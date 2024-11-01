@@ -743,7 +743,8 @@ class FreeplayState extends MusicBeatState
 							if (!alreadyClicked)
 							{
 								MusicBeatState.reopen = false; //Fix a sticker bug
-								FlxG.switchState(new PlayState());
+								LoadingState.prepareToSong();
+								LoadingState.loadAndSwitchState(new PlayState());
 							}
 							else FlxG.switchState(new PlayState());
 						}

@@ -183,8 +183,8 @@ class TitleState extends MusicBeatState
 			GameJoltAPI.authDaUser(FlxG.save.data.gjUser, FlxG.save.data.gjToken);
 		}
 
-		Conductor.bpm = titleJSON.bpm;
-		globalBPM = titleJSON.bpm;
+		Conductor.bpm = 65;
+		globalBPM = 65;
 		persistentUpdate = true;
 
 		var bg:FlxSprite = new FlxSprite();

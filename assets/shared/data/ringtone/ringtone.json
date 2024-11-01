@@ -251,6 +251,11 @@
 						"Add Camera Zoom",
 						"0.01",
 						"0.01"
+					],
+					[
+						"Duet Cam",
+						"0.7",
+						"a"
 					]
 				]
 			],
@@ -891,6 +896,11 @@
 						"Add Camera Zoom",
 						"0.08",
 						"0.08"
+					],
+					[
+						"Duet Cam",
+						"1.2",
+						""
 					]
 				]
 			],
@@ -1903,6 +1913,11 @@
 						"Change Lyric",
 						"I'd",
 						""
+					],
+					[
+						"Play Animation",
+						"singRIGHT",
+						"dad"
 					]
 				]
 			],
@@ -1923,6 +1938,11 @@
 						"Change Lyric",
 						"I'd gut",
 						""
+					],
+					[
+						"Play Animation",
+						"singDOWN",
+						"dad"
 					]
 				]
 			],
@@ -1943,6 +1963,11 @@
 						"Change Lyric",
 						"I'd gut you",
 						""
+					],
+					[
+						"Play Animation",
+						"singDOWN",
+						"dad"
 					]
 				]
 			],
@@ -1953,6 +1978,11 @@
 						"Change Lyric",
 						"I'd gut you like",
 						""
+					],
+					[
+						"Play Animation",
+						"singUP",
+						"dad"
 					]
 				]
 			],
@@ -1963,6 +1993,11 @@
 						"Change Lyric",
 						"I'd gut you like a ",
 						""
+					],
+					[
+						"Play Animation",
+						"singRIGHT",
+						"dad"
 					]
 				]
 			],
@@ -1973,6 +2008,11 @@
 						"Change Lyric",
 						"I'd gut you like a fish",
 						""
+					],
+					[
+						"Play Animation",
+						"singLEFT",
+						"dad"
 					]
 				]
 			],
@@ -3043,6 +3083,11 @@
 						"Add Camera Zoom",
 						"0.07",
 						"0.07"
+					],
+					[
+						"Duet Cam",
+						"0.7",
+						"a"
 					]
 				]
 			],
@@ -3093,6 +3138,46 @@
 						"Add Camera Zoom",
 						"0.04",
 						"0.04"
+					]
+				]
+			],
+			[
+				161294.117647059,
+				[
+					[
+						"Duet Cam",
+						"1.2",
+						""
+					]
+				]
+			],
+			[
+				161470.588235294,
+				[
+					[
+						"Change Focus",
+						"bf",
+						""
+					]
+				]
+			],
+			[
+				161823.529411764,
+				[
+					[
+						"Change Focus",
+						"dad",
+						""
+					]
+				]
+			],
+			[
+				162176.470588235,
+				[
+					[
+						"Duet Cam",
+						"0.7",
+						"a"
 					]
 				]
 			],
@@ -3433,6 +3518,11 @@
 						"Add Camera Zoom",
 						"0.08",
 						"0.08"
+					],
+					[
+						"Duet Cam",
+						"1.2",
+						""
 					]
 				]
 			],
@@ -10844,6 +10934,66 @@
 				"gfSection": false,
 				"bpm": 170,
 				"changeBPM": false
+			},
+			{
+				"sectionNotes": [],
+				"sectionBeats": 4,
+				"altAnim": false,
+				"exSection": false,
+				"gfSection": false,
+				"bpm": 170,
+				"changeBPM": false,
+				"mustHitSection": true
+			},
+			{
+				"sectionBeats": 4,
+				"sectionNotes": [],
+				"exSection": false,
+				"gfSection": false,
+				"altAnim": false,
+				"mustHitSection": true,
+				"changeBPM": false,
+				"bpm": 170
+			},
+			{
+				"sectionBeats": 4,
+				"sectionNotes": [],
+				"exSection": false,
+				"gfSection": false,
+				"altAnim": false,
+				"mustHitSection": true,
+				"changeBPM": false,
+				"bpm": 170
+			},
+			{
+				"sectionBeats": 4,
+				"sectionNotes": [],
+				"exSection": false,
+				"gfSection": false,
+				"altAnim": false,
+				"mustHitSection": true,
+				"changeBPM": false,
+				"bpm": 170
+			},
+			{
+				"sectionBeats": 4,
+				"sectionNotes": [],
+				"exSection": false,
+				"gfSection": false,
+				"altAnim": false,
+				"mustHitSection": true,
+				"changeBPM": false,
+				"bpm": 170
+			},
+			{
+				"sectionBeats": 4,
+				"sectionNotes": [],
+				"exSection": false,
+				"gfSection": false,
+				"altAnim": false,
+				"mustHitSection": true,
+				"changeBPM": false,
+				"bpm": 170
 			},
 			{
 				"gfSection": false,

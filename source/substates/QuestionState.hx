@@ -17,7 +17,7 @@ class QuestionState extends MusicBeatSubstate
 
         PlayState.instance.canPause = false;
 
-        timerOfDoom = new FlxTimer().start(7, function(tween:FlxTimer) {punish();});
+        timerOfDoom = new FlxTimer().start(7/PlayState.instance.playbackRate, function(tween:FlxTimer) {punish();});
 
         bg = new FlxSprite().makeGraphic(FlxG.width*2, FlxG.height*2, FlxColor.BLACK);
 		bg.alpha = 0.6;
@@ -127,7 +127,7 @@ class QuestionState extends MusicBeatSubstate
                     FlxTween.tween(Arrow, {x: Arrow.x - 300}, 2, {ease: FlxEase.sineOut, onComplete: function(tween:FlxTween) {FlxTween.tween(Arrow, {alpha: 0}, 1, {ease: FlxEase.sineOut});}});
                     FlxTween.tween(Health, {y: Health.y - 500}, 2, {ease: FlxEase.sineOut});
                     FlxTween.tween(Health, {alpha: 0}, 1, {ease: FlxEase.sineOut});
-                    PlayState.instance.modManager.setValue('vanish', 1.5, 0);
+                    PlayState.instance.modManager.setValue('vanish', 1, 0);
                     FlxG.save.data.punish = 'arrowFade';
                     FlxG.save.flush();
                 case 1:

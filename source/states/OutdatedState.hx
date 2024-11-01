@@ -32,7 +32,7 @@ class OutdatedState extends MusicBeatState
 			//leftState = true;
 			#if windows FlxG.switchState(new UpdateState());
 			#else
-			CoolUtil.browserLoad("https://github.com/Z11Coding/Vs.-Z11-Mixtape-Madness/releases/");
+			CoolUtil.browserLoad("https://github.com/Z11Coding/Fear-Factor-V1/releases/");
 			#end
 		}
 		else if(controls.BACK) {

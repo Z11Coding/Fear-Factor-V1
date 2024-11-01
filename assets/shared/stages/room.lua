@@ -4,7 +4,7 @@ function onCreate()
     
     makeLuaSprite("crossDimentionalPortal", 'stages/room/IMG_0828', -100, -200)
     scaleObject('crossDimentionalPortal', 1.0, 1.0, true)
-    --addLuaSprite('crossDimentionalPortal')
+    addLuaSprite('crossDimentionalPortal')
 
     makeLuaSprite("windows10", 'stages/room/IMG_0829', -100, -200)
     setBlendMode("windows10", "add")
@@ -15,7 +15,6 @@ function onCreate()
     setTextSize("where?", 40)
     setTextFont("where?", "Scream.ttf")
     addLuaText('where?')
-    setProperty("skipCountdown", true)
 end
 
 function onCreatePost()

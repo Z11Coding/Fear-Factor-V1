@@ -81,12 +81,12 @@ class FirstCheckState extends MusicBeatState
 		var tmr = new FlxTimer().start(2, function(tmr:FlxTimer)
 		{
 			trace('checking for update');
-			var http = new haxe.Http("https://raw.githubusercontent.com/Z11Coding/Vs.-Z11-Mixtape-Madness/refs/heads/main/gitVersion.txt");
+			var http = new haxe.Http("https://raw.githubusercontent.com/Z11Coding/Fear-Factor-V1/refs/heads/main/gitVersion.txt");
 
 			http.onData = function(data:String)
 			{
 				updateVersion = data.split('\n')[0].trim();
-				var curVersion:String = MainMenuState.mixtapeEngineVersion.trim();
+				var curVersion:String = MainMenuState.modVersion.trim();
 				trace('version online: ' + updateVersion + ', your version: ' + curVersion);
 				if (updateVersion != curVersion)
 				{
@@ -118,6 +118,7 @@ class FirstCheckState extends MusicBeatState
 				updateIcon.visible = false;
 				FlxTween.tween(updateAlphabet, {alpha: 0}, 2, {ease:FlxEase.sineOut});
 				FlxTween.tween(updateIcon, {alpha: 0}, 2, {ease:FlxEase.sineOut});
+				FlxTween.tween(updateRibbon, {alpha: 0}, 2, {ease:FlxEase.sineOut});
 				new FlxTimer().start(2, function(tmr:FlxTimer)
 				{
 					openSubState(new substates.PromptPsych("Enable Modcharts?\n(This can be changed in the settings menu later.)", 

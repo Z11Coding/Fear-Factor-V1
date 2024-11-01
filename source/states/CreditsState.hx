@@ -15,6 +15,7 @@ class CreditsState extends MusicBeatState
 	var intendedColor:FlxColor;
 	var descBox:AttachedSprite;
 
+	private var camGame:PsychCamera;
 	var offsetThing:Float = -75;
 
 	override function create()
@@ -23,6 +24,8 @@ class CreditsState extends MusicBeatState
 		// Updating Discord Rich Presence
 		DiscordClient.changePresence("In the Menus", null);
 		#end
+
+		camGame = initPsychCamera();
 
 		persistentUpdate = true;
 		bg = new FlxSprite().loadGraphic(Paths.image('menuDesat'));
@@ -38,27 +41,23 @@ class CreditsState extends MusicBeatState
 		#end
 
 		var defaultList:Array<Array<String>> = [ //Name - Icon name - Description - Link - BG Color
-			['Beta Testers'],
-			['Dylan',		        'dylan',		    '',					                                         'https://docs.google.com/document/d/1Ece_WG4QBnYSlRPEotqwCXxAEz2o_ugF_9YgSQ3oelU/edit?usp=sharing',		'9ff1cd'],
-			['Dave',				'dave',			    '',						                                     'https://twitter.com/vids144p/status/1792668118222864402',		'f62681'],
-			['Fanta in my system Team'],
-			['JDST',		        'jsdt',		        'Main Director, Artist, Animator and Composer of (SONG NAME HERE)',					 'https://docs.google.com/document/d/1Ece_WG4QBnYSlRPEotqwCXxAEz2o_ugF_9YgSQ3oelU/edit?usp=sharing',		'9ff1cd'],
-			['Magi',				'magi',			    'Composer of (SONG NAME HERE)',						                                 'https://twitter.com/vids144p/status/1792668118222864402',		'f62681'],
-			['Z11Gaming',			'z11',			    'Main Coder and Composer of Funky Fanta',						                     'https://www.youtube.com/watch?v=Lc1TUnTKMLo',		'2e1745'],
-			[''],
-			['Fanta in my system Special Thanks :)'],
-			['kmill2113',		    'kmill',			'Got that Fanta In His System',						         'https://www.tiktok.com/@kmill2113?lang=en',		'14967B'],
-			['BigNinjaKai',		    'kai',		        'OnlyCans',					                                 '',		'444444'],
-			['Kevin',				'k',			    'Can Solo Herobrine',						                 '',		'14967B'],
-			[''],
+			['Fear Factor Team'],
+			['JDST',		        	'image-11',		 'Director',					                                    'https://www.youtube.com/@JDST',		    '6bffe4'],
+			['Z11Gaming',		        'ZGaming',		'Coder/Modcharter',					                            'https://www.youtube.com/@Z11Music',		'8a0ec8'],
+			['Eclipse',		            'missing_icon', 'Charter for Shape',					                        'https://x.com/EclipseNightMer',		    '0da349'],
+			['Lemmeo',		            'Lemmeo_Icon-1','Charter for Ringtone and Revelation',					        'https://www.youtube.com/@Lemmeo',			'9cade5'],
 			["Psych Engine Team"],
 			["Shadow Mario",		"shadowmario",		"Main Programmer and Head of Psych Engine",					"https://ko-fi.com/shadowmario",	"444444"],
 			["Riveren",				"riveren",			"Main Artist/Animator of Psych Engine",						"https://x.com/riverennn",			"14967B"],
 			[""],
-			["Former Engine Members"],
+			["Special Thanks"],
+			["riconuts",				"riconuts",			"Programmer for Troll Engine\n(An awsome engine you should check out sometime!)",			"https://twitter.com/riconut",			"FFFFFF"],
+			["Nebula The Zorua",		"nebulazorua",		"True and Honest programmer for Troll Engine\n(An awsome engine you should check out sometime!)",						"",										"FFFFFF"],
+			["4mbr0s3 2",				"4mbr0s3_2",		"Modchart system (From Troll Engine)",						"https://www.youtube.com/@4mbr0s3-2",				"FFFFFF"],
+			["Former Psych Engine Members"],
 			["bb-panzu",			"bb",				"Ex-Programmer of Psych Engine",							"https://x.com/bbsub3",				"3E813A"],
 			[""],
-			["Engine Contributors"],
+			["Psych Engine Contributors"],
 			["crowplexus",			"crowplexus",		"HScript Iris, Input System v3, and Other PRs",				"https://github.com/crowplexus",	"CFCFCF"],
 			["Kamizeta",			"kamizeta",			"Creator of Pessy, Psych Engine's mascot.",				"https://www.instagram.com/cewweey/",	"D21C11"],
 			["MaxNeton",			"maxneton",			"Loading Screen Easter Egg Artist/Animator.",	"https://bsky.app/profile/maxneton.bsky.social","3C2E4E"],
@@ -139,6 +138,10 @@ class CreditsState extends MusicBeatState
 		intendedColor = bg.color;
 		changeSelection();
 		super.create();
+		if(ClientPrefs.data.shaders){
+			camGame.setFilters(FirstCheckState.filters);
+			camGame.filtersEnabled = true;
+		}
 	}
 
 	var quitting:Bool = false;
@@ -152,6 +155,16 @@ class CreditsState extends MusicBeatState
 
 		if(!quitting)
 		{
+			if (creditsStuff[curSelected][0] == "JDST") 
+			{
+				bg = new FlxSprite().loadGraphic(Paths.image('president JD'));
+				bg.screenCenter();
+			}
+			else
+			{
+				bg = new FlxSprite().loadGraphic(Paths.image('menuDesat'));
+				bg.screenCenter();
+			}
 			if(creditsStuff.length > 1)
 			{
 				var shiftMult:Int = 1;

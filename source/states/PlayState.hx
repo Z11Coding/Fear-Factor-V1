@@ -126,7 +126,7 @@ class PlayState extends MusicBeatState
 		['Good', 0.8], // From 70% to 79%
 		['Great', 0.9], // From 80% to 89%
 		['Sick!', 1], // From 90% to 99%
-		['Perfect!!', 1] // The value on this one isn't used actually, since Perfect is always "1"
+		['Killer!!', 1] // The value on this one isn't used actually, since Perfect is always "1"
 	];
 
 	// event variables
@@ -776,7 +776,7 @@ class PlayState extends MusicBeatState
 			camfilters2.push(shaders.ShadersHandler.chromaticAberration);
 			ShadersHandler.setupRainShader();
 			camfilters2.push(new ShaderFilter(ShadersHandler.rainShader));
-			//camfilters2.push(shaders.ShadersHandler.bloom);
+			if (SONG.song.toLowerCase() == 'revelation') camfilters2.push(shaders.ShadersHandler.bloom);
 			// camfilters2.push(shaders.ShadersHandler.rainShader);
 			/*filters.push(ShadersHandler.fuckingTriangle); //this shader has a cool feature for all the wrong reasons >:)
 				camfilters.push(ShadersHandler.fuckingTriangle); */
@@ -1541,6 +1541,8 @@ class PlayState extends MusicBeatState
 		resetRPC();
 
 		callOnScripts('onCreatePost');
+		if (SONG.song.toLowerCase() == 'stranger danger') 
+			FlxTween.tween(dad.colorTransform, {blueOffset: -255, redOffset: -255, greenOffset: -255}, 0.1, {ease: FlxEase.sineInOut});
 
 		add(playfields);
 		add(notefields);
@@ -1561,13 +1563,14 @@ class PlayState extends MusicBeatState
 
 		add(blackOverlay);
 
-		lyrics = new FlxText(0, 100, 1280, "", 0, true);
+		lyrics = new FlxText(0, 100, 1280, "", 32, true);
 		lyrics.scrollFactor.set();
 		lyrics.cameras = [camOther];
+		// lyricsArray = CoolUtil.coolTextFile("assets/data/endless/endlessLyrics.txt");
 		lyrics.alignment = FlxTextAlign.CENTER;
 		lyrics.borderStyle = FlxTextBorderStyle.OUTLINE_FAST;
 		lyrics.borderSize = 4;
-		lyrics.text = 'TESTING, testing...';
+		lyrics.text = '';
 		add(lyrics);
 
 		daStatic = new FlxSprite(0, 0);
@@ -1637,25 +1640,25 @@ class PlayState extends MusicBeatState
 		switch (stormType)
 		{
 			case 0:
-				FlxTween.num(rainIntensity, 0.04, 2, {ease: FlxEase.expoOut}, function(num)
+				FlxTween.num(rainIntensity, 0.1, 8, {ease: FlxEase.expoOut}, function(num)
 				{
 					rainIntensity = num;
 				});
 				thunderON = false;
 			case 1:
-				FlxTween.num(rainIntensity, 0.1, 2, {ease: FlxEase.expoOut}, function(num)
+				FlxTween.num(rainIntensity, 0.5, 8, {ease: FlxEase.expoOut}, function(num)
 				{
 					rainIntensity = num;
 				});
 				thunderON = false;
 			case 2:
-				FlxTween.num(rainIntensity, 0.9, 2, {ease: FlxEase.expoOut}, function(num)
+				FlxTween.num(rainIntensity, 0.9, 8, {ease: FlxEase.expoOut}, function(num)
 				{
 					rainIntensity = num;
 				});
 				thunderON = true;
 			case 3:
-				FlxTween.num(rainIntensity, 0, 2, {ease: FlxEase.expoOut}, function(num)
+				FlxTween.num(rainIntensity, 0, 8, {ease: FlxEase.expoOut}, function(num)
 				{
 					rainIntensity = num;
 				});
@@ -1875,7 +1878,7 @@ class PlayState extends MusicBeatState
 				dad2.healthColorArray[2]) else FlxColor.fromRGB(dad.healthColorArray[0], dad.healthColorArray[1], dad.healthColorArray[2]);
 			var bCol = if (bf2 != null) FlxColor.fromRGB(bf2.healthColorArray[0], bf2.healthColorArray[1],
 				bf2.healthColorArray[2]) else FlxColor.fromRGB(boyfriend.healthColorArray[0], boyfriend.healthColorArray[1], boyfriend.healthColorArray[2]);
-			if (curSong.toLowerCase() == 'stranger-danger' || curSong.toLowerCase() == 'shape')
+			if (SONG.song.toLowerCase() == 'stranger danger' || curSong.toLowerCase() == 'shape')
 				bCol = FlxColor.fromRGB(gf.healthColorArray[0], gf.healthColorArray[1], gf.healthColorArray[2]);
 			if (healthBar2 != null)
 				healthBar2.setColors(dCol, bCol);
@@ -3061,7 +3064,7 @@ class PlayState extends MusicBeatState
 						modManager.setValue('dizzy', 1, 0);
 						FlxTween.num(health, 0.6, 1, {ease: FlxEase.sineOut}, function(value:Float) {health = value;});
 					case 'arrowFade':
-						modManager.setValue('vanish', 1.5, 0);
+						modManager.setValue('vanish', 1, 0);
 					case 'lessHealth':
 						MaxHP = 0.9;
 						FlxTween.num(health, 0.9, 1, {ease: FlxEase.sineOut}, function(value:Float) {health = value;});
@@ -4652,7 +4655,7 @@ if (result < 0 || result > mania) {
 			bfkilledcheck = doDrain;
 		}
 
-		ShadersHandler.setBloom(0.1, 0.1);
+		ShadersHandler.setBloom(0.1, 0.2);
 		ShadersHandler.updateBloom(elapsed);
 
 		if (FlxG.keys.justPressed.NINE)
@@ -4965,9 +4968,9 @@ if (result < 0 || result > mania) {
 			if (health <= 0.0475)
 			{
 				scoreTxt.text = "DON'T MISS!";
-				scoreTxt.borderColor = Std.parseInt("0xFFFF0000");
+				scoreTxt.borderColor = FlxColor.fromInt(Std.parseInt("0xFFFF0000"));
 				playerScoreTxt.text = "DON'T MISS!";
-				playerScoreTxt.borderColor = Std.parseInt("0xFFFF0000");
+				playerScoreTxt.borderColor = FlxColor.fromInt(Std.parseInt("0xFFFF0000"));
 				if (AIPlayer.active)
 				{
 					opponentScoreTxt.text = "DON'T MISS!";
@@ -4976,16 +4979,16 @@ if (result < 0 || result > mania) {
 			}
 			else if (ratingName == '?')
 			{
-				scoreTxt.borderColor = Std.parseInt("0xFFFFE600");
+				scoreTxt.borderColor = FlxColor.fromInt(Std.parseInt("0xFFFFE600"));
 				scoreTxt.text = ClientPrefs.data.mixupMode ? 'Misses: ' + songMisses + ' | NPS: ' + nps : 'Score: ' + Std.int(scoreLerp) + ' | Misses: ' + songMisses + ' | Rating: ' + ratingName + ' | NPS: ' + nps;
-				scoreTxt.borderColor = Std.parseInt("0xFFFFE600");
+				scoreTxt.borderColor = FlxColor.fromInt(Std.parseInt("0xFFFFE600"));
 				scoreTxt.text = 'Misses: ' + songMisses + ' | NPS: ' + nps; // peeps wanted no integer rating
 				if (AIPlayer.active)
 				{
-					opponentScoreTxt.borderColor = Std.parseInt("0xFFFFE600");
+					opponentScoreTxt.borderColor = FlxColor.fromInt(Std.parseInt("0xFFFFE600"));
 					opponentScoreTxt.text = aiText; // peeps wanted no integer rating
 				}
-				playerScoreTxt.color = Std.parseInt("0xFFFFE600");
+				playerScoreTxt.color = FlxColor.fromInt(Std.parseInt("0xFFFFE600"));
 				playerScoreTxt.text = '['+daNameB+']\nScore: ' + songScore + '\nRating: ' + ratingName + ' ('
 					+ Highscore.floorDecimal(ratingPercent * 100, 2) + '%)' + ' - ' + ratingFC; // peeps wanted no integer rating
 			}
@@ -5087,7 +5090,7 @@ if (result < 0 || result > mania) {
 			{
 				// this part is here for latency reasons
 				// (cuz some people dont have rhythm)
-				// also yeah i know there are better ways of doing it nut this took me weeks so if you wanna make it better be my guest and let me know
+				// also yeah i know there are better ways of doing it but this took me weeks so if you wanna make it better be my guest and let me know
 				if (((curStep % 16 / gfSpeed == 0 || curStep % 16 / gfSpeed == 8)
 					|| (curStep % 16 / gfSpeed == 1 || curStep % 16 / gfSpeed == 9)
 					|| (curStep % 16 / gfSpeed == 2 || curStep % 16 / gfSpeed == 10))
@@ -6630,7 +6633,7 @@ if (result < 0 || result > mania) {
 				}
 
 			case 'Change Lyric': //added an a to stop the event for now
-				//lyrics.text = value1;
+				lyrics.text = value1;
 				var split:Array<String> = value2.split(',');
 				var color:String = split[0];
 				var effect:String = split[1];
@@ -7119,7 +7122,7 @@ if (result < 0 || result > mania) {
 
 		if (FlxG.save.data.complete != null)
 		{
-			switch (curSong.toLowerCase())
+			switch (SONG.song.toLowerCase())
 			{
 				case "ringtone":
 					FlxG.save.data.complete[0] = true;
@@ -7127,7 +7130,7 @@ if (result < 0 || result > mania) {
 					FlxG.save.data.complete[1] = true;
 				case "shape":
 					FlxG.save.data.complete[2] = true;
-				case "stranger-danger":
+				case "stranger danger":
 					FlxG.save.data.complete[3] = true;
 			}
 			trace(FlxG.save.data.complete);
@@ -7200,7 +7203,7 @@ if (result < 0 || result > mania) {
 			}
 			else
 			{
-				if (FlxG.save.data.complete == [true, true, true, true] && !FlxG.save.data.complete2) //eh, could be worse
+				if ((FlxG.save.data.complete[0] == true && FlxG.save.data.complete[1] == true && FlxG.save.data.complete[2] == true && FlxG.save.data.complete[3] == true) && !FlxG.save.data.complete2) //eh, could be worse
 					gameplayArea = "Countdown";
 				else
 					gameplayArea = "Freeplay";
@@ -7980,7 +7983,7 @@ if (result < 0 || result > mania) {
 				{
 					var animToPlay:String = singAnimations[Std.int(Math.abs(daNote.noteData))] + daNote.animSuffix + 'miss';
 					char.playAnim(animToPlay, true);
-					if (curSong.toLowerCase() == 'stranger-danger') gf.playAnim(animToPlay, true); // felt lazy
+					if (SONG.song.toLowerCase() == 'stranger danger') gf.playAnim(animToPlay, true); // felt lazy
 				}
 			}
 		}
@@ -8024,6 +8027,7 @@ if (result < 0 || result > mania) {
 		{
 			var animToPlay:String = singAnimations[Std.int(Math.abs(daNote.noteData))] + 'miss' + daNote.animSuffix;
 			char.playAnim(animToPlay, true);
+			if (SONG.song.toLowerCase() == 'stranger danger') gf.playAnim(animToPlay, true); // felt lazy
 		}
 
 		if (combo > 10 && gf != null && gf.animOffsets.exists('sad'))
@@ -8339,13 +8343,13 @@ if (result < 0 || result > mania) {
 			}
 			if (health > 0.01 && ClientPrefs.data.drain)
 			{
-				switch (curSong.toLowerCase())
+				switch (SONG.song.toLowerCase())
 				{
 					case 'revelation':
 						health -= 0.032;
 					case 'ringtone':
 						health -= 0.028;
-					case 'stranger-danger':
+					case 'stranger danger':
 						health -= 0.018;
 				}
 			}
@@ -8883,6 +8887,12 @@ if (result < 0 || result > mania) {
 			{
 				resyncVocals();
 			}
+		}
+
+		if (SONG.song.toLowerCase() == 'stranger danger')
+		{
+			if (curStep == 208) FlxTween.tween(dad.colorTransform, {blueOffset: -160, redOffset: -160, greenOffset: -160}, Conductor.stepCrochet*0.001*16, {ease: FlxEase.sineInOut});
+			if (curStep == 1264) FlxTween.tween(dad.colorTransform, {blueOffset: 0, redOffset: 0, greenOffset: 0}, Conductor.stepCrochet*0.001*4, {ease: FlxEase.sineInOut});
 		}
 
 		if (curSong.toLowerCase() == 'shape')

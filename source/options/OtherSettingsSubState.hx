@@ -20,15 +20,15 @@ class OtherSettingsSubState extends BaseOptionsMenu
 
 		var option:Option = new Option('Cache Graphics', // even tho only one person asked, it here
 			"If checked, The Graphics Will Be Cached.", 'graphicsPreload2', 'bool');
-		addOption(option);
+		//addOption(option);
 
 		var option:Option = new Option('Cache Music', // even tho only one person asked, it here
 			"If checked, The Music Will Be Cached.", 'musicPreload2', 'bool');
-		addOption(option); // now shut up before i put you in my basement
+		//addOption(option); // now shut up before i put you in my basement
 
 		var option:Option = new Option('Cache Videos', // even tho only one person asked, it here
 			"If checked, The Videos Will Be Cached.", 'videoPreload2', 'bool');
-		addOption(option); // now shut up before i put you in my basement
+		//addOption(option); // now shut up before i put you in my basement
 
 		var option:Option = new Option(
 			'Silent Volume Noise', 
@@ -120,7 +120,21 @@ class OtherSettingsSubState extends BaseOptionsMenu
 			"What song do you prefer for the Pause Screen?",
 			'pauseMusic',
 			'string',
-			['None', 'Breakfast', 'Tea Time', 'Celebration', 'Drippy Genesis', 'Reglitch', 'False Memory', 'Funky Genesis', 'Late Night Cafe', 'Late Night Jersey', 'Silly Little Sample Song']);
+			[
+				'None', 
+				'Breakfast', 
+				'Tea Time', 
+				'Celebration', 
+				'Drippy Genesis', 
+				'Reglitch', 
+				'False Memory', 
+				'Funky Genesis', 
+				'Late Night Cafe', 
+				'Late Night Jersey', 
+				'Silly Little Sample Song',
+				'CloseYourEyes',
+				'CloseYourEyes(Vocal Mix)',
+			]);
 		addOption(option);
 		option.onChange = onChangePauseMusic;
 
@@ -142,7 +156,7 @@ class OtherSettingsSubState extends BaseOptionsMenu
 			"Have you ever hear of Funky Friday/Friday Night Bloxin'?\nWell is essentially that, except it's single player.",
 			'mixupMode',
 			'bool');
-		addOption(option);
+		//addOption(option);
 
 		var option:Option = new Option('Opp. Difficulty',
 			"ONLY WORKS IF MIX-UP MODE IS ON!!!\nSet the level of how badly the opponent beats your butt.",
@@ -157,7 +171,7 @@ class OtherSettingsSubState extends BaseOptionsMenu
 			"Average FNF Player",
 			"Dont"]
 		);
-		addOption(option);
+		//addOption(option);
 		option.displayFormat = '< %v >';
 
 		var option:Option = new Option('Break The Sticker Audio',
@@ -171,7 +185,7 @@ class OtherSettingsSubState extends BaseOptionsMenu
 			Turn This Bad Boy On To Get Your Keyboard In The Action Too!\n
 			(YOU MUST HAVE ARTEMIS INSTALLED AND THE PROFILE SET TO MIXTAPE FOR IT TO WORK!)\n
 			(YOU WILL BE SENT TO THE TITLE SCREEN WHEN YOU LEAVE IF THIS IS ON!)", 'enableArtemis', 'bool');
-		addOption(option);
+		//addOption(option);
 
 		super();
 	}
@@ -209,16 +223,6 @@ class OtherSettingsSubState extends BaseOptionsMenu
 			case 'CloseYourEyes(Vocal Mix)':
 				indeed = 11;
 		}
-		/*
-		if (controls.UI_RIGHT_P)
-			indeed++;
-		if (controls.UI_LEFT_P)
-			indeed--;
-		if (indeed < 0)
-			indeed = curBPMList.length - 1;
-		if (indeed >= curBPMList.length)
-			indeed = 0;
-		*/
 		if(ClientPrefs.data.pauseMusic == 'None')
 			FlxG.sound.music.volume = 0;
 		else
@@ -246,7 +250,7 @@ class OtherSettingsSubState extends BaseOptionsMenu
 
 	override function destroy()
 	{
-		if(changedMusic) FlxG.sound.playMusic(Paths.music('freakyMenu'));
+		if(changedMusic) FlxG.sound.playMusic(Paths.music('odd_menu_music'));
 		super.destroy();
 	}
 

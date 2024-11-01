@@ -191,7 +191,7 @@ class Main extends Sprite
 		#end
 		Mods.loadTopMod();
 
-		FlxG.save.bind('Mixtape', CoolUtil.getSavePath());
+		FlxG.save.bind('FearFactor', CoolUtil.getSavePath());
 
 		Highscore.load();
 

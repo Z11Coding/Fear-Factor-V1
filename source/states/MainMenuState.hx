@@ -34,7 +34,7 @@ class MainMenuState extends MusicBeatState
 	public static var fridayVersion:String = '0.2.7-Git + 0.2.8-NG';
 	public static var mixtapeEngineVersion:String = '0.4.0'; // this is used for Discord RPC
 	public static var psychEngineVersion:String = '1.0'; // This is also used for Discord RPC
-	public static var beta:Bool = false;
+	public static var modVersion:String = '1.0.0'; // This is not used for Discord RPC
 	public static var curSelected:Int = 0;
 	public static var curColumn:MainMenuColumn = CENTER;
 	public static var secretOverride:String = null;
@@ -49,7 +49,7 @@ class MainMenuState extends MusicBeatState
 	var leftItem:FlxSprite;
 	var rightItem:FlxSprite;
 
-	var leftOption:String = #if ACHIEVEMENTS_ALLOWED 'achievements' #else null #end;
+	var leftOption:String = null;
 	var rightOption:String = 'options';
 
 	public var icon:HealthIcon;
@@ -71,14 +71,7 @@ class MainMenuState extends MusicBeatState
 
 	var noname:Bool = false;
 
-	//Secrets
-	var PBTBM:FlxSprite;
-	var FF:FlxSprite;
-	var ohno:FlxSound;
-	var TL:FlxSprite;
-	var h:String;
-	var chroma:ChromaticAberration;
-	var logoTrail:FlxTrail;
+	private var camGame:PsychCamera;
 
 	override function create()
 	{
@@ -88,7 +81,11 @@ class MainMenuState extends MusicBeatState
 		#end
 
 
-		if (FlxG.save.data.complete == null) FlxG.save.data.complete = [false, false, false, false];
+		if (FlxG.save.data.complete == null) 
+		{
+			FlxG.save.data.complete = [false, false, false, false];
+			FlxG.save.data.complete2 = false;
+		}
 
 		checker = new FlxBackdrop(Paths.image('mainmenu/Main_Checker'), XY, Std.int(0.2), Std.int(0.2));
 
@@ -102,6 +99,8 @@ class MainMenuState extends MusicBeatState
 		#else
 		trace(Sys.environment()["USER"]); // sussy test for a next menu x3
 		#end
+
+		camGame = initPsychCamera();
 
 		persistentUpdate = persistentDraw = true;
 
@@ -231,14 +230,13 @@ class MainMenuState extends MusicBeatState
 		#end
 		#end
 
-		if(ClientPrefs.data.shaders){
-			FlxG.camera.setFilters(FirstCheckState.filters);
-			FlxG.camera.filtersEnabled = true;
-		}
-
 		super.create();
 
-		FlxG.camera.follow(camFollow, null, 9);
+		camGame.follow(camFollow, null, 9);
+		if(ClientPrefs.data.shaders){
+			camGame.setFilters(FirstCheckState.filters);
+			camGame.filtersEnabled = true;
+		}
 	}
 
 	function createMenuItem(name:String, x:Float, y:Float):FlxSprite
@@ -275,8 +273,6 @@ class MainMenuState extends MusicBeatState
 			FlxG.save.data.complete = [false, false, false, false];
 			FlxG.save.data.complete2 = false;
 		}
-
-		Conductor.songPosition = FlxG.sound.music.time;
 
 		if(FlxG.keys.justPressed.F11)
     		FlxG.fullscreen = !FlxG.fullscreen;
@@ -401,7 +397,7 @@ class MainMenuState extends MusicBeatState
 				FlxG.sound.play(Paths.sound('cancelMenu'));
 				TransitionState.transitionState(TitleState, null, []);
 				// Main Menu Back Animations
-				FlxTween.tween(FlxG.camera, {zoom: 5}, 0.8, {ease: FlxEase.expoIn});
+				FlxTween.tween(camGame, {zoom: 5}, 0.8, {ease: FlxEase.expoIn});
 				FlxTween.tween(bg, {angle: 45}, 0.8, {ease: FlxEase.expoIn});
 				FlxTween.tween(bg, {alpha: 0}, 0.8, {ease: FlxEase.expoIn});
 				if (!ClientPrefs.data.lowQuality)
@@ -440,9 +436,9 @@ class MainMenuState extends MusicBeatState
 					Cursor.hide();
 					FlxG.sound.play(Paths.sound('confirmMenu'));
 					// Main Menu Select Animations
-					FlxTween.tween(FlxG.camera, {zoom: 5}, 0.8, {ease: FlxEase.expoIn, onComplete: function(twn:FlxTween)
+					FlxTween.tween(camGame, {zoom: 5}, 0.8, {ease: FlxEase.expoIn, onComplete: function(twn:FlxTween)
 					{
-						FlxG.camera.zoom = 1;
+						camGame.zoom = 1;
 					}});
 					FlxTween.tween(bg, {angle: 45}, 0.8, {ease: FlxEase.expoIn});
 					if (!ClientPrefs.data.lowQuality)
@@ -515,7 +511,6 @@ class MainMenuState extends MusicBeatState
 	function goToState(daChoice:String)
 	{
 		trace(daChoice);
-		if(ohno != null && ohno.playing) ohno.stop(); 
 		switch (daChoice)
 		{
 			case 'freeplay':
@@ -585,9 +580,9 @@ class MainMenuState extends MusicBeatState
 
 		if (!selectedSomethin)
 		{
-			FlxG.camera.zoom = zoomies;
+			camGame.zoom = zoomies;
 
-			FlxTween.tween(FlxG.camera, {zoom: 1}, Conductor.crochet / 1300, {
+			FlxTween.tween(camGame, {zoom: 1}, Conductor.crochet / 1300, {
 				ease: FlxEase.quadOut
 			});
 		}

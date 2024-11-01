@@ -105,25 +105,10 @@ class CacheState extends MusicBeatState
 	{
 		trace('ngl pretty cool');
 
-
-		if (!cacheInit && (FlxG.save.data.musicPreload2 == null || FlxG.save.data.graphicsPreload2 == null || FlxG.save.data.videoPreload2 == null)) {
-			cacheInit = true;
-			pause = true;
-			allowMusic = false;
-			FlxG.switchState(new CacheSettings());
-		}
-
-		//Cursor.cursorMode = Cross;
-		FlxTransitionableState.skipNextTransOut = false;
-		newDest = new What();
-		//FlxG.sound.play(Paths.music('celebration'));
-		for (folder in Mods.getModDirectories())
-		{
-			if(!Mods.ignoreModFolders.contains(folder))
-			{
-				daMods.push(folder);
-			}
-		}
+		dontBother = true;
+		allowMusic = false;
+		FlxG.switchState(new What());
+		return;
 		
 		if((FlxG.save.data.musicPreload2 != null && ClientPrefs.data.musicPreload2 == false)
 			|| (FlxG.save.data.graphicsPreload2 != null && ClientPrefs.data.graphicsPreload2 == false)
@@ -137,6 +122,13 @@ class CacheState extends MusicBeatState
 			allowMusic = true;
 			dontBother = false;
 			didPreCache = true;
+		}
+
+		if (!cacheInit && (FlxG.save.data.musicPreload2 == null || FlxG.save.data.graphicsPreload2 == null || FlxG.save.data.videoPreload2 == null)) {
+			cacheInit = true;
+			pause = true;
+			allowMusic = false;
+			FlxG.switchState(new CacheSettings());
 		}
 
 		menuBG = new FlxSprite().loadGraphic(Paths.image('loading/' + FlxG.random.int(0, 16, [3])));
