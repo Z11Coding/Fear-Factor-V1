@@ -74,9 +74,9 @@ class UpdateState extends MusicBeatState
 		super.create();
 		FlxG.autoPause = false;
 
-		FlxG.sound.playMusic(Paths.music(listoSongs[FlxG.random.int(0, 10)]), 0);
+		FlxG.sound.playMusic(Paths.music(Paths.formatToSongPath(listoSongs[FlxG.random.int(0, 10)])), 0);
 		FlxG.sound.music.pitch = 1;
-
+		
 		FlxG.sound.music.fadeIn(4, 0, 0.7);
 
 		bg = new FlxSprite(-80).loadGraphic(Paths.image('menuDesat'));
