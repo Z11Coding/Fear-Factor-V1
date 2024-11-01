@@ -42,10 +42,13 @@ class CreditsState extends MusicBeatState
 
 		var defaultList:Array<Array<String>> = [ //Name - Icon name - Description - Link - BG Color
 			['Fear Factor Team'],
-			['JDST',		        	'image-11',		 'Director',					                                    'https://www.youtube.com/@JDST',		    '6bffe4'],
+			['JDST',		        	'image-11',		'Director',					                                    'https://www.youtube.com/@JDST',		    '6bffe4'],
 			['Z11Gaming',		        'ZGaming',		'Coder/Modcharter',					                            'https://www.youtube.com/@Z11Music',		'8a0ec8'],
-			['Eclipse',		            'missing_icon', 'Charter for Shape',					                        'https://x.com/EclipseNightMer',		    '0da349'],
+			['Eclipse',		            'eclipse', 		'Charter for Shape',					                        'https://x.com/EclipseNightMer',		    '0da349'],
 			['Lemmeo',		            'Lemmeo_Icon-1','Charter for Ringtone and Revelation',					        'https://www.youtube.com/@Lemmeo',			'9cade5'],
+			['SZ0',		            	'SZ0',			'GhostFace and Pennywise Chromatics',					        'https://gamebanana.com/members/1945687',	'e77891'],
+			['Kingin',		            'king', 		'Ringtone BG',					        						'https://x.com/AKingingNG',					'e77891'],
+			['Teserex',		            'Teserex-C', 	'Icon Artist',					        						'https://x.com/teserex',					'eb4b00'],
 			["Psych Engine Team"],
 			["Shadow Mario",		"shadowmario",		"Main Programmer and Head of Psych Engine",					"https://ko-fi.com/shadowmario",	"444444"],
 			["Riveren",				"riveren",			"Main Artist/Animator of Psych Engine",						"https://x.com/riverennn",			"14967B"],

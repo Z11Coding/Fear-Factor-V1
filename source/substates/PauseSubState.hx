@@ -328,6 +328,7 @@ class PauseSubState extends MusicBeatSubstate
 
 					
 					FlxG.sound.playMusic(Paths.music('odd_menu_music'));
+					Conductor.bpm = 65;
 					PlayState.changedDifficulty = false;
 					PlayState.chartingMode = false;
 					FlxG.camera.followLerp = 0;

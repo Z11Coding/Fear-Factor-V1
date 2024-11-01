@@ -95,25 +95,16 @@ class FirstCheckState extends MusicBeatState
 				}
 				else
 				{
-					openSubState(new substates.PromptPsych("Enable Modcharts?\n(This can be changed in the settings menu later.)", 
-						function() {
-							ClientPrefs.data.modcharts = true;
-							FlxG.switchState(new states.CacheState());
-						},
-						function() {
-							ClientPrefs.data.modcharts = false;
-							FlxG.switchState(new states.CacheState());
-						},
-						"Yes",
-						"No"
-					));
+					FlxTween.tween(updateAlphabet, {alpha: 0}, 2, {ease:FlxEase.sineOut});
+					FlxTween.tween(updateIcon, {alpha: 0}, 2, {ease:FlxEase.sineOut});
+					FlxTween.tween(updateRibbon, {alpha: 0}, 2, {ease:FlxEase.sineOut});
+					FlxG.switchState(new What());
 				}
 			}
 
 			http.onError = function(error)
 			{
 				trace('error: $error');
-				updateAlphabet.text = 'Failed the vibe check!';
 				updateAlphabet.color = FlxColor.RED;
 				updateIcon.visible = false;
 				FlxTween.tween(updateAlphabet, {alpha: 0}, 2, {ease:FlxEase.sineOut});
@@ -121,18 +112,7 @@ class FirstCheckState extends MusicBeatState
 				FlxTween.tween(updateRibbon, {alpha: 0}, 2, {ease:FlxEase.sineOut});
 				new FlxTimer().start(2, function(tmr:FlxTimer)
 				{
-					openSubState(new substates.PromptPsych("Enable Modcharts?\n(This can be changed in the settings menu later.)", 
-						function() {
-							ClientPrefs.data.modcharts = true;
-							FlxG.switchState(new states.CacheState());
-						},
-						function() {
-							ClientPrefs.data.modcharts = false;
-							FlxG.switchState(new states.CacheState());
-						},
-						"Yes",
-						"No"
-					));
+					FlxG.switchState(new What());
 				});
 			}
 

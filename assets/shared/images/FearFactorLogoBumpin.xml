@@ -1,0 +1,42 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TextureAtlas imagePath="FearFactorLogoBumpin.png">
+	<!-- Created with Adobe Animate version 21.0.6.41649 -->
+	<!-- http://www.adobe.com/products/animate.html -->
+	<SubTexture name="FearFactorLogoBumpin0000" x="22" y="22" width="580" height="426"/>
+	<SubTexture name="FearFactorLogoBumpin0001" x="602" y="22" width="580" height="426"/>
+	<SubTexture name="FearFactorLogoBumpin0002" x="602" y="22" width="580" height="426"/>
+	<SubTexture name="FearFactorLogoBumpin0003" x="1182" y="22" width="580" height="426"/>
+	<SubTexture name="FearFactorLogoBumpin0004" x="1182" y="22" width="580" height="426"/>
+	<SubTexture name="FearFactorLogoBumpin0005" x="1182" y="22" width="580" height="426"/>
+	<SubTexture name="FearFactorLogoBumpin0006" x="22" y="448" width="580" height="426"/>
+	<SubTexture name="FearFactorLogoBumpin0007" x="22" y="448" width="580" height="426"/>
+	<SubTexture name="FearFactorLogoBumpin0008" x="22" y="448" width="580" height="426"/>
+	<SubTexture name="FearFactorLogoBumpin0009" x="22" y="448" width="580" height="426"/>
+	<SubTexture name="FearFactorLogoBumpin0010" x="22" y="448" width="580" height="426"/>
+	<SubTexture name="FearFactorLogoBumpin0011" x="22" y="448" width="580" height="426"/>
+	<SubTexture name="FearFactorLogoBumpin0012" x="22" y="448" width="580" height="426"/>
+	<SubTexture name="FearFactorLogoBumpin0013" x="22" y="448" width="580" height="426"/>
+	<SubTexture name="FearFactorLogoBumpin0014" x="22" y="448" width="580" height="426"/>
+	<SubTexture name="FearFactorLogoBumpin0015" x="22" y="448" width="580" height="426"/>
+	<SubTexture name="FearFactorLogoBumpin0016" x="22" y="448" width="580" height="426"/>
+	<SubTexture name="FearFactorLogoBumpin0017" x="22" y="448" width="580" height="426"/>
+	<SubTexture name="FearFactorLogoBumpin0018" x="22" y="448" width="580" height="426"/>
+	<SubTexture name="FearFactorLogoBumpin0019" x="22" y="448" width="580" height="426"/>
+	<SubTexture name="FearFactorLogoBumpin0020" x="22" y="448" width="580" height="426"/>
+	<SubTexture name="FearFactorLogoBumpin0021" x="22" y="448" width="580" height="426"/>
+	<SubTexture name="FearFactorLogoBumpin0022" x="22" y="448" width="580" height="426"/>
+	<SubTexture name="FearFactorLogoBumpin0023" x="22" y="448" width="580" height="426"/>
+	<SubTexture name="FearFactorLogoBumpin0024" x="22" y="448" width="580" height="426"/>
+	<SubTexture name="FearFactorLogoBumpin0025" x="22" y="448" width="580" height="426"/>
+	<SubTexture name="FearFactorLogoBumpin0026" x="22" y="448" width="580" height="426"/>
+	<SubTexture name="FearFactorLogoBumpin0027" x="22" y="448" width="580" height="426"/>
+	<SubTexture name="FearFactorLogoBumpin0028" x="22" y="448" width="580" height="426"/>
+	<SubTexture name="FearFactorLogoBumpin0029" x="22" y="448" width="580" height="426"/>
+	<SubTexture name="FearFactorLogoBumpin0030" x="22" y="448" width="580" height="426"/>
+	<SubTexture name="FearFactorLogoBumpin0031" x="22" y="448" width="580" height="426"/>
+	<SubTexture name="FearFactorLogoBumpin0032" x="22" y="448" width="580" height="426"/>
+	<SubTexture name="FearFactorLogoBumpin0033" x="22" y="448" width="580" height="426"/>
+	<SubTexture name="FearFactorLogoBumpin0034" x="22" y="448" width="580" height="426"/>
+	<SubTexture name="FearFactorLogoBumpin0035" x="22" y="448" width="580" height="426"/>
+	<SubTexture name="FearFactorLogoBumpin0036" x="22" y="448" width="580" height="426"/>
+</TextureAtlas>

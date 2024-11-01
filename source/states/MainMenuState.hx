@@ -157,10 +157,10 @@ class MainMenuState extends MusicBeatState
 
 		logoBl = new FlxSprite(-100, -100);
 
-		logoBl.frames = Paths.getSparrowAtlas('logoBumpin');
+		logoBl.frames = Paths.getSparrowAtlas('FearFactorLogoBumpin');
 		logoBl.scrollFactor.set();
 		logoBl.antialiasing = ClientPrefs.data.globalAntialiasing;
-		logoBl.animation.addByPrefix('bump', 'logo bumpin', 24, false);
+		logoBl.animation.addByPrefix('bump', 'FearFactorLogoBumpin', 24, false);
 		logoBl.setGraphicSize(Std.int(logoBl.width * 0.6));
 		logoBl.animation.play('bump');
 		logoBl.alpha = 0;
@@ -170,8 +170,8 @@ class MainMenuState extends MusicBeatState
 
 
 		FlxTween.tween(logoBl, {
-			y: logoBl.y + 50,
-			x: logoBl.x + 450,
+			y: logoBl.y + 100,
+			x: logoBl.x + 580,
 			angle: -4,
 			alpha: 1
 		}, 1.4, {ease: FlxEase.expoInOut});
@@ -514,7 +514,7 @@ class MainMenuState extends MusicBeatState
 		switch (daChoice)
 		{
 			case 'freeplay':
-				TransitionState.transitionState(FreeplayState, {transitionType: "stickers"});
+				TransitionState.transitionState(FreeplayState, {transitionType: "instant"});
 			case 'socials':
 				MusicBeatState.switchState(new SocialsState());
 			#if MODS_ALLOWED
@@ -522,7 +522,7 @@ class MainMenuState extends MusicBeatState
 				MusicBeatState.switchState(new ModsMenuState());
 			#end
 			case 'achievements':
-				TransitionState.transitionState(AchievementsMenuState, {transitionType: "fallRandom"});
+				TransitionState.transitionState(AchievementsMenuState, {transitionType: "instant"});
 			case 'credits':
 				MusicBeatState.switchState(new CreditsState());
 			case 'options':

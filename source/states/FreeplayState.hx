@@ -742,9 +742,31 @@ class FreeplayState extends MusicBeatState
 						{
 							if (!alreadyClicked)
 							{
-								MusicBeatState.reopen = false; //Fix a sticker bug
-								LoadingState.prepareToSong();
-								LoadingState.loadAndSwitchState(new PlayState());
+								if (songLowercase == 'shape')
+								{
+									openSubState(new substates.PromptPsych("Play with modchart?\n(WARNING: IT IS VERY DIFFICULT! DON'T BLAME ME IF YOU DON'T LIKE IT!)", 
+										function() {
+											ClientPrefs.data.modcharts = true;
+											alreadyClicked = true;
+											MusicBeatState.reopen = false; //Fix a sticker bug
+											FlxG.switchState(new PlayState());
+										},
+										function() {
+											ClientPrefs.data.modcharts = false;
+											alreadyClicked = true;
+											MusicBeatState.reopen = false; //Fix a sticker bug
+											FlxG.switchState(new PlayState());
+										},
+										"Yes",
+										"No"
+									));
+								}
+								else
+								{
+									alreadyClicked = true;
+									MusicBeatState.reopen = false; //Fix a sticker bug
+									FlxG.switchState(new PlayState());
+								}
 							}
 							else FlxG.switchState(new PlayState());
 						}

@@ -776,7 +776,6 @@ class PlayState extends MusicBeatState
 			camfilters2.push(shaders.ShadersHandler.chromaticAberration);
 			ShadersHandler.setupRainShader();
 			camfilters2.push(new ShaderFilter(ShadersHandler.rainShader));
-			if (SONG.song.toLowerCase() == 'revelation') camfilters2.push(shaders.ShadersHandler.bloom);
 			// camfilters2.push(shaders.ShadersHandler.rainShader);
 			/*filters.push(ShadersHandler.fuckingTriangle); //this shader has a cool feature for all the wrong reasons >:)
 				camfilters.push(ShadersHandler.fuckingTriangle); */

@@ -64,11 +64,9 @@ function onCreatePost()
 
         queueEase(2536, 2552, 'drunk', 1, 'sineInOut')
         queueEase(2536, 2552, 'drunkZ', 1, 'sineInOut')
-        queueEase(2536, 2552, 'tornado', 1.5, 'sineInOut')
 
         queueEase(2944, 2945, 'drunk', 0, 'sineInOut')
         queueEase(2944, 2945, 'drunkZ', 0, 'sineInOut')
-        queueEase(2944, 2945, 'tornado', 0, 'sineInOut')
 
         queueEase(2944, 3040, 'haloSpeed', 5, 'sineInOut')
         queueEase(2944, 3040, 'haloRadiusX', 5000, 'sineInOut')

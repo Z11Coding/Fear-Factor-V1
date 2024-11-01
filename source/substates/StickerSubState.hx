@@ -286,7 +286,8 @@ class StickerSubState extends MusicBeatSubstate
 
   override public function update(elapsed:Float):Void
   {
-    super.update(elapsed);
+    if (grpStickers.members != null)
+      super.update(elapsed);
 
     // if (FlxG.keys.justPressed.ANY)
     // {

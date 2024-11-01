@@ -99,7 +99,7 @@ class UpdateState extends MusicBeatState
 		checker.scrollFactor.set(0, 0.07);
 
 		text = new FlxText(0, 0, 0, "Updating Your Mod...", 18);
-		text.setFormat(Paths.font('funkin.ttf'), 18, FlxColor.WHITE, CENTER, OUTLINE, FlxColor.BLACK);
+		text.setFormat(Paths.font('comboFont.ttf'), 18, FlxColor.WHITE, CENTER, OUTLINE, FlxColor.BLACK);
 		add(text);
 		text.screenCenter(X);
 		text.y = 290;
@@ -127,11 +127,11 @@ class UpdateState extends MusicBeatState
 		add(progressBar);
 
 		progressText = new FlxText(progressBar.x, progressBar.y - 20, 0, "0%", 16);
-		progressText.setFormat(Paths.font('fnf1.ttf'), 16, FlxColor.WHITE, CENTER, OUTLINE, FlxColor.BLACK);
+		progressText.setFormat(Paths.font('comboFont.ttf'), 16, FlxColor.WHITE, CENTER, OUTLINE, FlxColor.BLACK);
 		add(progressText);
 
 		download_info = new FlxText(progressBar.x + progBar_bg.width, progressBar.y + progBar_bg.height, 0, "0B / 0B", 16);
-		download_info.setFormat(Paths.font('fnf1.ttf'), 16, FlxColor.WHITE, CENTER, OUTLINE, FlxColor.BLACK);
+		download_info.setFormat(Paths.font('comboFont.ttf'), 16, FlxColor.WHITE, CENTER, OUTLINE, FlxColor.BLACK);
 		add(download_info);
 
 		zip = new URLLoader();
@@ -216,7 +216,7 @@ class UpdateState extends MusicBeatState
 	inline function getUpdateLink()
 	{
 		var fileEnd = #if android 'apk' #else 'zip' #end;
-		online_url = "https://github.com/Z11Coding/Fear-Factor-V1/releases/download/" + FirstCheckState.updateVersion + '/Mixtape-Madness-${getPlatform()}.$fileEnd';
+		online_url = "https://github.com/Z11Coding/Fear-Factor-V1/releases/download/" + FirstCheckState.updateVersion + '/FearFactor-${getPlatform()}.$fileEnd';
 		trace("update url: " + online_url);
 	}
 

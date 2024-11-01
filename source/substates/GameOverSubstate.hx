@@ -40,6 +40,8 @@ class GameOverSubstate extends MusicBeatSubstate
 		endSoundName = 'gameOverEnd';
 		deathDelay = 0;
 
+		
+
 		var _song = PlayState.SONG;
 		if(_song != null)
 		{
@@ -48,6 +50,7 @@ class GameOverSubstate extends MusicBeatSubstate
 			if(_song.gameOverLoop != null && _song.gameOverLoop.trim().length > 0) loopSoundName = _song.gameOverLoop;
 			if(_song.gameOverEnd != null && _song.gameOverEnd.trim().length > 0) endSoundName = _song.gameOverEnd;
 		}
+		if (_song.song.toLowerCase() == 'shape')  characterName = 'micleDeth';
 	}
 
 	var charX:Float = 0;
@@ -55,6 +58,7 @@ class GameOverSubstate extends MusicBeatSubstate
 
 	var overlay:FlxSprite;
 	var overlayConfirmOffsets:FlxPoint = FlxPoint.get();
+	var jumpscare:FlxSprite;
 	override function create()
 	{
 		instance = this;
@@ -81,10 +85,10 @@ class GameOverSubstate extends MusicBeatSubstate
 		FlxG.camera.focusOn(new FlxPoint(FlxG.camera.scroll.x + (FlxG.camera.width / 2), FlxG.camera.scroll.y + (FlxG.camera.height / 2)));
 		FlxG.camera.follow(camFollow, LOCKON, 0.01);
 		add(camFollow);
+		FlxG.camera.followLerp = 100;
 		
 		PlayState.instance.setOnScripts('inGameOver', true);
 		PlayState.instance.callOnScripts('onGameOverStart', []);
-		FlxG.sound.music.loadEmbedded(Paths.music(loopSoundName), true);
 
 		if(characterName == 'pico-dead')
 		{
@@ -148,6 +152,7 @@ class GameOverSubstate extends MusicBeatSubstate
 				overlay.animation.play('deathLoop');
 			}
 			justPlayedLoop = true;
+			FlxG.sound.music.loadEmbedded(Paths.music(loopSoundName), true);
 		}
 
 		if(!isEnding)
@@ -167,11 +172,11 @@ class GameOverSubstate extends MusicBeatSubstate
 	
 				Mods.loadTopMod();
 				if (PlayState.isStoryMode)
-					MusicBeatState.switchState(new StoryMenuState());
+					FlxG.switchState(new StoryMenuState());
 				else
-					MusicBeatState.switchState(new FreeplayState());
+					FlxG.switchState(new FreeplayState());
 	
-				FlxG.sound.playMusic(Paths.music('freakyMenu'));
+				FlxG.sound.playMusic(Paths.music('odd_menu_music'));
 				PlayState.instance.callOnScripts('onGameOverConfirm', [false]);
 			}
 			else if (justPlayedLoop)

@@ -38,7 +38,7 @@ class TransitionState {
         if (options == null) {
             // If options are null, select a random transition
             //trace("Random transition selected due to null options.");
-            var transitions = ["fadeOut", "fadeColor", "slideLeft", "slideRight", "slideUp", "slideDown", "slideRandom", "fallRandom", "fallSequential", "stickers"];
+            var transitions = ["fadeOut", "fadeColor", "slideLeft", "slideRight", "slideUp", "slideDown", "slideRandom", "fallRandom", "fallSequential"/*, "stickers"*/];
             var random = new FlxRandom();
             options = {
                 transitionType: transitions[random.int(0, transitions.length - 1)],
