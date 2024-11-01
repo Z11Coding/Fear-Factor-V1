@@ -34,7 +34,7 @@ class MainMenuState extends MusicBeatState
 	public static var fridayVersion:String = '0.2.7-Git + 0.2.8-NG';
 	public static var mixtapeEngineVersion:String = '0.4.0'; // this is used for Discord RPC
 	public static var psychEngineVersion:String = '1.0'; // This is also used for Discord RPC
-	public static var modVersion:String = '1.0.1'; // This is not used for Discord RPC
+	public static var modVersion:String = '1.0.2'; // This is not used for Discord RPC
 	public static var curSelected:Int = 0;
 	public static var curColumn:MainMenuColumn = CENTER;
 	public static var secretOverride:String = null;

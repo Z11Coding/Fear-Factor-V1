@@ -4634,7 +4634,7 @@ if (result < 0 || result > mania) {
 	var alreadyChanged:Bool = false;
 	var camResize:Float = 0;
 	var freezeCamera:Bool = false;
-	var allowDebugKeys:Bool = true;
+	var allowDebugKeys:Bool = false;
 
 	public function die():Void
 	{

@@ -20,7 +20,7 @@ class OutdatedState extends MusicBeatState
 		warnText = new FlxText(0, 0, FlxG.width,
 			"A newer version of this mod is available.\nWould you like to update?\n(ENTER for yes, ESC for no.)",
 			32);
-		warnText.setFormat(Paths.font('funkin.ttf'), 32, FlxColor.WHITE, CENTER);
+		warnText.setFormat(Paths.font('comboFont.ttf'), 32, FlxColor.WHITE, CENTER);
 		warnText.screenCenter(Y);
 		add(warnText);
 	}

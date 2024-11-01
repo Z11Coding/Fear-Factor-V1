@@ -76,7 +76,7 @@ class UpdateState extends MusicBeatState
 
 		FlxG.sound.playMusic(Paths.music(Paths.formatToSongPath(listoSongs[FlxG.random.int(0, 10)])), 0);
 		FlxG.sound.music.pitch = 1;
-		
+
 		FlxG.sound.music.fadeIn(4, 0, 0.7);
 
 		bg = new FlxSprite(-80).loadGraphic(Paths.image('menuDesat'));
@@ -100,7 +100,7 @@ class UpdateState extends MusicBeatState
 
 		text = new FlxText(0, 0, 0, "Updating Your Mod...", 18);
 		text.setFormat(Paths.font('comboFont.ttf'), 18, FlxColor.WHITE, CENTER, OUTLINE, FlxColor.BLACK);
-		add(text);
+		//add(text);
 		text.screenCenter(X);
 		text.y = 290;
 
