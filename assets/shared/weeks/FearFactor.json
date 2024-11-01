@@ -1,0 +1,59 @@
+{
+	"storyName": "",
+	"difficulties": "",
+	"hideFreeplay": false,
+	"weekBackground": "",
+	"weekBefore": "tutorial",
+	"freeplayColor": [
+		146,
+		113,
+		253
+	],
+	"startUnlocked": true,
+	"hideStoryMode": true,
+	"songs": [
+		[
+			"Ringtone",
+			"ghost",
+			[
+				0,
+				0,
+				0
+			]
+		],
+		[
+			"Revelation",
+			"jigsaw",
+			[
+				146,
+				20,
+				0
+			]
+		],
+		[
+			"Shape",
+			"micle",
+			[
+				0,
+				0,
+				0
+			]
+		],
+		[
+			"Stranger Danger",
+			"it",
+			[
+				0,
+				0,
+				0
+			]
+		]
+	],
+	"weekCharacters": [
+		"",
+		"",
+		""
+	],
+	"hiddenUntilUnlocked": false,
+	"weekName": "The Fear Factor"
+}

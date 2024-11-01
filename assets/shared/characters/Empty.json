@@ -1,0 +1,37 @@
+{
+	"animations": [
+		{
+			"loop": false,
+			"offsets": [
+				0,
+				0
+			],
+			"fps": 24,
+			"anim": "idle",
+			"indices": [],
+			"name": "Dad idle dance"
+		}
+	],
+	"no_antialiasing": false,
+	"image": "characters/empty",
+	"position": [
+		0,
+		0
+	],
+	"strum_skin": "normal",
+	"healthicon": "micle",
+	"strum_offset": 120,
+	"flip_x": false,
+	"healthbar_colors": [
+		238,
+		171,
+		102
+	],
+	"camera_position": [
+		0,
+		0
+	],
+	"sing_duration": 6.1,
+	"scale": 1,
+	"strum_offset_down": -120
+}

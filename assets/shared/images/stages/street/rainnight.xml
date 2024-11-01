@@ -1,0 +1,15 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TextureAtlas imagePath="rainnight.png">
+	<!-- Created with Adobe Animate version 22.0.2.168 -->
+	<!-- http://www.adobe.com/products/animate.html -->
+	<SubTexture name="rainning0000" x="20" y="20" width="1485" height="1260" pivotX="324.95" pivotY="992.65" frameX="-272" frameY="-844" frameWidth="2037" frameHeight="2741"/>
+	<SubTexture name="rainning0001" x="1539" y="20" width="1833" height="2288" frameX="-204" frameY="0" frameWidth="2037" frameHeight="2741"/>
+	<SubTexture name="rainning0002" x="3406" y="20" width="1833" height="2289" frameX="-136" frameY="-212" frameWidth="2037" frameHeight="2741"/>
+	<SubTexture name="rainning0003" x="5273" y="20" width="1833" height="2288" frameX="-68" frameY="-425" frameWidth="2037" frameHeight="2741"/>
+	<SubTexture name="rainning0004" x="20" y="2343" width="1801" height="2140" frameX="0" frameY="-601" frameWidth="2037" frameHeight="2741"/>
+	<SubTexture name="rainning0005" x="1855" y="2343" width="1449" height="1232" frameX="-272" frameY="-844" frameWidth="2037" frameHeight="2741"/>
+	<SubTexture name="rainning0006" x="1539" y="20" width="1833" height="2288" frameX="-204" frameY="0" frameWidth="2037" frameHeight="2741"/>
+	<SubTexture name="rainning0007" x="3406" y="20" width="1833" height="2289" frameX="-136" frameY="-212" frameWidth="2037" frameHeight="2741"/>
+	<SubTexture name="rainning0008" x="5273" y="20" width="1833" height="2288" frameX="-68" frameY="-425" frameWidth="2037" frameHeight="2741"/>
+	<SubTexture name="rainning0009" x="3338" y="2343" width="1833" height="2104" frameX="0" frameY="-637" frameWidth="2037" frameHeight="2741"/>
+</TextureAtlas>

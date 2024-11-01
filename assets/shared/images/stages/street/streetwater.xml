@@ -1,0 +1,11 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TextureAtlas imagePath="streetwater.png">
+	<!-- Created with Adobe Animate version 22.0.2.168 -->
+	<!-- http://www.adobe.com/products/animate.html -->
+	<SubTexture name="idle0000" x="20" y="20" width="6111" height="1552" pivotX="0" pivotY="0"/>
+	<SubTexture name="idle0001" x="20" y="20" width="6111" height="1552"/>
+	<SubTexture name="idle0002" x="20" y="1606" width="6111" height="1552"/>
+	<SubTexture name="idle0003" x="20" y="1606" width="6111" height="1552"/>
+	<SubTexture name="idle0004" x="20" y="3192" width="6111" height="1552"/>
+	<SubTexture name="idle0005" x="20" y="3192" width="6111" height="1552"/>
+</TextureAtlas>
