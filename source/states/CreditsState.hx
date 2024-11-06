@@ -160,14 +160,19 @@ class CreditsState extends MusicBeatState
 		{
 			if (creditsStuff[curSelected][0] == "JDST") 
 			{
+				remove(bg);
 				bg = new FlxSprite().loadGraphic(Paths.image('president JD'));
 				bg.screenCenter();
+				add(bg);
 			}
 			else
 			{
+				remove(bg);
 				bg = new FlxSprite().loadGraphic(Paths.image('menuDesat'));
 				bg.screenCenter();
+				add(bg);
 			}
+
 			if(creditsStuff.length > 1)
 			{
 				var shiftMult:Int = 1;

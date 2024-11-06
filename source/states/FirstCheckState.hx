@@ -88,7 +88,7 @@ class FirstCheckState extends MusicBeatState
 				updateVersion = data.split('\n')[0].trim();
 				var curVersion:String = MainMenuState.modVersion.trim();
 				trace('version online: ' + updateVersion + ', your version: ' + curVersion);
-				if (updateVersion != curVersion)
+				if (updateVersion != curVersion && ClientPrefs.data.checkForUpdates)
 				{
 					trace('versions arent matching!');
 					MusicBeatState.switchState(new states.OutdatedState());
@@ -98,7 +98,10 @@ class FirstCheckState extends MusicBeatState
 					FlxTween.tween(updateAlphabet, {alpha: 0}, 2, {ease:FlxEase.sineOut});
 					FlxTween.tween(updateIcon, {alpha: 0}, 2, {ease:FlxEase.sineOut});
 					FlxTween.tween(updateRibbon, {alpha: 0}, 2, {ease:FlxEase.sineOut});
-					FlxG.switchState(new What());
+					new FlxTimer().start(2, function(tmr:FlxTimer)
+					{
+						FlxG.switchState(new What());
+					});
 				}
 			}
 

@@ -639,13 +639,13 @@ class TitleState extends MusicBeatState
 					deleteCoolText();
 
 				case 30:
-					addMoreColoredText('Z11\'s', 0, 0xFF7B1788);
+					addMoreColoredText('FNF:', 0, 0xFFFF0000);
 				// credTextShit.visible = true;
 				case 31:
-					addMoreColoredText('Modpack', 0, 0xFFFFFFFF);
+					addMoreColoredText('Fear', 0, 0xFFFF0000);
 				// credTextShit.text += '\nNight';
 				case 32:
-					addMoreColoredText('Mixup', 0, 0xFF353535);
+					addMoreColoredText('Factor', 0, 0xFFFF0000);
 
 				case 33:
 					deleteCoolText();

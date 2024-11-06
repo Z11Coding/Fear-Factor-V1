@@ -1,10 +1,12 @@
 package substates;
+import flixel.input.keyboard.FlxKey;
 
 class QuestionState extends MusicBeatSubstate
 {
     var Arrow:Alphabet;
     var Health:Alphabet;
     var Ulta:Alphabet;
+    var indicatorThatIDidntThinkINeededToAddButHereWeAre:Alphabet;
 
     var timerOfDoom:FlxTimer;
     var timeOfDoom:FlxText;
@@ -55,6 +57,22 @@ class QuestionState extends MusicBeatSubstate
         Ulta.screenCenter(XY);
         Ulta.y -= 1200;
         add(Ulta);
+
+        var keysL:Array<FlxKey>;
+        var keysR:Array<FlxKey>;
+
+        keysL = ClientPrefs.keyBinds.get('ui_left').copy();
+        keysR = ClientPrefs.keyBinds.get('ui_right').copy();
+
+        indicatorThatIDidntThinkINeededToAddButHereWeAre = new Alphabet(-300, FlxG.height/2, '', true);
+        indicatorThatIDidntThinkINeededToAddButHereWeAre.cameras = [PlayState.instance.camHUD];
+        indicatorThatIDidntThinkINeededToAddButHereWeAre.scrollFactor.set();
+        indicatorThatIDidntThinkINeededToAddButHereWeAre.scaleX = 0.8;
+        indicatorThatIDidntThinkINeededToAddButHereWeAre.screenCenter(XY);
+        add(indicatorThatIDidntThinkINeededToAddButHereWeAre);
+        indicatorThatIDidntThinkINeededToAddButHereWeAre.y -= 300;
+        indicatorThatIDidntThinkINeededToAddButHereWeAre.x -= 600;
+        indicatorThatIDidntThinkINeededToAddButHereWeAre.text = 'PRESS '+InputFormatter.getKeyName(ClientPrefs.keyBinds.get('ui_left')[0])+'/'+InputFormatter.getKeyName(ClientPrefs.keyBinds.get('ui_left')[1])+' AND '+InputFormatter.getKeyName(ClientPrefs.keyBinds.get('ui_right')[0])+'/'+InputFormatter.getKeyName(ClientPrefs.keyBinds.get('ui_right')[1])+" TO CHOOSE.";
 
         SFX = new FlxSound().loadEmbedded(Paths.sound('confirmMenu'));
     }
