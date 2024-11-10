@@ -103,7 +103,7 @@ class OptionsState extends MusicBeatState
 			if (cameFromPlaystate) 
 			{
 				StageData.loadDirectory(PlayState.SONG);
-				LoadingState.loadAndSwitchState(new states.PlayState());
+				FlxG.switchState(new states.PlayState());
 			}
 			else MusicBeatState.switchState(new states.MainMenuState());
 		}

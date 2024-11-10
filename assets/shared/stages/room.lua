@@ -61,12 +61,18 @@ function onStepHit()
     end
     if curStep == 1836 then
         allowZoom = true
-        zoomEvent(1.4, 0.000001)
+        zoomEvent(1.2, 0.000001)
     end
     if curStep == 1838 then
-        allowZoom = true
+        allowZoom = false
         setProperty("camGame.zoom", getProperty("camGame.zoom") - 0.19)
         setProperty("camHUD.zoom", getProperty("camHUD.zoom") - 0.19)
+    end
+    if curStep == 2047 then
+        allowZoom = false
+    end
+    if curStep == 2049 then
+        allowZoom = true
     end
 end
 
@@ -83,7 +89,6 @@ function onUpdatePost()
 end
 
 function zoomEvent(v1,v2)
-
     if v2 == '' or v2 == nil then
         setProperty("defaultCamZoom",v1)
         setProperty('camGame.zoom', v1)

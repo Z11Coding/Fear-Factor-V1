@@ -104,6 +104,7 @@ class CacheState extends MusicBeatState
 	override function create()
 	{
 		trace('ngl pretty cool');
+		MemoryUtil.clearMajor();
 
 		dontBother = true;
 		allowMusic = false;

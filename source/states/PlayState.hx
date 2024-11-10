@@ -599,7 +599,6 @@ class PlayState extends MusicBeatState
 		if (!CacheMode)
 			PlayState.cachingSongs = [];
 
-		Paths.clearStoredMemory();
 		if(nextReloadAll) Paths.clearUnusedMemory();
 		nextReloadAll = false;
 		MemoryUtil.clearMajor();
@@ -4431,9 +4430,10 @@ if (result < 0 || result > mania) {
 
 	override public function update(elapsed:Float)
 	{
+
 		if (curSong.toLowerCase() == 'shape' && songStarted && doDrain) 
 		{
-			health -= drainAmount;
+			health -= drainAmount / (ClientPrefs.data.framerate/60);
 			bfkilledcheck = doDrain;
 		}
 

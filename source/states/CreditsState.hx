@@ -25,6 +25,8 @@ class CreditsState extends MusicBeatState
 		DiscordClient.changePresence("In the Menus", null);
 		#end
 
+		MemoryUtil.clearMinor();
+
 		camGame = initPsychCamera();
 
 		persistentUpdate = true;

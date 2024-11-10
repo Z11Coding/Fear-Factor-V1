@@ -32,7 +32,7 @@ class MemoryUtil {
 			enable();
 	}
 
-	public static function init() {}
+	public static function init() {enable();}
 
 	public static function clearMinor() {
 		#if (cpp || java || neko)
@@ -77,6 +77,14 @@ class MemoryUtil {
 	}
 
 	public static inline function currentMemUsage() {
+		#if cpp
+		return Gc.memInfo64(Gc.MEM_INFO_CURRENT);
+		#else
+		return 0;
+		#end
+	}
+	
+	public static inline function totalMemUsage() {
 		#if cpp
 		return Gc.memInfo64(Gc.MEM_INFO_USAGE);
 		#elseif sys
