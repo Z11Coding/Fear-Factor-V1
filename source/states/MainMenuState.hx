@@ -80,13 +80,6 @@ class MainMenuState extends MusicBeatState
 		DiscordClient.changePresence("In the Menus", null);
 		#end
 
-
-		if (FlxG.save.data.complete == null) 
-		{
-			FlxG.save.data.complete = [false, false, false, false];
-			FlxG.save.data.complete2 = false;
-		}
-
 		checker = new FlxBackdrop(Paths.image('mainmenu/Main_Checker'), XY, Std.int(0.2), Std.int(0.2));
 
 		debugKeys = ClientPrefs.keyBinds.get('debug_1').copy();

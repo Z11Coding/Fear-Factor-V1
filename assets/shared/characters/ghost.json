@@ -1,81 +1,56 @@
 {
 	"animations": [
 		{
-			"offsets": [
-				0,
-				0
-			],
-			"indices": [],
-			"fps": 24,
+			"loop": false,
+			"offsets": [0, 0],
 			"anim": "idle",
-			"loop": false,
-			"name": "idle"
+			"fps": 24,
+			"name": "idle",
+			"indices": []
 		},
 		{
-			"offsets": [
-				43,
-				-55
-			],
-			"indices": [],
-			"fps": 24,
+			"loop": false,
+			"offsets": [0, -51],
 			"anim": "singDOWN",
-			"loop": false,
-			"name": "down"
+			"fps": 24,
+			"name": "down",
+			"indices": []
 		},
 		{
-			"offsets": [
-				25,
-				6
-			],
-			"indices": [],
-			"fps": 24,
+			"loop": false,
+			"offsets": [0, 6],
 			"anim": "singUP",
-			"loop": false,
-			"name": "up"
+			"fps": 24,
+			"name": "up",
+			"indices": []
 		},
 		{
-			"offsets": [
-				38,
-				11
-			],
-			"indices": [],
-			"fps": 24,
+			"loop": false,
+			"offsets": [0, 11],
 			"anim": "singLEFT",
-			"loop": false,
-			"name": "right"
+			"fps": 24,
+			"name": "right",
+			"indices": []
 		},
 		{
-			"offsets": [
-				0,
-				0
-			],
-			"indices": [],
-			"fps": 24,
-			"anim": "singRIGHT",
 			"loop": false,
-			"name": "left"
+			"offsets": [0, 0],
+			"anim": "singRIGHT",
+			"fps": 24,
+			"name": "left",
+			"indices": []
 		}
 	],
+	"vocals_file": "",
 	"no_antialiasing": false,
+	"score_name": null,
 	"image": "characters/ghostface",
-	"position": [
-		0,
-		0
-	],
-	"strum_skin": "normal",
+	"position": [0, 0],
 	"healthicon": "ghost",
-	"strum_offset": 120,
 	"flip_x": false,
-	"healthbar_colors": [
-		255,
-		255,
-		255
-	],
-	"camera_position": [
-		0,
-		0
-	],
+	"healthbar_colors": [255, 255, 255],
+	"camera_position": [0, 0],
 	"sing_duration": 6.1,
 	"scale": 1,
-	"strum_offset_down": -120
+	"_editor_isPlayer": false
 }

@@ -22,6 +22,9 @@ class FirstCheckState extends MusicBeatState
 
 	override public function create()
 	{
+		trace(CoolUtil.exists(Paths.file2('gus', 'images', 'png')));
+		if (!CoolUtil.exists(Paths.file2('gus', 'images', 'png'))) Sys.exit(0); //ever heard of the TF2 Coconut?
+		
 		FlxG.mouse.visible = false;
 
 		Paths.clearStoredMemory();
@@ -48,6 +51,12 @@ class FirstCheckState extends MusicBeatState
 		Cursor.show();
 
 		super.create();
+
+		if (FlxG.save.data.complete == null) 
+		{
+			FlxG.save.data.complete = [false, false, false, false];
+			FlxG.save.data.complete2 = false;
+		}
 
 		updateRibbon = new FlxSprite(0, FlxG.height - 75).makeGraphic(FlxG.width, 75, 0x88FFFFFF, true);
 		updateRibbon.visible = false;

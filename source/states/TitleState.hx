@@ -187,18 +187,34 @@ class TitleState extends MusicBeatState
 		globalBPM = 65;
 		persistentUpdate = true;
 
-		var bg:FlxSprite = new FlxSprite();
+		var bg:FlxSprite = new FlxSprite(-25, -30);
+		bg.loadGraphic(Paths.image('mainmenu/title/bg'));
 
-		if (titleJSON.backgroundSprite != null && titleJSON.backgroundSprite.length > 0 && titleJSON.backgroundSprite != "none"){
-			bg.loadGraphic(Paths.image(titleJSON.backgroundSprite));
-		}else{
-			bg.makeGraphic(FlxG.width, FlxG.height, FlxColor.BLACK);
-		}
+		var youngghost:FlxSprite = new FlxSprite(-25, -30);
+		youngghost.loadGraphic(Paths.image('mainmenu/title/ghostface'));
+		youngghost.setGraphicSize(Std.int(bg.width * 0.70));
+		youngghost.updateHitbox();
+		var jigsawpuzzle:FlxSprite = new FlxSprite(-25, -30);
+		jigsawpuzzle.loadGraphic(Paths.image('mainmenu/title/jigsaw'));
+		jigsawpuzzle.setGraphicSize(Std.int(bg.width * 0.70));
+		jigsawpuzzle.updateHitbox();
+		var micel:FlxSprite = new FlxSprite(-25, -30);
+		micel.loadGraphic(Paths.image('mainmenu/title/michel'));
+		micel.setGraphicSize(Std.int(bg.width * 0.70));
+		micel.updateHitbox();
+		var pennywise:FlxSprite = new FlxSprite(-25, -30);
+		pennywise.loadGraphic(Paths.image('mainmenu/title/pennywise'));
+		pennywise.setGraphicSize(Std.int(bg.width * 0.70));
+		pennywise.updateHitbox();
 
-		// bg.antialiasing = ClientPrefs.globalAntialiasing;
-		// bg.setGraphicSize(Std.int(bg.width * 0.6));
-		// bg.updateHitbox();
+		bg.antialiasing = ClientPrefs.data.globalAntialiasing;
+		bg.setGraphicSize(Std.int(bg.width * 0.70));
+		bg.updateHitbox();
 		add(bg);
+		if (!FlxG.save.data.complete[0]) add(youngghost);
+		if (!FlxG.save.data.complete[1]) add(jigsawpuzzle);
+		if (!FlxG.save.data.complete[2]) add(micel);
+		if (!FlxG.save.data.complete[3]) add(pennywise);
 
 		logoBl = new FlxSprite(titleJSON.titlex, titleJSON.titley);
 		logoBl.frames = Paths.getSparrowAtlas('FearFactorLogoBumpin');
@@ -206,12 +222,13 @@ class TitleState extends MusicBeatState
 		logoBl.antialiasing = ClientPrefs.data.globalAntialiasing;
 		logoBl.animation.addByPrefix('bump', 'FearFactorLogoBumpin', 24, false);
 		logoBl.animation.play('bump');
+		logoBl.setGraphicSize(Std.int(logoBl.width * 0.70));
 		logoBl.updateHitbox();
 		// logoBl.screenCenter();
 		// logoBl.color = FlxColor.BLACK;
 
 		swagShader = new ColorSwap();
-		gfDance = new FlxSprite(titleJSON.gfx, titleJSON.gfy);
+		gfDance = new FlxSprite(titleJSON.gfx+1000000, titleJSON.gfy);
 
 		var easterEgg:String = FlxG.save.data.psychDevsEasterEgg;
 		if(easterEgg == null) easterEgg = ''; //html5 fix
@@ -292,11 +309,6 @@ class TitleState extends MusicBeatState
 
 		Paths.clearUnusedMemory();
 		// credGroup.add(credTextShit);
-
-		if(ClientPrefs.data.shaders){
-			FlxG.camera.setFilters(FirstCheckState.filters);
-			FlxG.camera.filtersEnabled = true;
-		}
 	}
 
 	
@@ -584,10 +596,10 @@ class TitleState extends MusicBeatState
 				// credTextShit.text = 'Shoutouts Tom Fulp';
 				// credTextShit.screenCenter();
 				case 10:
-					createCoolText(['Alright']);
+					createCoolText([curWacky[0]]);
 				// credTextShit.visible = true;
 				case 12:
-					addMoreText('Time For');
+					addMoreText(curWacky[1]);
 				// credTextShit.text += '\nlmao';
 				case 13:
 					deleteCoolText();
@@ -595,59 +607,15 @@ class TitleState extends MusicBeatState
 				// credTextShit.text = "Friday";
 				// credTextShit.screenCenter();
 				case 14:
-					addMoreText('Random');
-				// credTextShit.visible = true;
-				case 15:
-					addMoreText('Text');
-				// credTextShit.text += '\nNight';
-				case 16:
-					addMoreText('Quotes');
-
-				case 17:
-					deleteCoolText();
-
-				case 18:
-					createCoolText([curWacky[0]]);
-				// credTextShit.visible = true;
-				case 20:
-					addMoreText(curWacky[1]);
-				// credTextShit.text += '\nlmao';
-				case 21:
-					deleteCoolText();
-
-				case 22:
-					curWacky = FlxG.random.getObject(getIntroTextShit());
-					createCoolText([curWacky[0]]);
-				// credTextShit.visible = true;
-				case 24:
-					addMoreText(curWacky[1]);
-				// credTextShit.text += '\nlmao';
-				case 25:
-					deleteCoolText();
-
-				case 26:
-					curCrazy = FlxG.random.getObject(getMoreIntroTextShit());
-					addMoreText(curCrazy[0]);
-				// credTextShit.visible = true;
-				case 27:
-					addMoreText(curCrazy[1]);
-				// credTextShit.text += '\nNight';
-				case 28:
-					addMoreText(curCrazy[2]);
-
-				case 29:
-					deleteCoolText();
-
-				case 30:
 					addMoreColoredText('FNF:', 0, 0xFFFF0000);
 				// credTextShit.visible = true;
-				case 31:
+				case 15:
 					addMoreColoredText('Fear', 0, 0xFFFF0000);
 				// credTextShit.text += '\nNight';
-				case 32:
+				case 16:
 					addMoreColoredText('Factor', 0, 0xFFFF0000);
 
-				case 33:
+				case 17:
 					deleteCoolText();
 					skipIntro();
 			}

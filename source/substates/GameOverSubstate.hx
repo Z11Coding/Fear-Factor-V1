@@ -50,7 +50,6 @@ class GameOverSubstate extends MusicBeatSubstate
 			if(_song.gameOverLoop != null && _song.gameOverLoop.trim().length > 0) loopSoundName = _song.gameOverLoop;
 			if(_song.gameOverEnd != null && _song.gameOverEnd.trim().length > 0) endSoundName = _song.gameOverEnd;
 		}
-		if (_song.song.toLowerCase() == 'shape')  characterName = 'micleDeth';
 	}
 
 	var charX:Float = 0;

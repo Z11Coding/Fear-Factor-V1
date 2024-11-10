@@ -15,6 +15,7 @@ function onCreate()
     setTextSize("where?", 40)
     setTextFont("where?", "Scream.ttf")
     addLuaText('where?')
+    setProperty('skipCountdown', true)
 end
 
 function onCreatePost()
@@ -26,11 +27,11 @@ function onCreatePost()
 end
 
 function onSongStart()
-    setTextFont("lyrics", "Scream.ttf")
-    setTextFont("scoreTxt", "Scream.ttf")
-    setTextFont("botplayTxt", "Scream.ttf")
-    setTextFont("skipText", "Scream.ttf")
-    setTextFont("timeTxt", "Scream.ttf")
+    setTextFont("lyrics", "Confidential-Regular.ttf")
+    setTextFont("scoreTxt", "Confidential-Regular.ttf")
+    setTextFont("botplayTxt", "Confidential-Regular.ttf")
+    setTextFont("skipText", "Confidential-Regular.ttf")
+    setTextFont("timeTxt", "Confidential-Regular.ttf")
     triggerEvent("Fade In", stepCrochet*0.001*256)
     zoomEvent(1.2, stepCrochet*0.001*256)
 end
@@ -45,7 +46,7 @@ function onStepHit()
     if curStep == 2319 then
         triggerEvent("Fade Out", 0.001)
     end
-    if curStep == 1827 then
+    if curStep == 1828 then
         allowZoom = false
         zoomEvent(getProperty("camGame.zoom") + 0.09,0.000001)
         setProperty("camHUD.zoom", getProperty("camHUD.zoom") - 0.09)
@@ -60,7 +61,7 @@ function onStepHit()
     end
     if curStep == 1836 then
         allowZoom = true
-        zoomEvent(1.4, 0.1)
+        zoomEvent(1.4, 0.000001)
     end
     if curStep == 1838 then
         allowZoom = true

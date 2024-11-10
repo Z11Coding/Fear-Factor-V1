@@ -20,7 +20,7 @@ function onEvent(name, value1, value2)
         zeroBfOffX = getMidpointX("boyfriend")-100
         zeroBfOffY = getMidpointY("boyfriend")-100
         zeroDadOffX = getMidpointX("dad") +150
-        zeroDadOffY = getMidpointY("dad") -100
+        zeroDadOffY = getMidpointY("dad") -520
 
         stageZoom = getProperty("defaultCamZoom")
         -- debugPrint("'"..value2.."'")
@@ -50,7 +50,12 @@ function onEvent(name, value1, value2)
 
             end
         else
-            setProperty("defaultCamZoom", stageZoom)
+            if tonumber(value1) ~= nil then
+                setProperty("defaultCamZoom", value1)
+            else
+                setProperty("defaultCamZoom", stageZoom)
+
+            end
 
             cameraSetTarget(mustHitSection and "boyfriend" or "dad")
             -- if mustHitSection then
