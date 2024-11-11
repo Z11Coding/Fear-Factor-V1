@@ -1,0 +1,1 @@
+RUN haxelib run lime rebuild systools windows BEFORE COMPILING THE GAME!!!!!!!!!!!
