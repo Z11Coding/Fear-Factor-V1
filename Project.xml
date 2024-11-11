@@ -58,7 +58,6 @@
 	<define name="DO_AUTO_UPDATE" unless="debug"/>
 	<define name="ACHIEVEMENTS_ALLOWED" />
 	<define name="DISCORD_ALLOWED" />
-	<define name="TRANSLATIONS_ALLOWED" />
 	<define name="PSYCH_WATERMARKS"/> <!-- DELETE THIS TO REMOVE WATERMARKS/DEV NAMES ON TITLE SCREEN -->
 	<define name="MULTICORE_LOADING" if="desktop" />
 	<define name="loadBenchmark" if="MULTICORE_LOADING"/>
@@ -77,7 +76,7 @@
 	<!-- __________________________ Game Assets & Etc. __________________________ -->
 
 	<!-- Turn on Crash Handler -->
-	<define name="CRASH_HANDLER"           if="desktop release" />
+	<define name="CRASH_HANDLER" if="desktop release" />
 
 
 	<!-- Assets -->
@@ -91,20 +90,10 @@
 	<assets path="assets/songs"            	  			        exclude="*.mp3" 	unless="web"/>
 	<assets path="assets/rave"         	   				        exclude="*.ogg" 	if="web"/>
 	<assets path="assets/rave"         	   	    		        exclude="*.mp3" 	unless="web"/>
-	
-	<section if="TITLE_SCREEN_EASTER_EGG">
-		<assets path="assets/secrets" 	   rename="assets" 		exclude="*.ogg" 	if="web"/>
-		<assets path="assets/secrets" 	   rename="assets" 		exclude="*.mp3" 	unless="web"/>
-	</section>
 
 	<section if="TRANSLATIONS_ALLOWED">
 		<assets path="assets/translations" rename="assets" 		exclude="*.ogg" 	if="web"/>
 		<assets path="assets/translations" rename="assets" 		exclude="*.mp3"  	unless="web"/>
-	</section>
-
-	<section if="BASE_GAME_FILES">
-		<assets path="assets/base_game"    rename="assets" 		exclude="*.ogg" 	if="web"/>
-		<assets path="assets/base_game"    rename="assets" 		exclude="*.mp3"  	unless="web"/>
 	</section>
 
 	<!-- DONT ENABLE THIS -->
