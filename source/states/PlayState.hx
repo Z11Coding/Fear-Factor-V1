@@ -4449,21 +4449,6 @@ if (result < 0 || result > mania) {
 		ShadersHandler.rainShader.updateViewInfo(FlxG.width, FlxG.height, camGame);
 		ShadersHandler.rainShader.update(elapsed);
 
-		if (!isStoryMode && playbackRate == 1)
-		{
-			var daNote:Note = allNotes[0];
-			if (daNote != null && daNote.strumTime > 100)
-			{
-				//needSkip = true;
-				skipTo = daNote.strumTime - 500;
-			}
-			else
-			{
-				needSkip = false;
-			}
-			
-		}
-
 		if (forceInvis)
 		{
 			modManager.setValue('noteAlpha', 1, 1);
@@ -4481,9 +4466,6 @@ if (result < 0 || result > mania) {
 			if (playfield.isPlayer)
 				playfield.autoPlayed = cpuControlled;
 		}
-
-		if (dad.color == 0xFF003BB9 && (dad.animation.curAnim.name == 'idle' || dad.animation.curAnim.name.startsWith('dance'))) 
-			dad.color = 0xFFFFFFFF;
 
 		if (cpuControlled) hadBotplayOn = true;
 
@@ -4621,74 +4603,6 @@ if (result < 0 || result > mania) {
 				sh_r += (60 - sh_r) / 32;
 				dad.angle = 0;
 			}
-		}
-
-		// Handle restarting the song when needed (player death or pressing Retry)
-		// I'll make this work later
-		if (needsReset)
-		{
-			callOnScripts('onSongRestart');
-			PlayState.savedTime = 0;
-
-			moveCamera(true);
-
-			var fromDeathState = isPlayerDying;
-
-			persistentUpdate = true;
-			persistentDraw = true;
-
-			// Reset music properly.
-			FlxG.sound.music.stop();
-			Conductor.songPosition = -5000;
-
-			Conductor.crochet = 0;
-			Conductor.stepCrochet = 0;
-			Conductor.visualPosition = 0;
-
-			startingSong = true;
-			isPlayerDying = false;
-
-			boyfriend.stunned = true;
-
-			if (opponentVocals != null)
-				opponentVocals.pause();
-			if (gfVocals != null)
-				gfVocals.pause();
-			if (vocals != null)
-				vocals.pause();
-
-			if (opponentVocals != null)
-				opponentVocals.time = 0;
-			if (gfVocals != null)
-				gfVocals.time = 0;
-			if (vocals != null)
-				vocals.time = 0;
-
-			if (FlxG.sound.music != null)
-				FlxG.sound.music.volume = 1;
-			if (vocals != null)
-				vocals.volume = 1;
-			if (opponentVocals != null)
-				opponentVocals.volume = 1;
-			if (gfVocals != null)
-				gfVocals.volume = 1;
-
-			if (!fromDeathState)
-			{
-				vwooshNotes();
-			}
-
-			// Delete all notes and reset the arrays.
-			allNotes = curChart;
-			unspawnNotes = curChart;
-
-			health = 1;
-			songScore = 0;
-			combo = 0;
-			startedCountdown = false;
-			restartCountdown();
-
-			needsReset = false;
 		}
 
 		super.update(elapsed);
