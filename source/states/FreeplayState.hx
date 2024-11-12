@@ -66,7 +66,7 @@ class FreeplayState extends MusicBeatState
 
 	var songChoices:Array<String> = [];
 	var listChoices:Array<String> = [];
-	var multiSongs:Array<String> = ["resistance", "resistalovania"];
+	var multiSongs:Array<String> = [];
 
 	public static var archipelago:Bool = false;
 
@@ -87,16 +87,8 @@ class FreeplayState extends MusicBeatState
 	override function create()
 	{
 		MemoryUtil.clearMajor();
-		curSelected = 0; //so it doesn't do weird things. might rework later
 		//Paths.clearStoredMemory();
 		//Paths.clearUnusedMemory();
-
-		if (FlxG.save.data.allowedSongs != null) allowedSongs = FlxG.save.data.allowedSongs;
-		if (FlxG.save.data.allowedSongs == null) 
-		{
-			FlxG.save.data.allowedSongs = allowedSongs;
-			FlxG.save.flush();
-		}
 		
 		persistentUpdate = true;
 		PlayState.isStoryMode = false;
@@ -192,7 +184,7 @@ class FreeplayState extends MusicBeatState
 		searchBar = new FlxUIInputText(FlxG.height, 100, 800, '', 20);
 		searchBar.screenCenter(X);
 		//searchBar.x -= 200;
-		add(searchBar);
+		//add(searchBar);
 		searchBar.backgroundColor = FlxColor.GRAY;
 		searchBar.lines = 1;
 		searchBar.autoSize = false;

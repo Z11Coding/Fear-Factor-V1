@@ -4027,54 +4027,6 @@ if (result < 0 || result > mania) {
 
 	public var skipArrowStartTween:Bool = false; // for lua
 
-	private function generateStaticArrows(player:Int):Void
-	{
-		/* 		var targetAlpha:Float = 1;
-			if (player < 1){
-				if(!ClientPrefs.opponentStrums) targetAlpha = 0;
-				else if(ClientPrefs.middleScroll) targetAlpha = 0.35;
-			}
-
-			for (i in 0...4){
-				var babyArrow:StrumNote = new StrumNote(
-					ClientPrefs.middleScroll ? STRUM_X_MIDDLESCROLL : STRUM_X,
-					ClientPrefs.downScroll ? FlxG.height - 162 : 50,
-					i
-				);
-
-				babyArrow.downScroll = ClientPrefs.downScroll;
-
-				if (!isStoryMode && !skipArrowStartTween)
-				{
-					//babyArrow.y -= 10;
-					babyArrow.alpha = 0;
-					FlxTween.tween(babyArrow, {alpha: targetAlpha}, 1, {ease: FlxEase.circOut, startDelay: 0.5 + (0.2 * i)});
-				}
-				else
-				{
-					babyArrow.alpha = targetAlpha;
-				}
-
-				if (player == 1)
-				{
-					playerStrums.add(babyArrow);
-				}
-				else
-				{
-					if(ClientPrefs.middleScroll)
-					{
-						babyArrow.x += 310;
-						if(i > 1) { //Up and Right
-							babyArrow.x += FlxG.width * 0.5 + 25;
-						}
-					}
-					opponentStrums.add(babyArrow);
-				}
-
-				strumLineNotes.add(babyArrow);
-				babyArrow.postAddedToGroup();
-		}*/
-	}
 
 	function updateNote(note:Note)
 	{
@@ -4909,57 +4861,7 @@ if (result < 0 || result > mania) {
 		if (health < 0)
 			health = 0;
 
-		if (startedCountdown)
-		{
-			Conductor.songPosition += FlxG.elapsed * 1000 * playbackRate;
-		}
-
-		if (skipActive && Conductor.songPosition >= skipTo)
-		{
-			remove(skipText);
-			skipActive = false;
-		}
-
-		if (FlxG.keys.justPressed.SPACE && skipActive)
-		{
-			//clearNotesBefore(skipTo); there was zero point to this
-			var ret:Dynamic = callOnScripts('onSkipIntro', [skipTo]);
-			if (ret != LuaUtils.Function_Stop)
-			{
-				FlxG.sound.music.pause();
-				vocals.pause();
-				opponentVocals.pause();
-				gfVocals.pause();
-				for (track in tracks)
-					track.pause();
-				Conductor.songPosition = skipTo;
-
-				FlxG.sound.music.time = Conductor.songPosition;
-				FlxG.sound.music.play();
-
-				vocals.time = Conductor.songPosition;
-				vocals.play();
-				opponentVocals.time = Conductor.songPosition;
-				opponentVocals.play();
-				gfVocals.time = Conductor.songPosition;
-				gfVocals.play();
-				for (track in tracks)
-				{
-					track.time = Conductor.songPosition;
-					track.play();
-				}
-			}
-			else 
-			{
-				FlxTween.tween(skipText, {alpha: 0}, 0.2, {
-					onComplete: function(tw)
-					{
-						remove(skipText);
-					}
-				});
-				skipActive = false;
-			}
-		}
+		if (startedCountdown) Conductor.songPosition += FlxG.elapsed * 1000 * playbackRate;
 
 		updateIconsScale(elapsed);
 		updateIconsPosition();
@@ -5152,28 +5054,6 @@ if (result < 0 || result > mania) {
 		{
 			i(elapsed);
 		}
-	}
-
-	/*
-	 *
-	 * Call this when resetting the playstate.
-	 */
-	public function vwooshNotes():Void
-	{
-		notes.forEachAlive(function(note:Note)
-		{
-			var targetY:Float = FlxG.height + note.y;
-			if (ClientPrefs.data.downScroll)
-				targetY = 0 - note.height;
-			FlxTween.tween(note, {y: targetY}, 0.5, {
-				ease: FlxEase.expoIn,
-				onComplete: function(twn)
-				{
-					note.kill();
-					note.destroy();
-				}
-			});
-		});
 	}
 
 	// Health icon updaters
@@ -6776,26 +6656,6 @@ if (result < 0 || result > mania) {
 			'hype', 
 			'two_keys', 
 			'toastie', 
-			'beat_battle', 
-			'beat_battle_master', 
-			'beat_battle_god', 
-			'beat_battle_fanatic', 
-			'feelinfrisky',
-			'leantastic', 
-			'punchout',
-			'rawr',
-			'underlust',
-			'resistified',
-			'skysthelimit',
-			'potatogameplay',
-			'mattdestroyer',
-			'matteleminator',
-			'mattgod',
-			'matt',
-			'mattbeyond',
-			'perfectionist',
-			'error404',
-			'pokemon'
 		]);
 		#end
 
@@ -9166,18 +9026,6 @@ if (result < 0 || result > mania) {
 		if (cpuControlled || hadBotplayOn) //So that if it's turned off last second, they still dont get the achievement
 			return;
 
-		var altsongname = StringTools.replace(songName, '-', ' ');
-		var a = [
-			'resistance',
-			'resistance-k',
-			'resistance awsome mix',
-			'resistance-kai',
-			'resistalovania',
-			'resistalovania-(mega-mix)',
-			'fightback'
-		];
-		if (FlxG.save.data.resistCheck == null)
-			FlxG.save.data.resistCheck = [false, false, false, false, false, false, false];
 		for (name in achievesToCheck)
 		{
 			if (!Achievements.exists(name))
@@ -9209,224 +9057,6 @@ if (result < 0 || result > mania) {
 
 					case 'debugger':
 						unlock = (songName == 'test' && !usedPractice);
-
-					case 'smooth_moves':
-						unlock = (songName.toLowerCase() == 'tutorial'
-							&& Difficulty.getString().toUpperCase() == 'HARD'
-							&& !changedDifficulty
-							&& !usedPractice
-							&& ratingName == 'SFC'
-							&& !playAsGF);
-
-					case 'beat_battle':
-						unlock = (altsongname.toLowerCase() == 'beat battle'
-							&& (Difficulty.getString().toUpperCase() == 'REASONABLE'
-								|| Difficulty.getString().toUpperCase() == 'UNREASONABLE'
-								|| Difficulty.getString().toUpperCase() == 'SEMIIMPOSSIBLE'
-								|| Difficulty.getString().toUpperCase() == 'IMPOSSIBLE')
-							&& !changedDifficulty
-							&& !usedPractice
-							&& !playAsGF);
-
-					case 'beat_battle_master':
-						unlock = (altsongname.toLowerCase() == 'beat battle'
-							&& (Difficulty.getString().toUpperCase() == 'REASONABLE'
-								|| Difficulty.getString().toUpperCase() == 'UNREASONABLE'
-								|| Difficulty.getString().toUpperCase() == 'SEMIIMPOSSIBLE'
-								|| Difficulty.getString().toUpperCase() == 'IMPOSSIBLE')
-							&& !changedDifficulty
-							&& !usedPractice
-							&& songMisses < 11
-							&& !playAsGF);
-
-					case 'beat_battle_god':
-						unlock = (altsongname.toLowerCase() == 'beat battle'
-							&& (Difficulty.getString().toUpperCase() == 'SEMIIMPOSSIBLE'
-								|| Difficulty.getString().toUpperCase() == 'IMPOSSIBLE')
-							&& !changedDifficulty
-							&& !usedPractice
-							&& songMisses < 26
-							&& !playAsGF);
-
-					case 'beat_battle_fanatic':
-						if (altsongname.toLowerCase() == 'beat battle'
-							&& (Difficulty.getString().toUpperCase() == 'SEMIIMPOSSIBLE'
-								|| Difficulty.getString().toUpperCase() == 'IMPOSSIBLE')
-							&& !changedDifficulty
-							&& !usedPractice
-							&& songMisses < 26
-							&& !playAsGF
-							&& Achievements.isUnlocked('beat_battle_god'))
-						{
-							Achievements.addScore('beat_battle_fanatic');
-						}
-
-						if (altsongname.toLowerCase() == 'beat battle 2'
-							&& ClientPrefs.data.modcharts
-							&& !usedPractice
-							&& !playAsGF)
-						{
-							Achievements.addScore('beat_battle_fanatic');
-						}
-
-
-					case 'feelinfrisky':
-						unlock = (altsongname.toLowerCase() == 'funky fanta' && songMisses == 0 && !usedPractice && !playAsGF);
-
-					case 'leantastic':
-						unlock = (songName.toLowerCase() == 'uls' && songMisses == 0 && !usedPractice && !playAsGF);
-
-					case 'punchout':
-						unlock = (altsongname.toLowerCase() == 'pack a punch' && songMisses == 0 && !usedPractice && !playAsGF);
-
-					case 'rawr':
-						unlock = (songName.toLowerCase() == 'rawr' && songMisses == 0 && !changedDifficulty && !usedPractice && !playAsGF);
-
-					case 'underlust':
-						unlock = (altsongname.toLowerCase() == 'resistalovania (mega mix)'
-							&& Difficulty.getString().toLowerCase() == 'unreal'
-							&& !changedDifficulty
-							&& !usedPractice
-							&& !playAsGF);
-
-					case 'resistified':
-						for (i in a)
-						{
-							switch (i)
-							{
-								case 'resistance':
-									if (songName.toLowerCase() == 'resistance'
-										&& songMisses == 0
-										&& !changedDifficulty
-										&& !usedPractice
-										&& !playAsGF
-										&& FlxG.save.data.resistCheck[0] == false)
-									{
-										FlxG.save.data.resistCheck[0] = true;
-										Achievements.addScore("resistified");
-										FlxG.save.flush();
-									}
-								case 'resistance-k':
-									if (songName.toLowerCase() == 'resistance-k'
-										&& songMisses == 0
-										&& !changedDifficulty
-										&& !usedPractice
-										&& !playAsGF
-										&& FlxG.save.data.resistCheck[1] == false)
-									{
-										FlxG.save.data.resistCheck[1] = true;
-										Achievements.addScore("resistified");
-										FlxG.save.flush();
-									}
-								case 'resistance awsome mix':
-									if (altsongname.toLowerCase() == 'resistance awsome mix'
-										&& songMisses == 0
-										&& !changedDifficulty
-										&& !usedPractice
-										&& !playAsGF
-										&& FlxG.save.data.resistCheck[2] == false)
-									{
-										FlxG.save.data.resistCheck[2] = true;
-										Achievements.addScore("resistified");
-										FlxG.save.flush();
-									}
-								case 'resistance-kai':
-									if (songName.toLowerCase() == 'resistance-kai'
-										&& songMisses == 0
-										&& !changedDifficulty
-										&& !usedPractice
-										&& !playAsGF
-										&& FlxG.save.data.resistCheck[3] == false)
-									{
-										FlxG.save.data.resistCheck[3] = true;
-										Achievements.addScore("resistified");
-										FlxG.save.flush();
-									}
-								case 'resistalovania':
-									if (songName.toLowerCase() == 'resistalovania'
-										&& songMisses == 0
-										&& !changedDifficulty
-										&& !usedPractice
-										&& !playAsGF
-										&& FlxG.save.data.resistCheck[4] == false)
-									{
-										FlxG.save.data.resistCheck[4] = true;
-										Achievements.addScore("resistified");
-										FlxG.save.flush();
-									}
-								case 'resistalovania-(mega-mix)':
-									if (altsongname.toLowerCase() == 'resistalovania (mega mix)'
-										&& songMisses == 0
-										&& !changedDifficulty
-										&& !usedPractice
-										&& !playAsGF
-										&& FlxG.save.data.resistCheck[5] == false)
-									{
-										FlxG.save.data.resistCheck[5] = true;
-										Achievements.addScore("resistified");
-										FlxG.save.flush();
-									}
-								case 'fightback':
-									if (altsongname.toLowerCase() == 'fightback'
-										&& songMisses == 0
-										&& !changedDifficulty
-										&& !usedPractice
-										&& !playAsGF
-										&& FlxG.save.data.resistCheck[6] == false)
-									{
-										FlxG.save.data.resistCheck[6] = true;
-										Achievements.addScore("resistified");
-										FlxG.save.flush();
-									}
-							}
-						}
-
-					case 'skysthelimit':
-						unlock = (songName.toLowerCase() == 'fangirl frenzy' && songMisses == 0 && !changedDifficulty && !usedPractice && !playAsGF);
-
-					case 'mattdestroyer':
-						unlock = (playbackRate >= 2 && !usedPractice && !playAsGF);
-
-					case 'matteleminator':
-						unlock = (playbackRate >= 5 && !usedPractice && !playAsGF);
-
-					case 'mattgod':
-						unlock = (playbackRate >= 10 && !usedPractice && !playAsGF);
-
-					case 'matt':
-						unlock = (playbackRate >= 15 && !usedPractice && !playAsGF);
-
-					case 'mattbeyond':
-						unlock = (playbackRate >= 20 && !usedPractice && !playAsGF);
-					case 'possessed':
-						unlock = (altsongname.toLowerCase() == 'possessed by the blood moon'
-							&& (Difficulty.getString().toUpperCase() == 'FNF'
-								|| Difficulty.getString().toUpperCase() == 'NITG')
-							&& !changedDifficulty
-							&& !usedPractice
-							&& songMisses < 1
-							&& !playAsGF);
-					case 'themoon':
-						unlock = (altsongname.toLowerCase() == 'possessed by the blood moon'
-							&& Difficulty.getString().toUpperCase() == 'POSSESSED'
-							&& !changedDifficulty
-							&& !usedPractice
-							&& songMisses < 1
-							&& !playAsGF);
-					case 'potatogameplay':
-						unlock = (ClientPrefs.data.framerate == 1 && !usedPractice && !playAsGF);
-					case 'error404':
-						unlock = (songName.toLowerCase() == 'eternity' && songMisses == 0 && !changedDifficulty && !usedPractice && !playAsGF);
-					case 'pokemon':
-						if (!changedDifficulty && !usedPractice && !playAsGF)
-						{
-							unlock = (FlxG.save.data.PBTBM && FlxG.save.data.FF && FlxG.save.data.TL);
-						}
-					case 'waldosworstnightmare':
-						if (!changedDifficulty && !usedPractice && !playAsGF)
-						{
-							unlock = (FlxG.save.data.PBTBM && FlxG.save.data.FF && FlxG.save.data.TL && FlxG.save.data.slowdown);
-						}	
 				}
 			}
 
