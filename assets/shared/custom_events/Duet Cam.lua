@@ -45,16 +45,18 @@ function onEvent(name, value1, value2)
             --custom camzoom (for when chars are further away)
             if tonumber(value1) ~= nil then
                 setProperty("defaultCamZoom", value1)
+                setProperty("camGame.zoom", value1)
             else
                 setProperty("defaultCamZoom", stageZoom)
-
+                setProperty("camGame.zoom", stageZoom)
             end
         else
             if tonumber(value1) ~= nil then
                 setProperty("defaultCamZoom", value1)
+                setProperty("camGame.zoom", value1)
             else
                 setProperty("defaultCamZoom", stageZoom)
-
+                setProperty("camGame.zoom", stageZoom)
             end
 
             cameraSetTarget(mustHitSection and "boyfriend" or "dad")

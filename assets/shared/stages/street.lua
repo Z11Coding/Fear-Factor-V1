@@ -55,7 +55,7 @@ function onCreatePost()
 end
 
 function onSongStart()
-    setProperty('camFollowPos.y', getProperty('camFollowPos.y') - 1500)
+    --setProperty('camFollowPos.y', getProperty('camFollowPos.y') - 1500)
     triggerEvent("Fade In", 12)
     zoomEvent(0.6, 12)
 end

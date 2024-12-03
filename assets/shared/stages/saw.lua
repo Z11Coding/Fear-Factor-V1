@@ -25,8 +25,6 @@ function onCreatePost()
     setTextFont("botplayTxt", "SAWesome.ttf")
     setTextFont("skipText", "SAWesome.ttf")
     setTextFont("timeTxt", "SAWesome.ttf")
-    setProperty('camFollowPos.x', getProperty('camFollowPos.x') + 140)
-    setProperty('camFollowPos.y', getProperty('camFollowPos.y') + 160)
     setProperty('boyfriend.visible', false)
 end
 
@@ -36,7 +34,7 @@ end
 
 function onStepHit()
     if curStep == 1 then
-        zoomEvent(0.5, 10)
+        zoomEvent(0.7, 10)
         triggerEvent("Fade In", 10)
     end
     if curStep == 1280 then
@@ -45,7 +43,6 @@ function onStepHit()
 end
 
 function zoomEvent(v1,v2)
-
     if v2 == '' then
         setProperty("defaultCamZoom",v1)
     else

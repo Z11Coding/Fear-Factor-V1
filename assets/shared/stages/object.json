@@ -9,9 +9,9 @@
 	"opponent2": [300, 100],
 	"hide_girlfriend": false,
 
-	"camera_boyfriend": [-500, -160],
+	"camera_boyfriend": [-400, -260],
 	"camera_opponent": [0, 0],
 	"camera_opponent2": [0, 0],
-	"camera_girlfriend": [300, -160],
+	"camera_girlfriend": [350, -260],
 	"camera_speed": 1
 }

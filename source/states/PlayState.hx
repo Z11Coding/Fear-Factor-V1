@@ -1,5 +1,7 @@
 package states;
 
+import openfl.system.System;
+import yutautil.MemoryHelper;
 import backend.Achievements;
 import backend.Highscore;
 import backend.StageData;
@@ -7881,7 +7883,13 @@ if (result < 0 || result > mania) {
 				switch (SONG.song.toLowerCase())
 				{
 					case 'revelation':
-						health -= 0.032;
+						switch (FlxG.save.data.punish)
+						{
+							case "UltaPun" | "lessHealth":
+								health -= 0.032;
+							default:
+								health -= 0.018;
+						}	
 					case 'ringtone':
 						health -= 0.028;
 					case 'stranger danger':
@@ -8361,7 +8369,19 @@ if (result < 0 || result > mania) {
 		FlxG.stage.removeEventListener(KeyboardEvent.KEY_UP, onKeyRelease);
 		FlxG.animationTimeScale = 1;
 		#if FLX_PITCH FlxG.sound.music.pitch = 1; #end
+		var clearfuck:yutautil.MemoryHelper = new MemoryHelper();
+		var oldMania = mania;
+
+		var protected:Array<String> = ['mania', 'SONG', 'E'];
+		for (stuff in protected)
+			clearfuck.addProtectedField(Type.getClass(this), stuff);
+		clearfuck.clearClassObject(Type.getClass(this));
+		for (stuff in instance) // Clear all variables
+			clearfuck.clearObject(stuff);
 		instance = null;
+		mania = oldMania;
+		MemoryUtil.clearMajor();
+		System.gc();
 		super.destroy();
 	}
 
