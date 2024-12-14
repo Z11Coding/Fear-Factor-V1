@@ -32,6 +32,8 @@ class PauseSubState extends MusicBeatSubstate
 
 	public static var songName:String = null;
 
+	public var psInstance:PlayState;
+
 	override function create()
 	{
 		if(Difficulty.list.length < 2) menuItemsOG.remove('Change Difficulty'); //No need to change difficulty if there is only one!
@@ -327,6 +329,8 @@ class PauseSubState extends MusicBeatSubstate
 					#if DISCORD_ALLOWED DiscordClient.resetClientID(); #end
 					PlayState.deathCounter = 0;
 					PlayState.seenCutscene = false;
+
+					psInstance.clearStageImages();
 
 					Mods.loadTopMod();
 					if(PlayState.isStoryMode)

@@ -386,6 +386,8 @@ class FreeplayState extends MusicBeatState
 	var stopMusicPlay:Bool = false;
 	override function update(elapsed:Float)
 	{
+		if(FlxG.keys.justPressed.EIGHT)
+			FlxG.bitmapLog.viewCache();
 		switch(Paths.formatToSongPath(songs[curSelected].songName))
 		{
 			case 'resistance':
@@ -402,6 +404,8 @@ class FreeplayState extends MusicBeatState
 		if (FlxG.sound.music != null)
 			Conductor.songPosition = FlxG.sound.music.time;
 
+		if(FlxG.sound.music == null)
+			FlxG.sound.playMusic(Paths.music('odd_menu_music'), 0);
 		if (FlxG.sound.music.volume < 0.7)
 		{
 			FlxG.sound.music.volume += 0.5 * FlxG.elapsed;

@@ -1,5 +1,6 @@
 package substates;
 
+import states.CreditsState;
 import sys.FileSystem;
 import sys.io.File;
 import flixel.FlxG;
@@ -162,7 +163,7 @@ class RankingSubstate extends MusicBeatSubstate
 									FlxG.save.flush();
 									Mods.loadTopMod();
 									FlxG.sound.playMusic(Paths.music('odd_menu_music'));
-									TransitionState.transitionState(states.FreeplayState, {transitionType: "stickers"});
+									TransitionState.transitionState(CreditsState, {transitionType: "stickers"});
 								}});
 							});	
 						});	

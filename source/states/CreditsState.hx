@@ -51,6 +51,8 @@ class CreditsState extends MusicBeatState
 			['SZ0',		            	'SZ0',			'GhostFace and Pennywise Chromatics',					        'https://gamebanana.com/members/1945687',	'e77891'],
 			['Kingin',		            'king', 		'Ringtone BG',					        						'https://x.com/AKingingNG',					'e77891'],
 			['Teserex',		            'Teserex-C', 	'Icon Artist',					        						'https://x.com/teserex',					'eb4b00'],
+			['Yutamon',                 'yutamon',      'Programmer',                                                   'https://x.com/VsGinNEW',                   '5c5c72'],
+			['StrPointless',            'str',     		'Programmer',                                                   'https://x.com/STRT23',                   	'5c5c72'],
 			["Psych Engine Team"],
 			["Shadow Mario",		"shadowmario",		"Main Programmer and Head of Psych Engine",					"https://ko-fi.com/shadowmario",	"444444"],
 			["Riveren",				"riveren",			"Main Artist/Animator of Psych Engine",						"https://x.com/riverennn",			"14967B"],
@@ -143,6 +145,10 @@ class CreditsState extends MusicBeatState
 		intendedColor = bg.color;
 		changeSelection();
 		super.create();
+
+		FlxG.sound.playMusic(Paths.music('closeyoureyesPiano'),0);
+		FlxG.sound.music.fadeIn(1,0,0.75);
+
 		if(ClientPrefs.data.shaders){
 			camGame.setFilters(FirstCheckState.filters);
 			camGame.filtersEnabled = true;

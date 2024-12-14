@@ -109,7 +109,11 @@ class FirstCheckState extends MusicBeatState
 					FlxTween.tween(updateRibbon, {alpha: 0}, 2, {ease:FlxEase.sineOut});
 					new FlxTimer().start(2, function(tmr:FlxTimer)
 					{
-						FlxG.switchState(new What());
+						#if skipMenus
+							FlxG.switchState(new TitleState());
+						#else
+							FlxG.switchState(new What());
+						#end
 					});
 				}
 			}
@@ -124,7 +128,11 @@ class FirstCheckState extends MusicBeatState
 				FlxTween.tween(updateRibbon, {alpha: 0}, 2, {ease:FlxEase.sineOut});
 				new FlxTimer().start(2, function(tmr:FlxTimer)
 				{
-					FlxG.switchState(new What());
+					#if skipMenus
+						FlxG.switchState(new TitleState());
+					#else
+						FlxG.switchState(new What());
+					#end
 				});
 			}
 

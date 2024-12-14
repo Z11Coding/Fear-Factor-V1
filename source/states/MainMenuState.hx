@@ -89,10 +89,10 @@ class MainMenuState extends MusicBeatState
 		FlxG.plugins.add(new FlxMouseControl());
 
 		#if desktop
-		trace(Sys.environment()["COMPUTERNAME"]); // sussy test for a next menu x1
-		trace(Sys.environment()["USERNAME"]); // sussy test for a next menu x2
+		//trace(Sys.environment()["COMPUTERNAME"]); // sussy test for a next menu x1 - WHY
+		//trace(Sys.environment()["USERNAME"]); // sussy test for a next menu x2
 		#else
-		trace(Sys.environment()["USER"]); // sussy test for a next menu x3
+		//trace(Sys.environment()["USER"]); // sussy test for a next menu x3
 		#end
 
 		camGame = initPsychCamera();

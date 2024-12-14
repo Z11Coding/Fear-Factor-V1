@@ -18,9 +18,4 @@ export/*
 !.vscode/tasks.json
 !.vscode/launch.json
 !.vscode/extensions.json
-.haxelib/discord_rpc/git/
-.haxelib/linc_luajit/git/
-.haxelib/hxCodec/git/
-.haxelib/lime/discord_rpc/git/
-.haxelib/lime/hxCodec/git/
-.haxelib/lime/linc_luajit/git/
+.haxelib

@@ -3200,379 +3200,16 @@ if (result < 0 || result > mania) {
 
 			for (songNotes in section.sectionNotes)
 			{
+				trace("Note process start");
 				var daStrumTime:Float = songNotes[0];
 				var daNoteData:Int;
-				if (chartModifier != "4K Only" && chartModifier != "ManiaConverter")
-				{
-					daNoteData = Std.int(songNotes[1] % Note.ammo[mania]);
-				}
-				else
-				{
-					daNoteData = Std.int(songNotes[1] % Note.ammo[SONG.mania]);
-				}
+				daNoteData = Std.int(songNotes[1] % Note.ammo[SONG.mania]);
 
 				var gottaHitNote:Bool = section.mustHitSection;
-
-				switch (chartModifier)
-				{
-					case "Random":
-						daNoteData = FlxG.random.int(0, mania);
-					case "RandomBasic":
-						var randomDirection:Int;
-						do
-						{
-							randomDirection = FlxG.random.int(0, mania);
-						}
-						while (randomDirection == prevNoteData && mania > 1);
-						prevNoteData = randomDirection;
-						daNoteData = randomDirection;
-					case "RandomComplex":
-						var thisNoteData = daNoteData;
-						if (initialNoteData == -1)
-						{
-							initialNoteData = daNoteData;
-							daNoteData = FlxG.random.int(0, mania);
-						}
-						else
-						{
-							var newNoteData:Int;
-							do
-							{
-								newNoteData = FlxG.random.int(0, mania);
-							}
-							while (newNoteData == prevNoteData && mania > 1);
-							if (thisNoteData == initialNoteData)
-							{
-								daNoteData = prevNoteData;
-							}
-							else
-							{
-								daNoteData = newNoteData;
-							}
-						}
-						prevNoteData = daNoteData;
-						initialNoteData = thisNoteData;
-
-					// case "Sequential":
-					// 	if (prevNoteData == 0) {
-					// 		daNoteData = 1;
-					// 		direction = 1;
-					// 	} else if (prevNoteData == mania - 1) {
-					// 		daNoteData = mania - 2;
-					// 		direction = -1;
-					// 	} else {
-					// 		daNoteData = prevNoteData + direction;
-					// 	}
-					// 	break;
-								case "Mirror": //Broken
-									var length = mania;
-									var mirroredIndex:Int;
-									var middle = Math.floor(length / 2);
-									if (daNoteData < middle) {
-										mirroredIndex = (middle - daNoteData) + middle - 1;
-									} else if (daNoteData > middle) {
-										mirroredIndex = middle - (daNoteData - middle);
-									} else {
-										mirroredIndex = daNoteData;
-									}
-								daNoteData = mirroredIndex;
-								case "ReverseMirror":
-									var median:Float = (mania + 1) / 2;
-								if (daNoteData <= median) {
-									// For values below the median, mirror downwards
-									daNoteData = Std.int(median - (median - daNoteData) - 1);
-								} else {
-									// For values above the median, mirror upwards
-									daNoteData = Std.int(median + (daNoteData - median) + 1);
-								}
-								daNoteData = Std.int(Math.max(0, Math.min(daNoteData, mania - 1)));
-
-					case "Skip":
-						var skipStep = 2; // Define the step size for skipping notes.
-						var randomLane = Math.random() < 0.5 ? prevNoteData : (prevNoteData + skipStep) % mania;
-						var randomDuration = Math.random() * 30; // Randomize the duration before switching lanes (in notes).
-						daNoteData = randomLane;
-					case "Flip":
-						if (gottaHitNote)
-						{
-							daNoteData = mania - Std.int(songNotes[1] % Note.ammo[mania]);
-						}
-					case "Pain":
-						daNoteData = daNoteData - Std.int(songNotes[1] % Note.ammo[mania]);
-					case "4K Only":
-						daNoteData = getNumberFromAnims(daNoteData, SONG.mania);
-					case "ManiaConverter":
-						daNoteData = getNumberFromAnims(daNoteData, mania);
-					case "Stairs":
-						daNoteData = stair % Note.ammo[mania];
-						stair++;
-					case "Wave":
-						// Sketchie... WHY?!
-						var ammoFromFortnite:Int = Note.ammo[mania];
-						var luigiSex:Int = (ammoFromFortnite * 2 - 2);
-						var marioSex:Int = stair++ % luigiSex;
-						if (marioSex < ammoFromFortnite)
-						{
-							daNoteData = marioSex;
-						}
-						else
-						{
-							daNoteData = luigiSex - marioSex;
-						}
-					case "Trills":
-						var ammoFromFortnite:Int = Note.ammo[mania];
-						var luigiSex:Int = (ammoFromFortnite * 2 - 2);
-						var marioSex:Int;
-						do
-						{
-							marioSex = Std.int((stair++ % (luigiSex * 4)) / 4 + stair % 2);
-							if (marioSex < ammoFromFortnite)
-							{
-								daNoteData = marioSex;
-							}
-							else
-							{
-								daNoteData = luigiSex - marioSex;
-							}
-						}
-						while (daNoteData == prevNoteData && mania > 1);
-						prevNoteData = daNoteData;
-					case "Ew":
-						// I hate that I used Sketchie's variables as a base for this... ;-;
-						var ammoFromFortnite:Int = Note.ammo[mania];
-						var luigiSex:Int = (ammoFromFortnite * 2 - 2);
-						var marioSex:Int = stair++ % luigiSex;
-						var noteIndex:Int = Std.int(marioSex / 2);
-						var noteDirection:Int = marioSex % 2 == 0 ? 1 : -1;
-						daNoteData = noteIndex + noteDirection;
-						// If the note index is out of range, wrap it around
-						if (daNoteData < 0)
-						{
-							daNoteData = 1;
-						}
-						else if (daNoteData >= ammoFromFortnite)
-						{
-							daNoteData = ammoFromFortnite - 2;
-						}
-					case "Death":
-						var ammoFromFortnite:Int = Note.ammo[mania];
-						var luigiSex:Int = (ammoFromFortnite * 4 - 4);
-						var marioSex:Int = stair++ % luigiSex;
-						var step:Int = Std.int(luigiSex / 3);
-
-						if (marioSex < ammoFromFortnite)
-						{
-							daNoteData = marioSex % step;
-						}
-						else if (marioSex < ammoFromFortnite * 2)
-						{
-							daNoteData = (marioSex - ammoFromFortnite) % step + step;
-						}
-						else if (marioSex < ammoFromFortnite * 3)
-						{
-							daNoteData = (marioSex - ammoFromFortnite * 2) % step + step * 2;
-						}
-						else
-						{
-							daNoteData = (marioSex - ammoFromFortnite * 3) % step + step * 3;
-						}
-					case "What":
-						switch (stair % (2 * Note.ammo[mania]))
-						{
-							case 0:
-							case 1:
-							case 2:
-							case 3:
-							case 4:
-								daNoteData = stair % Note.ammo[mania];
-							default:
-								daNoteData = Note.ammo[mania] - 1 - (stair % Note.ammo[mania]);
-						}
-						stair++;
-					case "Amalgam":
-						{
-							var modifierNames:Array<String> = [
-								"Random", "RandomBasic", "RandomComplex", "Flip", "Pain", "Stairs", "Wave", "Huh", "Ew", "What", "Jack Wave", "SpeedRando",
-								"Trills"
-							];
-
-							if (caseExecutionCount <= 0)
-							{
-								currentModifier = FlxG.random.int(-1, (modifierNames.length - 1)); // Randomly select a case from 0 to 9
-								caseExecutionCount = FlxG.random.int(1, 51); // Randomly select a number from 1 to 50
-								trace("Active Modifier: " + modifierNames[currentModifier] + ", Notes to edit: " + caseExecutionCount);
-							}
-							// trace('Notes remaining: ' + caseExecutionCount);
-							caseExecutionCount--;
-							switch (currentModifier)
-							{
-								case 0: // "Random"
-									daNoteData = FlxG.random.int(0, mania);
-								case 1: // "RandomBasic"
-									var randomDirection:Int;
-									do
-									{
-										randomDirection = FlxG.random.int(0, mania);
-									}
-									while (randomDirection == prevNoteData && mania > 1);
-									prevNoteData = randomDirection;
-									daNoteData = randomDirection;
-								case 2: // "RandomComplex"
-									var thisNoteData = daNoteData;
-									if (initialNoteData == -1)
-									{
-										initialNoteData = daNoteData;
-										daNoteData = FlxG.random.int(0, mania);
-									}
-									else
-									{
-										var newNoteData:Int;
-										do
-										{
-											newNoteData = FlxG.random.int(0, mania);
-										}
-										while (newNoteData == prevNoteData && mania > 1);
-										if (thisNoteData == initialNoteData)
-										{
-											daNoteData = prevNoteData;
-										}
-										else
-										{
-											daNoteData = newNoteData;
-										}
-									}
-									prevNoteData = daNoteData;
-									initialNoteData = thisNoteData;
-								case 3: // "Flip"
-									if (gottaHitNote)
-									{
-										daNoteData = mania - Std.int(songNotes[1] % Note.ammo[mania]);
-									}
-								case 4: // "Pain"
-									daNoteData = daNoteData - Std.int(songNotes[1] % Note.ammo[mania]);
-								case 5: // "Stairs"
-									daNoteData = stair % Note.ammo[mania];
-									stair++;
-								case 6: // "Wave"
-									// Sketchie... WHY?!
-									var ammoFromFortnite:Int = Note.ammo[mania];
-									var luigiSex:Int = (ammoFromFortnite * 2 - 2);
-									var marioSex:Int = stair++ % luigiSex;
-									if (marioSex < ammoFromFortnite)
-									{
-										daNoteData = marioSex;
-									}
-									else
-									{
-										daNoteData = luigiSex - marioSex;
-									}
-								case 7: // "Huh"
-									var ammoFromFortnite:Int = Note.ammo[mania];
-									var luigiSex:Int = (ammoFromFortnite * 4 - 4);
-									var marioSex:Int = stair++ % luigiSex;
-									var step:Int = Std.int(luigiSex / 3);
-									var waveIndex:Int = Std.int(marioSex / step);
-									var waveDirection:Int = waveIndex % 2 == 0 ? 1 : -1;
-									var waveRepeat:Int = Std.int(waveIndex / 2);
-									var repeatStep:Int = marioSex % step;
-									if (repeatStep < waveRepeat)
-									{
-										daNoteData = waveIndex * step + waveDirection * repeatStep;
-									}
-									else
-									{
-										daNoteData = waveIndex * step + waveDirection * (waveRepeat * 2 - repeatStep);
-									}
-									if (daNoteData < 0)
-									{
-										daNoteData = 0;
-									}
-									else if (daNoteData >= ammoFromFortnite)
-									{
-										daNoteData = ammoFromFortnite - 1;
-									}
-								case 8: // "Ew"
-									// I hate that I used Sketchie's variables as a base for this... ;-;
-									var ammoFromFortnite:Int = Note.ammo[mania];
-									var luigiSex:Int = (ammoFromFortnite * 2 - 2);
-									var marioSex:Int = stair++ % luigiSex;
-									var noteIndex:Int = Std.int(marioSex / 2);
-									var noteDirection:Int = marioSex % 2 == 0 ? 1 : -1;
-									daNoteData = noteIndex + noteDirection;
-									// If the note index is out of range, wrap it around
-									if (daNoteData < 0)
-									{
-										daNoteData = 1;
-									}
-									else if (daNoteData >= ammoFromFortnite)
-									{
-										daNoteData = ammoFromFortnite - 2;
-									}
-								case 9: // "What"
-									switch (stair % (2 * Note.ammo[mania]))
-									{
-										case 0:
-										case 1:
-										case 2:
-										case 3:
-										case 4:
-											daNoteData = stair % Note.ammo[mania];
-										default:
-											daNoteData = Note.ammo[mania] - 1 - (stair % Note.ammo[mania]);
-									}
-									stair++;
-								case 10: // Jack Wave
-									var ammoFromFortnite:Int = Note.ammo[mania];
-									var luigiSex:Int = (ammoFromFortnite * 2 - 2);
-									var marioSex:Int = Std.int((stair++ % (luigiSex * 4)) / 4);
-									if (marioSex < ammoFromFortnite)
-									{
-										daNoteData = marioSex;
-									}
-									else
-									{
-										daNoteData = luigiSex - marioSex;
-									}
-								case 11: // SpeedRando
-								// Handled by SpeedRando Code below!
-								case 12: // Trills
-									var ammoFromFortnite:Int = Note.ammo[mania];
-									var luigiSex:Int = (ammoFromFortnite * 2 - 2);
-									var marioSex:Int;
-									do
-									{
-										marioSex = Std.int((stair++ % (luigiSex * 4)) / 4 + stair % 2);
-										if (marioSex < ammoFromFortnite)
-										{
-											daNoteData = marioSex;
-										}
-										else
-										{
-											daNoteData = luigiSex - marioSex;
-										}
-									}
-									while (daNoteData == prevNoteData && mania > 1);
-									prevNoteData = daNoteData;
-								default:
-									// Default case (optional)
-							}
-						}
-				}
-
-				if (chartModifier != "4K Only" && chartModifier != "ManiaConverter")
-				{
-					if (songNotes[1] > (Note.ammo[mania] - 1))
+				if (songNotes[1] > (Note.ammo[SONG.mania] - 1))
 					{
 						gottaHitNote = !section.mustHitSection;
 					}
-				}
-				else
-				{
-					if (songNotes[1] > (Note.ammo[SONG.mania] - 1))
-					{
-						gottaHitNote = !section.mustHitSection;
-					}
-				}
 
 				var oldNote:Note;
 				if (allNotes.length > 0)
@@ -3605,10 +3242,6 @@ if (result < 0 || result > mania) {
 				if (!Std.isOfType(songNotes[3], String))
 					swagNote.noteType = ChartingStateOG.noteTypeList[songNotes[3]]; // Backward compatibility + compatibility with Week 7 charts
 				swagNote.scrollFactor.set();
-				if (chartModifier == 'Amalgam' && currentModifier == 11)
-				{
-					swagNote.multSpeed = FlxG.random.float(0.1, 2);
-				}
 
 				var susLength:Float = swagNote.sustainLength;
 
@@ -3633,13 +3266,11 @@ if (result < 0 || result > mania) {
 					swagNote.destroy();
 					continue;
 				}
-
 				var curStepCrochet:Float = 60 / daBpm * 1000 / 4.0;
 				final roundSus:Int = Math.round(swagNote.sustainLength / curStepCrochet);
-				if(roundSus > 0)
-				{
-					for (susNote in 0...roundSus)
+				for (susNote in 0...roundSus)
 					{
+						trace("check for sus");
 						oldNote = allNotes[Std.int(allNotes.length - 1)];
 
 						var sustainNote:Note = new Note(daStrumTime + (Conductor.stepCrochet * susNote) + (Conductor.stepCrochet), daNoteData, oldNote, true);
@@ -3648,10 +3279,6 @@ if (result < 0 || result > mania) {
 						sustainNote.animSuffix = swagNote.animSuffix;
 						sustainNote.noteType = type;
 						sustainNote.noteIndex = swagNote.noteIndex;
-						if (chartModifier == 'Amalgam' && currentModifier == 11)
-						{
-							sustainNote.multSpeed = swagNote.multSpeed;
-						}
 						if (sustainNote == null || !sustainNote.alive)
 							break;
 						sustainNote.ID = allNotes.length;
@@ -3668,8 +3295,8 @@ if (result < 0 || result > mania) {
 						{
 							sustainNote.x += FlxG.width * 0.5; // general offset
 						}
+						trace("end for sus");
 					}
-				}
 
 				if (swagNote.mustPress)
 				{
@@ -3689,6 +3316,7 @@ if (result < 0 || result > mania) {
 				}
 			}
 			daBeats += 1;
+			trace("Note process end");
 		}
 
 		for (event in songData.events) // Event Notes
@@ -3737,145 +3365,7 @@ if (result < 0 || result > mania) {
 		}
 		checkEventNote();
 		generatedMusic = true;
-		if (chartModifier == 'SpeedRando')
-		{
-			var curNotes:Array<Note> = [];
-			var allowBrokenSustains = Math.random() < 0.2;
 
-			trace('Broken Sustains?: ' + allowBrokenSustains);
-			for (i in 0...unspawnNotes.length)
-			{
-				if (unspawnNotes[i] != null)
-				{ // Null check
-					if (unspawnNotes[i].mustPress)
-					{
-						if (!unspawnNotes[i].isSustainNote)
-						{
-							unspawnNotes[i].multSpeed = FlxG.random.float(0.1, 2);
-							curNotes[unspawnNotes[i].noteData] = unspawnNotes[i];
-						}
-						else
-						{
-							if (curNotes[unspawnNotes[i].noteData] != null)
-							{
-								unspawnNotes[i].multSpeed = curNotes[unspawnNotes[i].noteData].multSpeed;
-							}
-						}
-					}
-					if (!unspawnNotes[i].mustPress)
-					{
-						if (!unspawnNotes[i].isSustainNote)
-						{
-							unspawnNotes[i].multSpeed = FlxG.random.float(0.1, 2);
-							curNotes[unspawnNotes[i].noteData] = unspawnNotes[i];
-						}
-						else
-						{
-							if (curNotes[unspawnNotes[i].noteData] != null)
-							{
-								unspawnNotes[i].multSpeed = curNotes[unspawnNotes[i].noteData].multSpeed;
-							}
-						}
-					}
-				}
-				if (!allowBrokenSustains)
-				{
-					if (unspawnNotes[i] != null)
-					{
-						if (unspawnNotes[i].isSustainNote)
-						{
-							for (note in unspawnNotes)
-							{
-								if (note != null && !note.isSustainNote && note.noteIndex == unspawnNotes[i].noteIndex)
-								{
-									unspawnNotes[i].multSpeed = note.multSpeed;
-									break;
-								}
-							}
-						}
-					}
-				}
-			}
-		}
-		if (chartModifier == "SpeedUp")
-		{
-			var scaryMode:Bool = Math.random() < 0.5;
-
-			var endSpeed:Float = Math.random() < 0.9 ? Math.random() * 10 : Math.random() * 2 - 1;
-			var startSpeed:Float;
-			if (endSpeed == 1)
-			{
-				// If endSpeed is exactly 1, startSpeed is a random float between -0.1 and 0.1
-				startSpeed = Math.random() < 0.5 ? Math.random() * 0.1 : -Math.random() * 0.1;
-			}
-			else if (endSpeed > 1)
-			{
-				startSpeed = Math.random() * 1.1 - 0.1;
-			}
-			else
-			{
-				startSpeed = Math.random() * 1;
-			}
-			var speedMultiplier:Float = 0;
-			var currentMultiplier:Float = 0;
-			if (scaryMode)
-			{
-				speedMultiplier = (endSpeed - startSpeed) / unspawnNotes.length;
-			}
-			else
-			{
-				var nonSustainNotes = unspawnNotes.filter(function(note) return !note.isSustainNote);
-				speedMultiplier = (endSpeed - startSpeed) / nonSustainNotes.length;
-			}
-			trace("startSpeed: " + startSpeed);
-			trace("endSpeed: " + endSpeed);
-			trace("speedMultiplier: " + speedMultiplier);
-			trace("currentMultiplier: " + currentMultiplier);
-			trace("scaryMode: " + scaryMode);
-			trace("noteIndex: " + noteIndex);
-			for (i in 0...unspawnNotes.length)
-			{
-				if (unspawnNotes[i] != null)
-				{
-					if (scaryMode)
-					{
-						currentMultiplier += speedMultiplier;
-						var noteIndex = unspawnNotes[i].noteIndex;
-						var multSpeed = unspawnNotes[i].multSpeed;
-						var newMultSpeed = currentMultiplier;
-						unspawnNotes[i].multSpeed = newMultSpeed;
-					}
-					else if (!scaryMode && !unspawnNotes[i].isSustainNote)
-					{
-						currentMultiplier += speedMultiplier;
-						var noteIndex = unspawnNotes[i].noteIndex;
-						var multSpeed = unspawnNotes[i].multSpeed;
-						var newMultSpeed = currentMultiplier;
-						unspawnNotes[i].multSpeed = newMultSpeed;
-					}
-				}
-			}
-			if (!scaryMode)
-			{
-				for (i in 0...unspawnNotes.length)
-				{
-					if (unspawnNotes[i] != null)
-					{
-						if (unspawnNotes[i].isSustainNote)
-						{
-							for (note in unspawnNotes)
-							{
-								if (note != null && !note.isSustainNote && note.noteIndex == unspawnNotes[i].noteIndex)
-								{
-									unspawnNotes[i].multSpeed = note.multSpeed;
-									break;
-								}
-							}
-						}
-					}
-				}
-			}
-		}
 	}
 
 	public function getNoteInitialTime(time:Float)
@@ -4708,7 +4198,9 @@ if (result < 0 || result > mania) {
 						for (track in tracks)
 							track.pause();
 					}
-					openSubState(new PauseSubState());
+					var pauseSubState = new PauseSubState();
+					pauseSubState.psInstance = this;
+					openSubState(pauseSubState);
 				}
 
 				if (gf != null && !Crashed)
@@ -9088,4 +8580,17 @@ if (result < 0 || result > mania) {
 
 	var curLight:Int = 0;
 	var curLightEvent:Int = 0;
+
+	public function clearStageImages()
+	{
+		trace("Clearing stage images for memory");
+		for(i in modchartSprites.keys())
+		{
+			trace("Deleting: " + i);
+			FlxG.bitmap.remove(modchartSprites.get(i).graphic);
+		}
+		trace("Clear character images for memory");
+
+	}
 }
+
