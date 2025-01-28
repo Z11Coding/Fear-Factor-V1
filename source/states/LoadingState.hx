@@ -241,7 +241,7 @@ class LoadingState extends MusicBeatState
 
 		FlxG.camera.visible = false;
 		FlxTransitionableState.skipNextTransIn = true;
-		TransitionState.transitionState(PlayState, {transitionType: "instant"});
+		TransitionState.transitionState(PlayState, {transitionType: "stickers"});
 		transitioning = true;
 		finishedLoading = true;
 		mutex = null;
@@ -249,11 +249,11 @@ class LoadingState extends MusicBeatState
 
 	public static function checkLoaded():Bool
 	{
-		/*for (key => bitmap in requestedBitmaps)
+		for (key => bitmap in requestedBitmaps)
 		{
 			if (bitmap != null && Paths.cacheBitmap(originalBitmapKeys.get(key), bitmap) != null) trace('finished preloading image $key');
 			else trace('failed to cache image $key');
-		}*/
+		}
 		requestedBitmaps.clear();
 		originalBitmapKeys.clear();
 		return (loaded == loadMax && initialThreadCompleted);

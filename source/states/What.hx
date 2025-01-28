@@ -25,6 +25,7 @@ class What extends MusicBeatState
 
     override public function create()
     {
+        states.FirstCheckState.gameInitialized = true;
         // var titleStateCheckFunc = EventFunc.createEventFunc(
         //     "CheckForTitleState", // eventName
         //     EventType.EqualTo(TitleState), // eventType, checking for equality with TitleState class
@@ -90,7 +91,7 @@ class What extends MusicBeatState
         //FlxG.sound.play(Paths.sound('WHAT_STARTUP'));
         new FlxTimer().start(12, function(tmr:FlxTimer)
         {
-           TransitionState.transitionState(TitleState, {duration: 1.5, transitionType: "instant", color: FlxColor.BLACK});
+           TransitionState.transitionState(TitleState, {duration: 1.5, transitionType: "stickers", color: FlxColor.BLACK});
         });
         whatT1 = FlxTween.tween(what1, {x:what5.x + 350, y:what5.y}, 8, {ease: FlxEase.expoInOut});
         whatT2 = FlxTween.tween(what2, {x:what5.x + 350, y:what5.y}, 8, {ease: FlxEase.expoInOut});

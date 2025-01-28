@@ -14,15 +14,14 @@ class GameOverSubstate extends MusicBeatSubstate
 {
 	public var boyfriend:Character;
 	var camFollow:FlxObject;
-
 	var stagePostfix:String = "";
 
 	public static var characterName:String = 'bf-dead';
 	public static var deathSoundName:String = 'fnf_loss_sfx';
-	public static var loopSoundName:String = 'Ominous_Sine_Loop';
+	public static var loopSoundName:String = 'gameOver';
 	public static var endSoundName:String = 'gameOverEnd';
 	public static var deathDelay:Float = 0;
-
+	public static var causeofdeath:UnderTextParser;
 	public static var instance:GameOverSubstate;
 	public function new(?playStateBoyfriend:Character = null)
 	{
@@ -36,11 +35,9 @@ class GameOverSubstate extends MusicBeatSubstate
 	public static function resetVariables() {
 		characterName = 'bf-dead';
 		deathSoundName = 'fnf_loss_sfx';
-		loopSoundName = 'Ominous_Sine_Loop';
+		loopSoundName = 'gameOver';
 		endSoundName = 'gameOverEnd';
 		deathDelay = 0;
-
-		
 
 		var _song = PlayState.SONG;
 		if(_song != null)
@@ -57,7 +54,6 @@ class GameOverSubstate extends MusicBeatSubstate
 
 	var overlay:FlxSprite;
 	var overlayConfirmOffsets:FlxPoint = FlxPoint.get();
-	var jumpscare:FlxSprite;
 	override function create()
 	{
 		instance = this;
@@ -73,22 +69,21 @@ class GameOverSubstate extends MusicBeatSubstate
 		boyfriend.skipDance = true;
 		add(boyfriend);
 
-		FlxG.sound.playMusic(Paths.sound(deathSoundName), true);
+		FlxG.sound.play(Paths.sound(deathSoundName));
 		FlxG.camera.scroll.set();
 		FlxG.camera.target = null;
 
 		boyfriend.playAnim('firstDeath');
-		boyfriend.visible = false;
 
 		camFollow = new FlxObject(0, 0, 1, 1);
 		camFollow.setPosition(boyfriend.getGraphicMidpoint().x + boyfriend.cameraPosition[0], boyfriend.getGraphicMidpoint().y + boyfriend.cameraPosition[1]);
 		FlxG.camera.focusOn(new FlxPoint(FlxG.camera.scroll.x + (FlxG.camera.width / 2), FlxG.camera.scroll.y + (FlxG.camera.height / 2)));
 		FlxG.camera.follow(camFollow, LOCKON, 0.01);
 		add(camFollow);
-		FlxG.camera.followLerp = 100;
 		
 		PlayState.instance.setOnScripts('inGameOver', true);
 		PlayState.instance.callOnScripts('onGameOverStart', []);
+		FlxG.sound.music.loadEmbedded(Paths.music(loopSoundName), true);
 
 		if(characterName == 'pico-dead')
 		{
@@ -133,6 +128,16 @@ class GameOverSubstate extends MusicBeatSubstate
 			}
 		}
 
+		var alphabet = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z'];
+		causeofdeath = new UnderTextParser(boyfriend.x, boyfriend.y - 100, FlxG.width, "", 32);
+		causeofdeath.scrollFactor.set(0,0);
+		causeofdeath.font = Paths.font("determination-extended.ttf");
+        causeofdeath.color = 0xFFFFFFFF; 
+		for (letter in alphabet)
+			causeofdeath.soundOnChars.set(letter, FlxG.sound.load(Paths.sound('ut/uifont'), 1));
+		add(causeofdeath);
+
+
 		super.create();
 	}
 
@@ -152,7 +157,6 @@ class GameOverSubstate extends MusicBeatSubstate
 				overlay.animation.play('deathLoop');
 			}
 			justPlayedLoop = true;
-			FlxG.sound.music.loadEmbedded(Paths.music(loopSoundName), true);
 		}
 
 		if(!isEnding)
@@ -172,9 +176,9 @@ class GameOverSubstate extends MusicBeatSubstate
 	
 				Mods.loadTopMod();
 				if (PlayState.isStoryMode)
-					FlxG.switchState(new StoryMenuState());
+					TransitionState.transitionState(StoryMenuState);
 				else
-					FlxG.switchState(new FreeplayState());
+					TransitionState.transitionState(FreeplayState);
 	
 				FlxG.sound.playMusic(Paths.music('odd_menu_music'));
 				PlayState.instance.callOnScripts('onGameOverConfirm', [false]);
@@ -214,6 +218,8 @@ class GameOverSubstate extends MusicBeatSubstate
 	{
 		FlxG.sound.music.play(true);
 		FlxG.sound.music.volume = volume;
+		causeofdeath.resetText(COD.getCOD());
+        causeofdeath.start(0.05, true);
 	}
 
 	function endBullshit():Void

@@ -9,6 +9,7 @@ class BackgroundGirls extends FlxSprite
 
 		// BG fangirls dissuaded
 		frames = Paths.getSparrowAtlas('stages/weeb/bgFreaks');
+		antialiasing = false;
 		swapDanceType();
 
 		setGraphicSize(Std.int(width * PlayState.daPixelZoom));

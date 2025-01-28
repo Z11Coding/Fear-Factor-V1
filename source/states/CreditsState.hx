@@ -15,7 +15,6 @@ class CreditsState extends MusicBeatState
 	var intendedColor:FlxColor;
 	var descBox:AttachedSprite;
 
-	private var camGame:PsychCamera;
 	var offsetThing:Float = -75;
 
 	override function create()
@@ -24,10 +23,6 @@ class CreditsState extends MusicBeatState
 		// Updating Discord Rich Presence
 		DiscordClient.changePresence("In the Menus", null);
 		#end
-
-		MemoryUtil.clearMinor();
-
-		camGame = initPsychCamera();
 
 		persistentUpdate = true;
 		bg = new FlxSprite().loadGraphic(Paths.image('menuDesat'));
@@ -46,23 +41,40 @@ class CreditsState extends MusicBeatState
 			['Fear Factor Team'],
 			['JDST',		        	'image-11',		'Director',					                                    'https://www.youtube.com/@JDST',		    '6bffe4'],
 			['Z11Gaming',		        'ZGaming',		'Coder/Modcharter',					                            'https://www.youtube.com/@Z11Music',		'8a0ec8'],
-			['Eclipse',		            'eclipse', 		'Charter for Shape',					                        'https://x.com/EclipseNightMer',		    '0da349'],
+			['Yutamon',					'face',			'',						       									'https://www.youtube.com/channel/UCLQVMC7UuTlAVkNAvo3O61A',		'f62681'],
+			['StrPointless',		    'face', 		'Programmer',					        						'',											'eb4b00'],
+			['SamuelPastel',		    'Sams_Icon',	'Artist/Animator',					                            'https://twitter.com/SamuelPastel4',		'684d77'],
+			['Kingin ',		    		'face',			'BG Artist/Playtester',					                        '',											'FFFFFF'],
+			['Teserex',		            'Teserex-C', 	'Icon Artist',					        						'https://x.com/teserex',					'eb4b00'],
+			['EclipseTheNightmare',		'eclipse', 		'Charter for Shape',					                        'https://x.com/EclipseNightMer',		    '0da349'],
 			['Lemmeo',		            'Lemmeo_Icon-1','Charter for Ringtone and Revelation',					        'https://www.youtube.com/@Lemmeo',			'9cade5'],
 			['SZ0',		            	'SZ0',			'GhostFace and Pennywise Chromatics',					        'https://gamebanana.com/members/1945687',	'e77891'],
-			['Kingin',		            'king', 		'Ringtone BG',					        						'https://x.com/AKingingNG',					'e77891'],
-			['Teserex',		            'Teserex-C', 	'Icon Artist',					        						'https://x.com/teserex',					'eb4b00'],
-			["Psych Engine Team"],
-			["Shadow Mario",		"shadowmario",		"Main Programmer and Head of Psych Engine",					"https://ko-fi.com/shadowmario",	"444444"],
-			["Riveren",				"riveren",			"Main Artist/Animator of Psych Engine",						"https://x.com/riverennn",			"14967B"],
-			[""],
+			['AverageFNF',		    	'face', 		'Playtester',					        						'',											'FFFFFF'],
+			['SkedgyEdgy',		    	'face', 		'Playtester',					        						'',											'FFFFFF'],
+			['Engine Stuff'],
+			['Below this point'],
+			[''],
+			['Mixtape Engine Team'],
+			['Z11Gaming',		    'ZGaming',		    'Made the engine.',					               	'https://www.youtube.com/@Z11Music',		'9ff1cd'],
+			['Yutamon',				'face',			    '',						       'https://www.youtube.com/channel/UCLQVMC7UuTlAVkNAvo3O61A',		'f62681'],
+			[''],
+			['Beta Testers'],
+			['Dylan',		        'dylan',		    'Beta-Tester for the Base Engine/Archipelago Edition',					                                         'https://docs.google.com/document/d/1Ece_WG4QBnYSlRPEotqwCXxAEz2o_ugF_9YgSQ3oelU/edit?usp=sharing',		'9ff1cd'],
+			['Dave',				'dave',			    'Beta-Tester for the Base Engine',						                                     'https://twitter.com/vids144p/status/1792668118222864402',		'f62681'],
+			[''],
 			["Special Thanks"],
 			["riconuts",				"riconuts",			"Programmer for Troll Engine\n(An awsome engine you should check out sometime!)",			"https://twitter.com/riconut",			"FFFFFF"],
 			["Nebula The Zorua",		"nebulazorua",		"True and Honest programmer for Troll Engine\n(An awsome engine you should check out sometime!)",						"",										"FFFFFF"],
 			["4mbr0s3 2",				"4mbr0s3_2",		"Modchart system (From Troll Engine)",						"https://www.youtube.com/@4mbr0s3-2",				"FFFFFF"],
-			["Former Psych Engine Members"],
+			[''],
+			["Psych Engine Team"],
+			["Shadow Mario",		"shadowmario",		"Main Programmer and Head of Psych Engine",					"https://ko-fi.com/shadowmario",	"444444"],
+			["Riveren",				"riveren",			"Main Artist/Animator of Psych Engine",						"https://x.com/riverennn",			"14967B"],
+			[""],
+			["Former Engine Members"],
 			["bb-panzu",			"bb",				"Ex-Programmer of Psych Engine",							"https://x.com/bbsub3",				"3E813A"],
 			[""],
-			["Psych Engine Contributors"],
+			["Engine Contributors"],
 			["crowplexus",			"crowplexus",		"HScript Iris, Input System v3, and Other PRs",				"https://github.com/crowplexus",	"CFCFCF"],
 			["Kamizeta",			"kamizeta",			"Creator of Pessy, Psych Engine's mascot.",				"https://www.instagram.com/cewweey/",	"D21C11"],
 			["MaxNeton",			"maxneton",			"Loading Screen Easter Egg Artist/Animator.",	"https://bsky.app/profile/maxneton.bsky.social","3C2E4E"],
@@ -81,6 +93,9 @@ class CreditsState extends MusicBeatState
 			["PhantomArcade",		"phantomarcade",	"Animator of Friday Night Funkin'",							"https://x.com/PhantomArcade3K",	"FADC45"],
 			["evilsk8r",			"evilsk8r",			"Artist of Friday Night Funkin'",							"https://x.com/evilsk8r",			"5ABD4B"],
 			["kawaisprite",			"kawaisprite",		"Composer of Friday Night Funkin'",							"https://x.com/kawaisprite",		"378FC7"],
+			[""],
+			["Psych Engine Discord"],
+			["Join the Psych Ward!", "discord", "", "https://discord.gg/2ka77eMXDv", "5165F6"]
 		];
 		
 		for(i in defaultList)
@@ -143,10 +158,6 @@ class CreditsState extends MusicBeatState
 		intendedColor = bg.color;
 		changeSelection();
 		super.create();
-		if(ClientPrefs.data.shaders){
-			camGame.setFilters(FirstCheckState.filters);
-			camGame.filtersEnabled = true;
-		}
 	}
 
 	var quitting:Bool = false;
@@ -160,21 +171,6 @@ class CreditsState extends MusicBeatState
 
 		if(!quitting)
 		{
-			if (creditsStuff[curSelected][0] == "JDST") 
-			{
-				remove(bg);
-				bg = new FlxSprite().loadGraphic(Paths.image('president JD'));
-				bg.screenCenter();
-				add(bg);
-			}
-			else
-			{
-				remove(bg);
-				bg = new FlxSprite().loadGraphic(Paths.image('menuDesat'));
-				bg.screenCenter();
-				add(bg);
-			}
-
 			if(creditsStuff.length > 1)
 			{
 				var shiftMult:Int = 1;

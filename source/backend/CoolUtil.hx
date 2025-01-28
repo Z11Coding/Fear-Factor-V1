@@ -3,11 +3,6 @@ package backend;
 import flixel.math.FlxPoint;
 import flixel.util.FlxSave;
 import flixel.FlxG;
-import openfl.utils.Assets;
-import lime.utils.Assets as LimeAssets;
-import lime.utils.AssetLibrary;
-import lime.utils.AssetManifest;
-import flixel.system.FlxSound;
 import lime.app.Application;
 #if sys
 import sys.io.File;
@@ -16,8 +11,7 @@ import sys.FileSystem;
 import openfl.utils.Assets;
 #end
 
-using StringTools;
-
+import haxe.Json;
 class CoolUtil
 {
 	public static function floorDecimal(value:Float, decimals:Int):Float
@@ -90,8 +84,7 @@ class CoolUtil
 		return Std.int((f + interval / 2) / interval) * interval;
 	}
 
-	inline public static function quantize(f:Float, snap:Float)
-	{
+	inline public static function quantize(f:Float, snap:Float){
 		// changed so this actually works lol
 		var m:Float = Math.fround(f * snap);
 		//trace(snap);
@@ -114,8 +107,130 @@ class CoolUtil
 	}
 
 	inline public static function capitalize(text:String)
-	{
 		return text.charAt(0).toUpperCase() + text.substr(1).toLowerCase();
+
+	inline public static function coolTextFile(path:String):Array<String>
+	{
+		var daList:String = null;
+		#if (sys && MODS_ALLOWED)
+		if(FileSystem.exists(path)) daList = File.getContent(path);
+		#else
+		if(Assets.exists(path)) daList = Assets.getText(path);
+		#end
+		return daList != null ? listFromString(daList) : [];
+	}
+
+	inline public static function listFromString(string:String):Array<String>
+	{
+		var daList:Array<String> = [];
+		daList = string.trim().split('\n');
+
+		for (i in 0...daList.length)
+			daList[i] = daList[i].trim();
+
+		return daList;
+	}
+
+	inline public static function dominantColor(sprite:flixel.FlxSprite):Int
+	{
+		var countByColor:Map<Int, Int> = [];
+		for(col in 0...sprite.frameWidth)
+		{
+			for(row in 0...sprite.frameHeight)
+			{
+				var colorOfThisPixel:FlxColor = sprite.pixels.getPixel32(col, row);
+				if(colorOfThisPixel.alphaFloat > 0.05)
+				{
+					colorOfThisPixel = FlxColor.fromRGB(colorOfThisPixel.red, colorOfThisPixel.green, colorOfThisPixel.blue, 255);
+					var count:Int = countByColor.exists(colorOfThisPixel) ? countByColor[colorOfThisPixel] : 0;
+					countByColor[colorOfThisPixel] = count + 1;
+				}
+			}
+		}
+
+		var maxCount = 0;
+		var maxKey:Int = 0; //after the loop this will store the max color
+		countByColor[FlxColor.BLACK] = 0;
+		for(key => count in countByColor)
+		{
+			if(count >= maxCount)
+			{
+				maxCount = count;
+				maxKey = key;
+			}
+		}
+		countByColor = [];
+		return maxKey;
+	}
+
+	inline public static function parseLog(msg:Dynamic):LogData {
+		try {
+			if (msg is String)
+				return cast(Json.parse(msg));
+			return cast(msg);
+		}
+		catch (e) {
+			return {
+				content: msg,
+				hue: null
+			}
+		}
+	}
+
+	inline public static function numberArray(max:Int, ?min = 0):Array<Int>
+	{
+		var dumbArray:Array<Int> = [];
+		for (i in min...max) dumbArray.push(i);
+
+		return dumbArray;
+	}
+
+	public static function formatAccuracy(value:Float)
+	{
+		var conversion:Map<String, String> = [
+			'0' => '0.00',
+			'0.0' => '0.00',
+			'0.00' => '0.00',
+			'00' => '00.00',
+			'00.0' => '00.00',
+			'00.00' => '00.00', // gotta do these as well because lazy
+			'000' => '000.00'
+		]; // these are to ensure you're getting the right values, instead of using complex if statements depending on string length
+
+		var stringVal:String = Std.string(value);
+		var converVal:String = '';
+		for (i in 0...stringVal.length)
+		{
+			if (stringVal.charAt(i) == '.')
+				converVal += '.';
+			else
+				converVal += '0';
+		}
+
+		var wantedConversion:String = conversion.get(converVal);
+		var convertedValue:String = '';
+
+		for (i in 0...wantedConversion.length)
+		{
+			if (stringVal.charAt(i) == '')
+				convertedValue += wantedConversion.charAt(i);
+			else
+				convertedValue += stringVal.charAt(i);
+		}
+
+		if (convertedValue.length == 0)
+			return '$value';
+
+		return convertedValue;
+	}
+
+	//uhhhh does this even work at all? i'm starting to doubt
+	public static function precacheSound(sound:String, ?library:String = null):Void {
+		Paths.sound(sound);
+	}
+
+	public static function precacheMusic(sound:String, ?library:String = null):Void {
+		Paths.music(sound);
 	}
 
 	public static function updateTheEngine():Void
@@ -162,116 +277,6 @@ class CoolUtil
 		Sys.exit(0);
 	}
 
-	inline public static function coolTextFile(path:String):Array<String>
-	{
-		var daList:Array<String> = [];
-		#if sys
-		if(FileSystem.exists(path)) daList = File.getContent(path).trim().split('\n');
-		#else
-		if(Assets.exists(path)) daList = Assets.getText(path).trim().split('\n');
-		#end
-
-		for (i in 0...daList.length)
-		{
-			daList[i] = daList[i].trim();
-		}
-
-		return daList;
-	}
-	inline public static function listFromString(string:String):Array<String>
-	{
-		var daList:Array<String> = [];
-		daList = string.trim().split('\n');
-
-		for (i in 0...daList.length)
-		{
-			daList[i] = daList[i].trim();
-		}
-
-		return daList;
-	}
-
-	inline public static function dominantColor(sprite:flixel.FlxSprite):Int
-	{
-		var countByColor:Map<Int, Int> = [];
-		for(col in 0...sprite.frameWidth)
-		{
-			for(row in 0...sprite.frameHeight)
-			{
-				var colorOfThisPixel:FlxColor = sprite.pixels.getPixel32(col, row);
-				if(colorOfThisPixel.alphaFloat > 0.05)
-				{
-					colorOfThisPixel = FlxColor.fromRGB(colorOfThisPixel.red, colorOfThisPixel.green, colorOfThisPixel.blue, 255);
-					var count:Int = countByColor.exists(colorOfThisPixel) ? countByColor[colorOfThisPixel] : 0;
-					countByColor[colorOfThisPixel] = count + 1;
-				}
-			}
-		}
-
-		var maxCount = 0;
-		var maxKey:Int = 0; //after the loop this will store the max color
-		countByColor[FlxColor.BLACK] = 0;
-		for(key => count in countByColor)
-		{
-			if(count >= maxCount)
-			{
-				maxCount = count;
-				maxKey = key;
-			}
-		}
-		countByColor = [];
-		return maxKey;
-	}
-
-	public static function numberArray(max:Int, ?min = 0):Array<Int>
-	{
-		var dumbArray:Array<Int> = [];
-		for (i in min...max)
-		{
-			dumbArray.push(i);
-		}
-		return dumbArray;
-	}
-
-	public static function formatAccuracy(value:Float)
-	{
-		var conversion:Map<String, String> = [
-			'0' => '0.00',
-			'0.0' => '0.00',
-			'0.00' => '0.00',
-			'00' => '00.00',
-			'00.0' => '00.00',
-			'00.00' => '00.00', // gotta do these as well because lazy
-			'000' => '000.00'
-		]; // these are to ensure you're getting the right values, instead of using complex if statements depending on string length
-
-		var stringVal:String = Std.string(value);
-		var converVal:String = '';
-		for (i in 0...stringVal.length)
-		{
-			if (stringVal.charAt(i) == '.')
-				converVal += '.';
-			else
-				converVal += '0';
-		}
-
-		var wantedConversion:String = conversion.get(converVal);
-		var convertedValue:String = '';
-
-		for (i in 0...wantedConversion.length)
-		{
-			if (stringVal.charAt(i) == '')
-				convertedValue += wantedConversion.charAt(i);
-			else
-				convertedValue += stringVal.charAt(i);
-		}
-
-		if (convertedValue.length == 0)
-			return '$value';
-
-		return convertedValue;
-	}
-
 	public static function getSizeLabel(num:UInt):String{
         var size:Float = num;
         var data = 0;
@@ -312,7 +317,7 @@ class CoolUtil
 		#end
 	}
 
-	public static function browserLoad(site:String) {
+	inline public static function browserLoad(site:String) {
 		#if linux
 		Sys.command('/usr/bin/xdg-open', [site]);
 		#else
@@ -470,4 +475,9 @@ class CoolUtil
 	{
 		return lerp * (FlxG.elapsed / (1 / 60));
 	}
+}
+
+typedef LogData = {
+	var content:String;
+	var hue:Null<Float>;
 }

@@ -27,6 +27,9 @@ import sys.io.*;
 import js.html.*;
 #end
 
+import archipelago.*;
+import streamervschat.*;
+
 import backend.Mods;
 import backend.Paths;
 import backend.Controls;
@@ -40,6 +43,7 @@ import backend.MusicBeatState;
 import backend.MusicBeatSubstate;
 import backend.CustomFadeTransition;
 import backend.TransitionState;
+import backend.ArtemisIntegration;
 import backend.Language;
 
 import backend.util.ColorUtil; //Thanks, Jack Bass. Very Cool
@@ -103,6 +107,8 @@ import backend.modules.ArrayToMapConverter;
 import backend.modules.SoundLayer;
 // import backend.modules.SoundGroup;
 import backend.modules.Variable;
+
+// import backend.util.JumpHack;
 using HoldableVariable;
 using DataStorage;
 using backend.FNFC;
@@ -113,6 +119,10 @@ using StringTools;
 using backend.ChanceSelector;
 using options.Toggle;
 using IterSingle;
+using yutautil.ExtendedDate;
+// using yutautil.JavaLoop;
+using yutautil.CollectionUtils;
+using Table;
 
 #if test
 // import backend.TestState;

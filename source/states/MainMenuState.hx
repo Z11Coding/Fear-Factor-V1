@@ -20,6 +20,7 @@ import flixel.input.keyboard.FlxKey;
 import flixel.effects.FlxFlicker;
 import shaders.ChromaticAberration;
 import flixel.addons.effects.FlxTrail;
+import flixel.ui.FlxButton;
 
 using StringTools;
 
@@ -32,9 +33,9 @@ enum MainMenuColumn {
 class MainMenuState extends MusicBeatState
 {
 	public static var fridayVersion:String = '0.2.7-Git + 0.2.8-NG';
-	public static var mixtapeEngineVersion:String = '0.4.0'; // this is used for Discord RPC
+	public static var mixtapeEngineVersion:String = '1.0.0'; // this is used for Discord RPC
 	public static var psychEngineVersion:String = '1.0'; // This is also used for Discord RPC
-	public static var modVersion:String = '1.0.2'; // This is not used for Discord RPC
+	public static var beta:Bool = false;
 	public static var curSelected:Int = 0;
 	public static var curColumn:MainMenuColumn = CENTER;
 	public static var secretOverride:String = null;
@@ -48,8 +49,9 @@ class MainMenuState extends MusicBeatState
 	public var iconBG:FlxSprite;
 	var leftItem:FlxSprite;
 	var rightItem:FlxSprite;
+	var archButton:FlxButton;
 
-	var leftOption:String = null;
+	var leftOption:String = #if ACHIEVEMENTS_ALLOWED 'achievements' #else null #end;
 	var rightOption:String = 'options';
 
 	public var icon:HealthIcon;
@@ -71,16 +73,20 @@ class MainMenuState extends MusicBeatState
 
 	var noname:Bool = false;
 
-	private var camGame:PsychCamera;
-
 	override function create()
 	{
+		// if (APEntryState.inArchipelagoMode) {
+		// 	FlxG.switchState(new CategoryState());
+		// }
 		#if DISCORD_ALLOWED
 		// Updating Discord Rich Presence
 		DiscordClient.changePresence("In the Menus", null);
 		#end
 
-		MemoryUtil.clearMinor();
+		#if sys
+		ArtemisIntegration.setGameState ("menu");
+		ArtemisIntegration.resetModName ();
+		#end
 
 		checker = new FlxBackdrop(Paths.image('mainmenu/Main_Checker'), XY, Std.int(0.2), Std.int(0.2));
 
@@ -95,8 +101,6 @@ class MainMenuState extends MusicBeatState
 		trace(Sys.environment()["USER"]); // sussy test for a next menu x3
 		#end
 
-		camGame = initPsychCamera();
-
 		persistentUpdate = persistentDraw = true;
 
 		Cursor.show();
@@ -110,6 +114,10 @@ class MainMenuState extends MusicBeatState
 		bg.screenCenter();
 		bg.antialiasing = ClientPrefs.data.globalAntialiasing;
 		add(bg);
+
+		#if sys
+		ArtemisIntegration.setBackgroundColor (StringTools.hex(bg.color));
+		#end
 
 		camFollow = new FlxObject(0, 0, 1, 1);
 		add(camFollow);
@@ -137,7 +145,7 @@ class MainMenuState extends MusicBeatState
 
 		for (num => option in optionShit)
 		{
-			var item:FlxSprite = createMenuItem(option, 0, (num * 140) + 180);
+			var item:FlxSprite = createMenuItem(option, 20, (num * 140) + 180);
 			item.y += (4 - optionShit.length) * 70; // Offsets for when you have anything other than 4 items
 			item.screenCenter(X);
 		}
@@ -165,8 +173,8 @@ class MainMenuState extends MusicBeatState
 
 
 		FlxTween.tween(logoBl, {
-			y: logoBl.y + 100,
-			x: logoBl.x + 580,
+			y: logoBl.y + 110,
+			x: logoBl.x + 530,
 			angle: -4,
 			alpha: 1
 		}, 1.4, {ease: FlxEase.expoInOut});
@@ -226,12 +234,7 @@ class MainMenuState extends MusicBeatState
 		#end
 
 		super.create();
-
-		camGame.follow(camFollow, null, 9);
-		if(ClientPrefs.data.shaders){
-			camGame.setFilters(FirstCheckState.filters);
-			camGame.filtersEnabled = true;
-		}
+		FlxG.camera.follow(camFollow, null, 9);
 	}
 
 	function createMenuItem(name:String, x:Float, y:Float):FlxSprite
@@ -265,9 +268,9 @@ class MainMenuState extends MusicBeatState
 		{
 			trace("resetting progress");
 			Achievements.relock();
-			FlxG.save.data.complete = [false, false, false, false];
-			FlxG.save.data.complete2 = false;
 		}
+
+		Conductor.songPosition = FlxG.sound.music.time;
 
 		if(FlxG.keys.justPressed.F11)
     		FlxG.fullscreen = !FlxG.fullscreen;
@@ -390,9 +393,9 @@ class MainMenuState extends MusicBeatState
 			{
 				selectedSomethin = true;
 				FlxG.sound.play(Paths.sound('cancelMenu'));
-				TransitionState.transitionState(TitleState, null, []);
+				TransitionState.transitionState(TitleState, null, [], true);
 				// Main Menu Back Animations
-				FlxTween.tween(camGame, {zoom: 5}, 0.8, {ease: FlxEase.expoIn});
+				FlxTween.tween(FlxG.camera, {zoom: 5}, 0.8, {ease: FlxEase.expoIn});
 				FlxTween.tween(bg, {angle: 45}, 0.8, {ease: FlxEase.expoIn});
 				FlxTween.tween(bg, {alpha: 0}, 0.8, {ease: FlxEase.expoIn});
 				if (!ClientPrefs.data.lowQuality)
@@ -431,9 +434,9 @@ class MainMenuState extends MusicBeatState
 					Cursor.hide();
 					FlxG.sound.play(Paths.sound('confirmMenu'));
 					// Main Menu Select Animations
-					FlxTween.tween(camGame, {zoom: 5}, 0.8, {ease: FlxEase.expoIn, onComplete: function(twn:FlxTween)
+					FlxTween.tween(FlxG.camera, {zoom: 5}, 0.8, {ease: FlxEase.expoIn, onComplete: function(twn:FlxTween)
 					{
-						camGame.zoom = 1;
+						FlxG.camera.zoom = 1;
 					}});
 					FlxTween.tween(bg, {angle: 45}, 0.8, {ease: FlxEase.expoIn});
 					if (!ClientPrefs.data.lowQuality)
@@ -508,8 +511,10 @@ class MainMenuState extends MusicBeatState
 		trace(daChoice);
 		switch (daChoice)
 		{
+			case 'story_mode':
+				TransitionState.transitionState(states.StoryMenuState, {transitionType: "stickers"},[], true);
 			case 'freeplay':
-				TransitionState.transitionState(FreeplayState, {transitionType: "instant"});
+				TransitionState.transitionState(FreeplayState, {transitionType: "stickers"},[], true);
 			case 'socials':
 				MusicBeatState.switchState(new SocialsState());
 			#if MODS_ALLOWED
@@ -517,7 +522,7 @@ class MainMenuState extends MusicBeatState
 				MusicBeatState.switchState(new ModsMenuState());
 			#end
 			case 'achievements':
-				TransitionState.transitionState(AchievementsMenuState, {transitionType: "instant"});
+				TransitionState.transitionState(AchievementsMenuState, {transitionType: "fallRandom"}, [], true);
 			case 'credits':
 				MusicBeatState.switchState(new CreditsState());
 			case 'options':
@@ -575,9 +580,9 @@ class MainMenuState extends MusicBeatState
 
 		if (!selectedSomethin)
 		{
-			camGame.zoom = zoomies;
+			FlxG.camera.zoom = zoomies;
 
-			FlxTween.tween(camGame, {zoom: 1}, Conductor.crochet / 1300, {
+			FlxTween.tween(FlxG.camera, {zoom: 1}, Conductor.crochet / 1300, {
 				ease: FlxEase.quadOut
 			});
 		}

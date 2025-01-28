@@ -63,63 +63,14 @@ enum abstract WaveformTarget(String)
 	var INST = 'inst';
 	var PLAYER = 'voc';
 	var OPPONENT = 'opp';
+	var GF = 'gf';
 }
 
 class ChartingStatePsych extends MusicBeatState implements PsychUIEventHandler.PsychUIEvent
 {
 	public static final defaultEvents:Array<Array<String>> =
 	[
-		['', "Nothing. Yep, that's right."], //Always leave this one empty pls
-		['Dadbattle Spotlight', "Used in Dad Battle,\nValue 1: 0/1 = ON/OFF,\n2 = Target Dad\n3 = Target BF"],
-		['Hey!', "Plays the \"Hey!\" animation from Bopeebo,\nValue 1: BF = Only Boyfriend, GF = Only Girlfriend,\nSomething else = Both.\nValue 2: Custom animation duration,\nleave it blank for 0.6s"],
-		['Set GF Speed', "Sets GF head bopping speed,\nValue 1: 1 = Normal speed,\n2 = 1/2 speed, 4 = 1/4 speed etc.\nUsed on Fresh during the beatbox parts.\n\nWarning: Value must be integer!"],
-		['Philly Glow', "Exclusive to Week 3\nValue 1: 0/1/2 = OFF/ON/Reset Gradient\n \nNo, i won't add it to other weeks."],
-		['Kill Henchmen', "For Mom's songs, don't use this please, i love them :("],
-		['Add Camera Zoom', "Used on MILF on that one \"hard\" part\nValue 1: Camera zoom add (Default: 0.015)\nValue 2: UI zoom add (Default: 0.03)\nLeave the values blank if you want to use Default."],
-		['BG Freaks Expression', "Should be used only in \"school\" Stage!"],
-		['Trigger BG Ghouls', "Should be used only in \"schoolEvil\" Stage!"],
-		['Play Animation', "Plays an animation on a Character,\nonce the animation is completed,\nthe animation changes to Idle\n\nValue 1: Animation to play.\nValue 2: Character (Dad, BF, GF)"],
-		['Camera Follow Pos', "Value 1: X\nValue 2: Y\n\nThe camera won't change the follow point\nafter using this, for getting it back\nto normal, leave both values blank."],
-		['Change Focus', 'Move the focus of the camera to a specific character\nLeave it empty to return the camera to normal.'],
-		['Set Game Cam Zoom and angle', "Value 1: Cam Zoom \n(1 is default, but depends in the stage's) \n Value 2: Cam angle"],
-		['Set hud Cam Zoom and angle', "Value 1: Hud Cam Zoom \n\n (1 is default, but depends) \n Value 2: Cam angle"],
-		['Alt Idle Animation', "Sets a specified postfix after the idle animation name.\nYou can use this to trigger 'idle-alt' if you set\nValue 2 to -alt\n\nValue 1: Character to set (Dad, BF or GF)\nValue 2: New postfix (Leave it blank to disable)"],
-		['Screen Shake', "Value 1: Camera shake\nValue 2: HUD shake\n\nEvery value works as the following example: \"1, 0.05\".\nThe first number (1) is the duration.\nThe second number (0.05) is the intensity."],
-		['Change Character', "Value 1: Character to change (Dad, BF, GF)\nValue 2: New character's name"],
-		['Change Scroll Speed', "Value 1: Scroll Speed Multiplier (1 is default)\nValue 2: Time it takes to change fully in seconds."],
-		['Set Property', "Value 1: Variable name\nValue 2: New value"],
-		['Play Sound', "Value 1: Sound file name\nValue 2: Volume (Default: 1), ranges from 0 to 1"],
-		['Change Mania', "Value 1: The new mania value (min: 0; max: 9)"],
-		['Change Mania (Special)', "Value 1: The new mania value (min: 0; max: 9)"],
-		['Super Burst', "Funnie Powerup"],
-		['Burst Dad', "Funnie Dad Burst"],
-		['Burst Boyfriend', "Funnie BF Burst"],
-		['Burst Dad 2', "Funnie Dad 2 Burst"],
-		['Burst BF2', "Funnie BF 2 Burst"],
-		['Switch Scroll', "Swap da scroll. Value 1: True or False"],
-		['Dad Fly', "Fly da dad. Value 1: True or False"],
-		['Turn on StrumFocus', "focuses the strums"],
-		['Turn off StrumFocus', "un-focuses the strums"],
-		['Fade In', "Hello There.\nValue 1 = time it takes to fade."],
-		['Fade Out', "Bye Bye!\nValue 1 = time it takes to fade."],
-		['Silhouette', 'KSGDUSN UYGD WHERE DID THE CHARACTERS GO!?!?!!?\nValue 1 Can Either Be Black Or White. Leave Blank For Normal'],
-		['Save Song Posititon', 'Place event where the player will start the song when they retry after they die.'],
-		['False Timer', 'Dang that was a short so-OH MY GOD WAIT I HAVE 5 MINUTES LEFT WHAT!\nPlace the event where the timer will revert back to the next\nfalse timer event or the actual length of the song.'],
-		['Chromatic Aberration', "Adds Le Chromatic Aberration.\nValue 1 = Amount Of Abberation"],
-		['Move Window', "Move The Window. No Im Not Kidding. Value1 = X Posiion. Value2 = Y Position."],
-		['Static', "Da Static\nValue 1 = Type Of Static:\n0 = Full Static\n1 = I See You\n2 = Half Static\n3 = No Static"],
-		['Static Fade', "Da Static Fade\nValue 1 = Time To Fade Static\nValue 2 = Alpha to Fade Static To"],
-		['Thunderstorm Trigger', "Ayo Its Raining.\nValue 1 = Type Of Storm.\n0 = light rain\n1 = heavy rain\n2 = thunderstorm\n3 = clear skys"],
-		['Rave Mode', "Reworked and WAY cooler!\nValue 1 can either be \n0(Off), 1(Light Rave), 2(Light Rave with Spotlight),\n3(Light Rave with Philly Glow), 4(Light Rave with Spotlight and Philly Glow),\n5(Heavy Rave), 6(Heavy Rave with Spotlight),\n7(Heavy Rave with Philly Glow), 8(Heavy Rave with Spotlight and Philly Glow)\nValue 2 can either be A or M for Auto and Manual toggle.\n\nFor now, the spotlight is automated, and same with\nPhilly Glow, but i'm working on it."],
-		['gfScared', "Value 1 can be true or false."],
-		['Freeze Notes', "Freeze The Notes Mid-Song"],
-		['Funnie Window Tween', 'Ayo What The Window Doin?\nValue 1: X,Y\nValue 2: Time'],
-		['Chrom Beat Effect', "Does The Chromatic Abberation Effect\nOn Every Beathit.\nSlow = Every 4 beats\nFast = Every 2 beats\nFaster = Every 1 beat\nslower = Every 8 beats\nMUST BE LOWER CASE!"],
-		['Change Lyric', 'AYO LYRICS!?!?!?!?!?!?ASKJSD:LKHSFCHU:OSCHNFC:OUSJKL BFLJS BFHNIKKS FNCS CFL>SFBHPOIS FLJKSN\nValue 1 = Lyrics\nValue 2 = Color And Effect\nValue 2 Is Optional.\nEx. Value 1 = da lyric Value 2 = white,fadein'],
-		['Enable or Disable Dad Trail', 'Can be either true or false.\nDon\'t ask what it does, you already know.'],
-		['Enable or Disable BF Trail', 'Can be either true or false.\nDon\'t ask what it does, you already know.'],
-		['Enable or Disable GF Trail', 'Can be either true or false.\nDon\'t ask what it does, you already know.'],
-		['window shake', 'Value 1: How Much (Ex: 12,12), Value 2: How Long'],
+		// Events are now automated.
 	];
 	
 	public static var keysArray:Array<FlxKey> = [ONE, TWO, THREE, FOUR, FIVE, SIX, SEVEN, EIGHT]; //Used for Vortex Editor
@@ -220,6 +171,8 @@ class ChartingStatePsych extends MusicBeatState implements PsychUIEventHandler.P
 	
 	var vocals:FlxSound = new FlxSound();
 	var opponentVocals:FlxSound = new FlxSound();
+	var gfVocals:FlxSound = new FlxSound();
+	var extraTracks:Array<FlxSound> = [];
 
 	var timeLine:FlxSprite;
 	var infoText:FlxText;
@@ -254,6 +207,8 @@ class ChartingStatePsych extends MusicBeatState implements PsychUIEventHandler.P
 
 	override function create()
 	{
+		states.editors.ChartEditorEvents.pushToArray(defaultEvents);
+		Cursor.cursorMode = Pointer;
 		if(Difficulty.list.length < 1) Difficulty.resetList();
 		_keysPressedBuffer.resize(keysArray.length);
 
@@ -262,11 +217,14 @@ class ChartingStatePsych extends MusicBeatState implements PsychUIEventHandler.P
 		FlxG.mouse.visible = true;
 		FlxG.sound.list.add(vocals);
 		FlxG.sound.list.add(opponentVocals);
+		FlxG.sound.list.add(gfVocals);
 
 		vocals.autoDestroy = false;
 		vocals.looped = true;
 		opponentVocals.autoDestroy = false;
 		opponentVocals.looped = true;
+		gfVocals.autoDestroy = false;
+		gfVocals.looped = true;
 
 		initPsychCamera();
 		camUI = new FlxCamera();
@@ -404,15 +362,15 @@ class ChartingStatePsych extends MusicBeatState implements PsychUIEventHandler.P
 		selectionBox.visible = false;
 		add(selectionBox);
 
-		infoBox = new PsychUIBox(infoBoxPosition.x, infoBoxPosition.y, 220, 220, ['Information']);
+		infoBox = new PsychUIBox(infoBoxPosition.x, infoBoxPosition.y, 250, 620, ['Information']);
 		infoBox.scrollFactor.set();
 		infoBox.cameras = [camUI];
-		infoText = new FlxText(15, 15, 230, '', 16);
+		infoText = new FlxText(15, 15, 260, '', 16);
 		infoText.scrollFactor.set();
 		infoBox.getTab('Information').menu.add(infoText);
 		add(infoBox);
 
-		mainBox = new PsychUIBox(mainBoxPosition.x, mainBoxPosition.y, 300, 280, ['Charting', 'Data', 'Events', 'Note', 'Section', 'Song']);
+		mainBox = new PsychUIBox(mainBoxPosition.x, mainBoxPosition.y, 300, 480, ['Charting', 'Data', 'Events', 'Note', 'Section', 'Song']);
 		mainBox.selectedName = 'Song';
 		mainBox.scrollFactor.set();
 		mainBox.cameras = [camUI];
@@ -480,6 +438,8 @@ class ChartingStatePsych extends MusicBeatState implements PsychUIEventHandler.P
 				vocals.pause();
 			if(FlxG.sound.music.time >= opponentVocals.length)
 				opponentVocals.pause();
+			if(FlxG.sound.music.time >= gfVocals.length)
+				gfVocals.pause();
 		}
 
 		reloadNotes();
@@ -504,6 +464,9 @@ class ChartingStatePsych extends MusicBeatState implements PsychUIEventHandler.P
 		gameOverCharDropDown.list = gameOverCharacters;
 
 		stageDropDown.list = loadFileList('stages/', 'data/stageList.txt');
+
+		if (Difficulty.list.length <= 0 || Difficulty.list == []) Difficulty.list = Difficulty.defaultList;
+		difficultyDropDown.list = Difficulty.list;
 		onChartLoaded();
 		changeMania();
 
@@ -625,17 +588,18 @@ class ChartingStatePsych extends MusicBeatState implements PsychUIEventHandler.P
 			events: [],
 			bpm: 150,
 			needsVoices: true,
-			newVoiceStyle: false,
 			speed: 1,
 			offset: 0,
+
+			extraTracks: [],
 
 			mania: Note.defaultMania,
 			startMania: Note.defaultMania,
 
 			player1: 'bf',
 			player2: 'dad',
-			player5: 'bf',
-			player4: 'dad',
+			player5: null,
+			player4: null,
 			gfVersion: 'gf',
 			stage: 'stage',
 			format: 'psych_v1'
@@ -668,6 +632,9 @@ class ChartingStatePsych extends MusicBeatState implements PsychUIEventHandler.P
 		songNameInputText.text = PlayState.SONG.song;
 		allowVocalsCheckBox.checked = (PlayState.SONG.needsVoices != false); //If the song for some reason does not have this value, it will be set to true
 
+		maniaStepper.value = PlayState.SONG.mania;
+		startManiaStepper.value = PlayState.SONG.startMania;
+
 		bpmStepper.value = PlayState.SONG.bpm;
 		scrollSpeedStepper.value = PlayState.SONG.speed;
 		audioOffsetStepper.value = Reflect.hasField(PlayState.SONG, 'offset') ? PlayState.SONG.offset : 0;
@@ -679,6 +646,7 @@ class ChartingStatePsych extends MusicBeatState implements PsychUIEventHandler.P
 		opponent2DropDown.selectedLabel = PlayState.SONG.player4;
 		girlfriendDropDown.selectedLabel = PlayState.SONG.gfVersion;
 		stageDropDown.selectedLabel = PlayState.SONG.stage;
+		difficultyDropDown.selectedLabel = Difficulty.list[PlayState.storyDifficulty];
 		StageData.loadDirectory(PlayState.SONG);
 
 		GRID_COLUMNS_PER_PLAYER = Note.ammo[PlayState.SONG.mania];
@@ -1074,7 +1042,14 @@ class ChartingStatePsych extends MusicBeatState implements PsychUIEventHandler.P
 				vocals.pause();
 			if(FlxG.sound.music.time >= opponentVocals.length)
 				opponentVocals.pause();
-
+			if(FlxG.sound.music.time >= gfVocals.length)
+				gfVocals.pause();
+			for (track in extraTracks)
+			{
+				if(FlxG.sound.music.time >= track.length)
+					track.pause();
+			}
+			
 			if(curSec > 0 && Conductor.songPosition < cachedSectionTimes[curSec])
 				loadSection(curSec - 1);
 			else if(curSec < cachedSectionTimes.length - 1 && Conductor.songPosition >= cachedSectionTimes[curSec + 1])
@@ -1555,7 +1530,8 @@ class ChartingStatePsych extends MusicBeatState implements PsychUIEventHandler.P
 				"\nGF: " + PlayState.SONG.gfVersion +
 				"\nDAD 2: " + PlayState.SONG.player4 + 
 				"\nBF 2: " + PlayState.SONG.player5 + 
-				"\n\nStage: " + PlayState.SONG.stage;
+				"\n\nStage: " + PlayState.SONG.stage +
+				"\n\nDifficulty: " + Difficulty.list[PlayState.storyDifficulty];
 
 			if(str != infoText.text)
 			{
@@ -1951,6 +1927,8 @@ class ChartingStatePsych extends MusicBeatState implements PsychUIEventHandler.P
 
 		@:privateAccess vocals.cleanup(true);
 		@:privateAccess opponentVocals.cleanup(true);
+		@:privateAccess gfVocals.cleanup(true);
+		for (track in extraTracks) @:privateAccess track.cleanup(true);
 		if (PlayState.SONG.needsVoices)
 		{
 			try
@@ -1971,6 +1949,32 @@ class ChartingStatePsych extends MusicBeatState implements PsychUIEventHandler.P
 					opponentVocals.pause();
 					opponentVocals.time = time;
 				}
+				
+				var gfVocal:Sound = Paths.voices(PlayState.SONG.song, 'gf');
+				if(gfVocal != null && gfVocal.length > 0)
+				{
+					gfVocals.loadEmbedded(gfVocal);
+					gfVocals.volume = 0;
+					gfVocals.play();
+					gfVocals.pause();
+					gfVocals.time = time;
+				}
+
+				for (track in PlayState.SONG.extraTracks)
+				{
+					var tracks:Sound = Paths.track(PlayState.SONG.song, track);
+					var exTracks:FlxSound = new FlxSound();
+					if(tracks != null && tracks.length > 0)
+					{
+						exTracks.loadEmbedded(tracks);
+						exTracks.volume = 0;
+						exTracks.play();
+						exTracks.pause();
+						exTracks.time = time;
+						extraTracks.push(exTracks);
+						FlxG.sound.list.add(exTracks);
+					}
+				}
 			}
 			catch (e:Dynamic) {}
 		}
@@ -1988,7 +1992,8 @@ class ChartingStatePsych extends MusicBeatState implements PsychUIEventHandler.P
 	{
 		trace('song completed');
 		setSongPlaying(false);
-		Conductor.songPosition = FlxG.sound.music.time = vocals.time = opponentVocals.time = FlxG.sound.music.length - 1;
+		Conductor.songPosition = FlxG.sound.music.time = vocals.time = opponentVocals.time = gfVocals.time = FlxG.sound.music.length - 1;
+		for (track in extraTracks) track.time = FlxG.sound.music.length - 1;
 		curSec = PlayState.SONG.notes.length - 1;
 		forceDataUpdate = true;
 	}
@@ -1998,9 +2003,13 @@ class ChartingStatePsych extends MusicBeatState implements PsychUIEventHandler.P
 		FlxG.sound.music.volume = instVolumeStepper.value;
 		vocals.volume = playerVolumeStepper.value;
 		opponentVocals.volume = opponentVolumeStepper.value;
+		gfVocals.volume = gfVolumeStepper.value;
+		for (track in extraTracks) track.volume = trackVolumeStepper.value;
 		if(instMuteCheckBox.checked) FlxG.sound.music.volume = 0;
 		if(playerMuteCheckBox.checked) vocals.volume = 0;
 		if(opponentMuteCheckBox.checked) opponentVocals.volume = 0;
+		if(gfMuteCheckBox.checked) gfVocals.volume = 0;
+		if(trackMuteCheckBox.checked) for (track in extraTracks) track.volume = 0;
 	}
 
 	var playbackRate:Float = 1;
@@ -2011,6 +2020,8 @@ class ChartingStatePsych extends MusicBeatState implements PsychUIEventHandler.P
 		FlxG.sound.music.pitch = value;
 		vocals.pitch = value;
 		opponentVocals.pitch = value;
+		gfVocals.pitch = value;
+		for (track in extraTracks) track.pitch = value;
 		#end
 	}
 
@@ -2020,18 +2031,24 @@ class ChartingStatePsych extends MusicBeatState implements PsychUIEventHandler.P
 
 		vocals.time = FlxG.sound.music.time;
 		opponentVocals.time = FlxG.sound.music.time;
+		gfVocals.time = FlxG.sound.music.time;
+		for (track in extraTracks) track.time = FlxG.sound.music.time;
 
 		if(doPlay)
 		{
 			FlxG.sound.music.play();
 			vocals.play();
 			opponentVocals.play();
+			gfVocals.play();
+			for (track in extraTracks) track.play();
 		}
 		else
 		{
 			FlxG.sound.music.pause();
 			vocals.pause();
 			opponentVocals.pause();
+			gfVocals.pause();
+			for (track in extraTracks) track.pause();
 		}
 
 		for (note in strumLineNotes)
@@ -2471,6 +2488,10 @@ class ChartingStatePsych extends MusicBeatState implements PsychUIEventHandler.P
 	var playerMuteCheckBox:PsychUICheckBox;
 	var opponentVolumeStepper:PsychUINumericStepper;
 	var opponentMuteCheckBox:PsychUICheckBox;
+	var gfVolumeStepper:PsychUINumericStepper;
+	var gfMuteCheckBox:PsychUICheckBox;
+	var trackVolumeStepper:PsychUINumericStepper;
+	var trackMuteCheckBox:PsychUICheckBox;
 	function addChartingTab()
 	{
 		var tab_group = mainBox.getTab('Charting').menu;
@@ -2504,11 +2525,19 @@ class ChartingStatePsych extends MusicBeatState implements PsychUIEventHandler.P
 		playerVolumeStepper.onValueChange = updateAudioVolume;
 		opponentVolumeStepper = new PsychUINumericStepper(objX + 200, objY, 0.1, 1, 0, 1, 1);
 		opponentVolumeStepper.onValueChange = updateAudioVolume;
+		
+		objY += 50;
+		gfVolumeStepper = new PsychUINumericStepper(objX, objY, 0.1, 1, 0, 1, 1);
+		gfVolumeStepper.onValueChange = updateAudioVolume;
+		trackVolumeStepper = new PsychUINumericStepper(objX + 100, objY, 0.1, 1, 0, 1, 1);
+		trackVolumeStepper.onValueChange = updateAudioVolume;
 
 		objY += 25;
 		instMuteCheckBox = new PsychUICheckBox(objX, objY, 'Mute', 60, updateAudioVolume);
 		playerMuteCheckBox = new PsychUICheckBox(objX + 100, objY, 'Mute', 60, updateAudioVolume);
 		opponentMuteCheckBox = new PsychUICheckBox(objX + 200, objY, 'Mute', 60, updateAudioVolume);
+		gfMuteCheckBox = new PsychUICheckBox(objX + 300, objY, 'Mute', 60, updateAudioVolume);
+		trackMuteCheckBox = new PsychUICheckBox(objX + 400, objY, 'Mute (All tracks will be munted!)', 60, updateAudioVolume);
 
 		tab_group.add(playbackSlider);
 		tab_group.add(mouseSnapCheckBox);
@@ -2524,12 +2553,18 @@ class ChartingStatePsych extends MusicBeatState implements PsychUIEventHandler.P
 		tab_group.add(new FlxText(instVolumeStepper.x, instVolumeStepper.y - 15, 100, 'Inst. Volume:'));
 		tab_group.add(new FlxText(playerVolumeStepper.x, playerVolumeStepper.y - 15, 100, 'Main Vocals:'));
 		tab_group.add(new FlxText(opponentVolumeStepper.x, opponentVolumeStepper.y - 15, 100, 'Opp. Vocals:'));
+		tab_group.add(new FlxText(gfVolumeStepper.x, gfVolumeStepper.y - 15, 100, 'GF Vocals:'));
+		tab_group.add(new FlxText(trackVolumeStepper.x, trackVolumeStepper.y - 15, 100, 'Extra Tracks:'));
 		tab_group.add(instVolumeStepper);
 		tab_group.add(instMuteCheckBox);
 		tab_group.add(playerVolumeStepper);
 		tab_group.add(playerMuteCheckBox);
 		tab_group.add(opponentVolumeStepper);
 		tab_group.add(opponentMuteCheckBox);
+		tab_group.add(gfVolumeStepper);
+		tab_group.add(gfMuteCheckBox);
+		tab_group.add(trackVolumeStepper);
+		tab_group.add(trackMuteCheckBox);
 	}
 
 	var gameOverCharDropDown:PsychUIDropDownMenu;
@@ -3195,6 +3230,8 @@ class ChartingStatePsych extends MusicBeatState implements PsychUIEventHandler.P
 				var parentFolder:String = Song.chartPath.replace('\\', '/');
 				parentFolder = parentFolder.substr(0, Song.chartPath.lastIndexOf('/')+1);
 				var notetypeFile:Array<String> = CoolUtil.coolTextFile(parentFolder + 'notetypes.txt');
+				trace(parentFolder);
+				trace(notetypeFile);
 				if(notetypeFile.length > 0)
 				{
 					for (ntTyp in notetypeFile)
@@ -3296,6 +3333,7 @@ class ChartingStatePsych extends MusicBeatState implements PsychUIEventHandler.P
 	var audioOffsetStepper:PsychUINumericStepper;
 
 	var stageDropDown:PsychUIDropDownMenu;
+	var difficultyDropDown:PsychUIDropDownMenu;
 	var playerDropDown:PsychUIDropDownMenu;
 	var player2DropDown:PsychUIDropDownMenu;
 	var opponentDropDown:PsychUIDropDownMenu;
@@ -3389,6 +3427,23 @@ class ChartingStatePsych extends MusicBeatState implements PsychUIEventHandler.P
 			StageData.loadDirectory(PlayState.SONG);
 			trace('selected $stage');
 		});
+
+		difficultyDropDown = new PsychUIDropDownMenu(objX + 140, objY + 120, [''], function(id:Int, difficulty:String)
+		{
+			try
+			{
+				PlayState.storyDifficulty = id;
+				if (difficulty.toLowerCase() == "normal")
+					PlayState.SONG = Song.loadFromJson(PlayState.SONG.song.toLowerCase(), PlayState.SONG.song.toLowerCase());
+				else
+					PlayState.SONG = Song.loadFromJson(PlayState.SONG.song.toLowerCase() + '-' + difficulty.toLowerCase(), PlayState.SONG.song.toLowerCase());
+				MusicBeatState.resetState();
+			}
+			catch (e:Any)
+			{
+				trace("File " + PlayState.SONG.song.toLowerCase() + '-' + difficulty.toLowerCase() + " is not found.");
+			}
+		});
 		
 		opponentDropDown = new PsychUIDropDownMenu(objX, objY + 80, [''], function(id:Int, character:String)
 		{
@@ -3427,12 +3482,14 @@ class ChartingStatePsych extends MusicBeatState implements PsychUIEventHandler.P
 
 		//dropdowns
 		tab_group.add(new FlxText(stageDropDown.x, stageDropDown.y - 15, 80, 'Stage:'));
+		tab_group.add(new FlxText(difficultyDropDown.x, difficultyDropDown.y - 15, 80, 'Difficulty:'));
 		tab_group.add(new FlxText(playerDropDown.x, playerDropDown.y - 15, 80, 'Player:'));
 		tab_group.add(new FlxText(player2DropDown.x, player2DropDown.y - 15, 80, 'Player 2:'));
 		tab_group.add(new FlxText(opponentDropDown.x, opponentDropDown.y - 15, 80, 'Opponent:'));
 		tab_group.add(new FlxText(opponent2DropDown.x, opponent2DropDown.y - 15, 80, 'Opponent 2:'));
 		tab_group.add(new FlxText(girlfriendDropDown.x, girlfriendDropDown.y - 15, 80, 'Girlfriend:'));
 		tab_group.add(stageDropDown);
+		tab_group.add(difficultyDropDown);
 		tab_group.add(girlfriendDropDown);
 		tab_group.add(opponentDropDown);
 		tab_group.add(opponent2DropDown);
@@ -4821,7 +4878,7 @@ class ChartingStatePsych extends MusicBeatState implements PsychUIEventHandler.P
 		setSongPlaying(false);
 		chartEditorSave.flush(); //just in case a random crash happens before loading
 
-		openSubState(new EditorPlayState(cast notes, [vocals, opponentVocals]));
+		openSubState(new EditorPlayState(cast notes, [vocals, opponentVocals, gfVocals]));
 		upperBox.isMinimized = true;
 		upperBox.visible = mainBox.visible = infoBox.visible = false;
 	}
@@ -5172,6 +5229,8 @@ class ChartingStatePsych extends MusicBeatState implements PsychUIEventHandler.P
 				vocals;
 			case OPPONENT:
 				opponentVocals;
+			case GF:
+				gfVocals;
 			default:
 				null;
 		}

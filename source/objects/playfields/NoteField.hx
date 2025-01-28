@@ -1,5 +1,6 @@
 package objects.playfields;
 
+import haxe.Exception;
 import math.*;
 import flixel.math.FlxMath;
 import flixel.math.FlxAngle;
@@ -170,7 +171,7 @@ class NoteField extends FieldBase
 			var object = drawNote(obj, pos);
 			if (object == null)
 				continue;
-			object.zIndex += (obj.animation != null && obj.animation.curAnim != null && obj.animation.curAnim.name == 'confirm') ? 0 : 0;
+			object.zIndex += (obj.animation != null && obj.animation.curAnim != null && obj.animation.curAnim.name == 'confirm') ? -1 : -2;
 
 			lookupMap.set(obj, object);
 			drawQueue.push(object);
@@ -328,7 +329,7 @@ class NoteField extends FieldBase
 							shit.alphaMultiplier *= camera.alpha;
 						
 						getScreenPosition(point, camera);
-						var drawItem = camera.startTrianglesBatch(graphic, shader.bitmap.filter == 4, true, null, true, shader);
+						var drawItem = camera.startTrianglesBatch(graphic, true, true, null, true, shader);
 						@:privateAccess
 						{
 							drawItem.addTrianglesColorArray(vertices, indices, uvData, null, point, camera._bounds, transforms);
@@ -673,7 +674,18 @@ class NoteField extends FieldBase
 			if(len <= 0) len = e.message.length;
 			#if windows
 			lime.app.Application.current.window.alert('ERROR: ' + e.message.substr(0, len)+'\nChances are your noteskin broke if you\'re reading this', 'Error Loading!');
-			Sys.exit(0);
+			// FlxTween.tween(FlxG.sound.music, { pitch: 0 }, FlxG.random.float(1, 3), {
+			// 	onComplete: function(e) {
+			// 		if (PlayState.isStoryMode) {
+			// 			FlxG.switchState(new states.StoryMenuState());
+			// 		} else {
+			// 			FlxG.switchState(new states.FreeplayState());
+			// 		}
+			// 		return null;
+			// 	}
+			// });
+			Main.closeGame();
+					
 			#else
 			throw 'Error: '+e+'\nChances are your noteskin broke something if you\'re reading this';
 			#end

@@ -21,7 +21,13 @@ class PauseSubState extends MusicBeatSubstate
 	var difficultyChoices = [];
 	var curSelected:Int = 0;
 
+	var pausebg:FlxSprite;
+	var pausebg1:FlxSprite;
+	var iconBG:FlxSprite;
+	var icon:HealthIcon;
+
 	var pauseMusic:FlxSound;
+	var opponentText:FlxText;
 	var practiceText:FlxText;
 	var skipTimeText:FlxText;
 	var skipTimeTracker:Alphabet;
@@ -68,6 +74,7 @@ class PauseSubState extends MusicBeatSubstate
 			if(pauseSong != null) pauseMusic.loadEmbedded(Paths.music(pauseSong), true, true);
 		}
 		pauseMusic.volume = 0;
+		pauseMusic.pitch = PlayState.instance.playbackRate;
 		pauseMusic.play(false, FlxG.random.int(0, Std.int(pauseMusic.length / 2)));
 
 		FlxG.sound.list.add(pauseMusic);
@@ -79,13 +86,91 @@ class PauseSubState extends MusicBeatSubstate
 		bg.scrollFactor.set();
 		add(bg);
 
+		if (!ClientPrefs.data.lowQuality)
+		{
+			pausebg = new FlxSprite().loadGraphic(Paths.image('pause/pausemenubg'));
+			pausebg.color = 0xFF1E1E1E;
+			pausebg.scrollFactor.set();
+			pausebg.updateHitbox();
+			pausebg.screenCenter();
+			pausebg.antialiasing = ClientPrefs.data.globalAntialiasing;
+			add(pausebg);
+			pausebg.x += 200;
+			pausebg.y -= 200;
+			pausebg.alpha = 0;
+			FlxTween.tween(pausebg, {
+				x: 0,
+				y: 0,
+				alpha: 1
+			}, 1, {ease: FlxEase.quadOut});
+
+			pausebg1 = new FlxSprite().loadGraphic(Paths.image('pause/iconbackground'));
+			pausebg1.color = 0xFF141414;
+			pausebg1.scrollFactor.set();
+			pausebg1.updateHitbox();
+			pausebg1.screenCenter();
+			pausebg1.antialiasing = ClientPrefs.data.globalAntialiasing;
+			add(pausebg1);
+			pausebg1.x -= 150;
+			pausebg1.y += 150;
+			pausebg1.alpha = 0;
+			FlxTween.tween(pausebg1, {
+				x: 0,
+				y: 0,
+				alpha: 1
+			}, 0.9, {ease: FlxEase.quadOut});
+
+			iconBG = new FlxSprite().loadGraphic(Paths.image('pause/iconbackground'));
+			iconBG.flipX = true;
+			if (!PlayState.instance.opponentmode)
+				iconBG.color = FlxColor.fromRGB(PlayState.instance.dad.healthColorArray[0], PlayState.instance.dad.healthColorArray[1],
+					PlayState.instance.dad.healthColorArray[2]);
+			else
+				iconBG.color = FlxColor.fromRGB(PlayState.instance.boyfriend.healthColorArray[0], PlayState.instance.boyfriend.healthColorArray[1],
+					PlayState.instance.boyfriend.healthColorArray[2]);
+			iconBG.scrollFactor.set();
+			iconBG.updateHitbox();
+			iconBG.screenCenter();
+			iconBG.antialiasing = ClientPrefs.data.globalAntialiasing;
+			add(iconBG);
+			iconBG.x += 100;
+			iconBG.y += 100;
+			iconBG.alpha = 0;
+			FlxTween.tween(iconBG, {
+				x: 0,
+				y: 0,
+				alpha: 1
+			}, 0.8, {ease: FlxEase.quadOut});
+
+			if (!PlayState.instance.opponentmode)
+				icon = new HealthIcon(PlayState.instance.dad.healthIcon);
+			else
+				icon = new HealthIcon(PlayState.instance.boyfriend.healthIcon);
+			icon.setGraphicSize(Std.int(icon.width * 1.7));
+			icon.antialiasing = ClientPrefs.data.globalAntialiasing;
+			icon.x = FlxG.width - 230;
+			icon.y = FlxG.height - 180;
+			icon.flipX = true;
+			icon.scrollFactor.set();
+			icon.updateHitbox();
+			add(icon);
+			icon.x += 150;
+			icon.y += 150;
+			icon.alpha = 0;
+			FlxTween.tween(icon, {
+				x: icon.x - 150,
+				y: icon.y - 150,
+				alpha: 1
+			}, 0.8, {ease: FlxEase.quadOut});
+		}
+
 		var levelInfo:FlxText = new FlxText(20, 15, 0, PlayState.SONG.song, 32);
 		levelInfo.scrollFactor.set();
 		levelInfo.setFormat(Paths.font("vcr.ttf"), 32);
 		levelInfo.updateHitbox();
 		add(levelInfo);
-
-		var levelDifficulty:FlxText = new FlxText(20, 15 + 32, 0, Difficulty.getString().toUpperCase(), 32);
+		var chartModifierText = PlayState.instance.chartModifier != "Normal" ? ' (' + PlayState.instance.chartModifier + ')'.toUpperCase() : '';
+		var levelDifficulty:FlxText = new FlxText(20, 15 + 32, 0, Difficulty.getString().toUpperCase() + chartModifierText.toUpperCase(), 32);
 		levelDifficulty.scrollFactor.set();
 		levelDifficulty.setFormat(Paths.font('vcr.ttf'), 32);
 		levelDifficulty.updateHitbox();
@@ -105,6 +190,15 @@ class PauseSubState extends MusicBeatSubstate
 		practiceText.visible = PlayState.instance.practiceMode;
 		add(practiceText);
 
+		opponentText = new FlxText(20, 15 + 96, 0, "OPPONENT MODE", 32);
+		opponentText.scrollFactor.set();
+		opponentText.setFormat(Paths.font('vcr.ttf'), 32);
+		opponentText.y = opponentText.y - 5;
+		opponentText.alpha = 0;
+		opponentText.updateHitbox();
+		opponentText.visible = PlayState.instance.opponentmode;
+		add(opponentText);
+
 		var chartingText:FlxText = new FlxText(20, 15 + 101, 0, Language.getPhrase("Charting Mode").toUpperCase(), 32);
 		chartingText.scrollFactor.set();
 		chartingText.setFormat(Paths.font('vcr.ttf'), 32);
@@ -121,11 +215,13 @@ class PauseSubState extends MusicBeatSubstate
 		levelInfo.x = FlxG.width - (levelInfo.width + 20);
 		levelDifficulty.x = FlxG.width - (levelDifficulty.width + 20);
 		blueballedTxt.x = FlxG.width - (blueballedTxt.width + 20);
+		opponentText.x = FlxG.width - (opponentText.width + 20);
 
 		FlxTween.tween(bg, {alpha: 0.6}, 0.4, {ease: FlxEase.quartInOut});
 		FlxTween.tween(levelInfo, {alpha: 1, y: 20}, 0.4, {ease: FlxEase.quartInOut, startDelay: 0.3});
 		FlxTween.tween(levelDifficulty, {alpha: 1, y: levelDifficulty.y + 5}, 0.4, {ease: FlxEase.quartInOut, startDelay: 0.5});
 		FlxTween.tween(blueballedTxt, {alpha: 1, y: blueballedTxt.y + 5}, 0.4, {ease: FlxEase.quartInOut, startDelay: 0.7});
+		FlxTween.tween(opponentText, {alpha: 1, y: opponentText.y + 5}, 0.4, {ease: FlxEase.quartInOut, startDelay: 0.9});
 
 		grpMenuShit = new FlxTypedGroup<Alphabet>();
 		add(grpMenuShit);
@@ -163,7 +259,6 @@ class PauseSubState extends MusicBeatSubstate
 	override function update(elapsed:Float)
 	{
 		cantUnpause -= elapsed;
-
 		if (pauseMusic.volume < 0.5)
 			pauseMusic.volume += 0.01 * elapsed;
 
@@ -173,14 +268,6 @@ class PauseSubState extends MusicBeatSubstate
 		{
 			close();
 			return;
-		}
-
-		if(FlxG.keys.justPressed.F5)
-		{
-			FlxTransitionableState.skipNextTransIn = true;
-			FlxTransitionableState.skipNextTransOut = true;
-			PlayState.nextReloadAll = true;
-			MusicBeatState.resetState();
 		}
 
 		updateSkipTextStuff();
@@ -336,7 +423,6 @@ class PauseSubState extends MusicBeatSubstate
 
 					
 					FlxG.sound.playMusic(Paths.music('odd_menu_music'));
-					Conductor.bpm = 65;
 					PlayState.changedDifficulty = false;
 					PlayState.chartingMode = false;
 					FlxG.camera.followLerp = 0;

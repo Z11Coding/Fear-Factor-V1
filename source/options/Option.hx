@@ -47,6 +47,8 @@ class Option
 		if(this.type != 'keybind') this.defaultValue = Reflect.getProperty(ClientPrefs.defaultData, variable);
 		switch(type)
 		{
+			case 'button' | 'label':
+					defaultValue = ''; // never used anyway, so like
 			case 'bool':
 				if(defaultValue == null) defaultValue = false;
 			case 'int' | 'float':
@@ -142,8 +144,64 @@ class Option
 			case 'integer': newValue = 'int';
 			case 'str': newValue = 'string';
 			case 'fl': newValue = 'float';
+			case 'button': newValue = 'button';
+			case 'label': 'label';
 		}
 		type = newValue;
 		return type;
+	}
+}
+
+class EnumOption extends Option
+{
+	public function new<T>(name:String, description:String = '', variable:String, options:EnumValue, ?onChange:Void->Void = null, ?translation:String = null)
+	{
+		var enumOptions:Array<String> = [];
+		for (field in Type.getEnumConstructs(Type.getEnum(options)))
+		{
+			var enumValue = Type.createEnum(Type.getEnum(options), field);
+			if (Reflect.fields(enumValue).length > 0)
+			{
+				throw 'Enum options with arguments are not supported';
+			}
+			enumOptions.push(field);
+		}
+		super(name, description, variable, 'string', enumOptions, onChange, translation);
+	}
+}
+
+class VarOption extends Option
+{
+	public function new<T>(name:String, description:String = '', variable:String, type:String = 'bool', ?options:Array<String> = null, ?onChange:Void->Void = null, ?translation:String = null) {
+		super(name, description, variable, type, options, onChange, translation);
+	}
+
+	// TODO: Override getValue and setValue instead via dynamic functions.
+
+	override public function getValue():Dynamic {
+		return getVariableValue(variable);
+	}
+
+	override public function setValue(value:Dynamic) {
+		try {
+			var parts = variable.split(".");
+			var lastPart = parts.pop();
+			var target = getVariableValue(parts.join("."));
+			Reflect.setProperty(target, lastPart, value);
+		} catch (e:Dynamic) {
+			trace('Error setting value for ' + variable + ': ' + e);
+		}
+	}
+
+	private function getVariableValue(variable:String):Dynamic {
+		var parts = variable.split(".");
+		var current:Dynamic = this;
+		for (part in parts) {
+			if (part == "this") {
+				part = Type.getClassName(Type.getClass(this));
+			}
+			current = Reflect.getProperty(current, part);
+		}
+		return current;
 	}
 }

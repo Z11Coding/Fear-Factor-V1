@@ -1,5 +1,5 @@
 package psychlua;
-
+import llua.State;
 import backend.window.*;
 class WindowFunctions
 {
@@ -29,6 +29,10 @@ class WindowFunctions
 
 		Lua_helper.add_callback(lua, "restoreWindows", function() {
 			CppAPI.restoreWindows();
+		});
+
+		Lua_helper.add_callback(lua, "setTransparency", function(color:Int, ?winName:String) {
+			CppAPI.setTransparency(winName, color);
 		});
 
 		Lua_helper.add_callback(lua, "resetTransparency", function() {
@@ -85,7 +89,7 @@ class WindowFunctions
 		});
 
 		Lua_helper.add_callback(lua, "sendNotification", function(title:String = "", desc:String = "") {
-			WindowUtils.suffix = title;
+			CppAPI.sendWindowsNotification(title, desc);
 		});
 	}
 }

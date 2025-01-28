@@ -15,8 +15,8 @@ class ShadersHandler
 	public static var visualizer:ShaderFilter = new ShaderFilter(new shaders.VisualizerShader());
 	public static var heatwaveShader:ShaderFilter = new ShaderFilter(new shaders.HeatwaveShader().shader);
 	public static var greyscale:ShaderFilter = new ShaderFilter(new Shaders.GreyscaleShader());
-	public static var bloom:ShaderFilter = new ShaderFilter(new Shaders.BloomShader());
 	public static var rainShader:RainShader;
+	public static var motionBlur:shaders.MotionBlur;
     // public static var rtxShader:RTX = new RTX();
 
 	public static function setupRainShader()
@@ -38,6 +38,7 @@ class ShadersHandler
 		sprite.shader = rtxShader;
     }
 
+
     public static function createLight(color:Array<Float>, brightness:Float, alpha:Float):RTXLight {
         return new RTXLight(color, brightness, alpha);
     }
@@ -56,17 +57,6 @@ class ShadersHandler
 		chromaticAberration.shader.data.rOffset.value = [chromeOffset];
 		chromaticAberration.shader.data.gOffset.value = [0.0];
 		chromaticAberration.shader.data.bOffset.value = [chromeOffset * -1];
-	}
-
-	public static function setBloom(blurSize:Float, intensity:Float):Void
-	{
-		bloom.shader.data.blurSize.value = [blurSize];
-		bloom.shader.data.intensity.value = [intensity];
-	}
-
-	public static function updateBloom(time:Float):Void
-	{
-		bloom.shader.data.time.value = [time];
 	}
 
 	public static function setTriangleX(triangle:Float):Void

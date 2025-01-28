@@ -6,36 +6,27 @@ import flixel.util.FlxDestroyUtil;
 class PromptPsych extends BasePrompt
 {
 	var yesFunction:Void->Void;
-	var noFunction:Void->Void;
-	var yesTxt:String;
-	var noTxt:String;
-	public function new(title:String, yesFunction:Void->Void, ?noFunction:Void->Void, yesTxt:String = 'OK', noTxt:String = 'Cancel')
+	public function new(title:String, yesFunction:Void->Void)
 	{
 		this.yesFunction = yesFunction;
-		this.noFunction = noFunction;
-		this.noTxt = noTxt;
-		this.yesTxt = yesTxt;
 		super(title, promptCreate);
 	}
 
 	function promptCreate(_)
 	{
 		var btnY = 390;
-		var btn:PsychUIButton = new PsychUIButton(0, btnY, yesTxt, function() {
+		var btn:PsychUIButton = new PsychUIButton(0, btnY, 'OK', function() {
 			yesFunction();
 			close();
 		});
-		//btn.normalStyle.bgColor = FlxColor.RED;
-		//btn.normalStyle.textColor = FlxColor.WHITE;
+		btn.normalStyle.bgColor = FlxColor.RED;
+		btn.normalStyle.textColor = FlxColor.WHITE;
 		btn.screenCenter(X);
 		btn.x -= 100;
 		btn.cameras = cameras;
 		add(btn);
 
-		var btn:PsychUIButton = new PsychUIButton(0, btnY, noTxt, function() {
-			noFunction();
-			close();
-		});
+		var btn:PsychUIButton = new PsychUIButton(0, btnY, 'Cancel', close);
 		btn.screenCenter(X);
 		btn.x += 100;
 		btn.cameras = cameras;

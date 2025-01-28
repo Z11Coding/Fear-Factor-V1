@@ -39,6 +39,10 @@ typedef TitleData =
 	titley:Float,
 	startx:Float,
 	starty:Float,
+	gfChar:Null<Bool>,
+	gfSprite:String,
+	gfAnimArray:Array<String>,
+	gfAnimIndices:Array<Array<Int>>,
 	gfx:Float,
 	gfy:Float,
 	backgroundSprite:String,
@@ -75,6 +79,7 @@ class TitleState extends MusicBeatState
 
 	public static var updateVersion:String = '';
 	public static var cueSong:Bool;
+	var candance:Bool = true;
 
 	override public function create():Void
 	{
@@ -118,7 +123,7 @@ class TitleState extends MusicBeatState
 		#elseif CHARTING
 		MusicBeatState.switchState(new ChartingState());
 		#else
-		if (cueSong) MusicBeatState.playSong(['beat-battle'], false, 1, 'TransitionState', 'stickers');
+		if (cueSong && Controls.instance != null) MusicBeatState.playSong(['beat-battle'], false, 1, 'TransitionState', 'stickers');
 		else if(FlxG.save.data.flashing == null && !FlashingState.leftState) {
 			FlxTransitionableState.skipNextTransIn = true;
 			FlxTransitionableState.skipNextTransOut = true;
@@ -143,6 +148,8 @@ class TitleState extends MusicBeatState
 		
 			FlxG.switchState(new options.OptionsState());
 		}
+		if (!candance)
+			candance = true;
 	}
 
 	var logoBl:FlxSprite;
@@ -154,6 +161,7 @@ class TitleState extends MusicBeatState
 	{
 		if (!initialized)
 		{
+			backend.window.Priority.setPriority(ClientPrefs.data.gamePriority != -1 ? ClientPrefs.data.gamePriority : 2);
 			/*var diamond:FlxGraphic = FlxGraphic.fromClass(GraphicTransTileDiamond);
 			diamond.persist = true;
 			diamond.destroyOnNoUse = false;
@@ -211,10 +219,14 @@ class TitleState extends MusicBeatState
 		bg.setGraphicSize(Std.int(bg.width * 0.70));
 		bg.updateHitbox();
 		add(bg);
-		if (!FlxG.save.data.complete[0]) add(youngghost);
-		if (!FlxG.save.data.complete[1]) add(jigsawpuzzle);
-		if (!FlxG.save.data.complete[2]) add(micel);
-		if (!FlxG.save.data.complete[3]) add(pennywise);
+		if (FlxG.save.data.complete != null)
+		{
+			if (!FlxG.save.data.complete[0]) add(youngghost);
+			if (!FlxG.save.data.complete[1]) add(jigsawpuzzle);
+			if (!FlxG.save.data.complete[2]) add(micel);
+			if (!FlxG.save.data.complete[3]) add(pennywise);
+		}
+		else FlxG.save.data.complete = [false, false, false, false];
 
 		logoBl = new FlxSprite(titleJSON.titlex, titleJSON.titley);
 		logoBl.frames = Paths.getSparrowAtlas('FearFactorLogoBumpin');
@@ -233,14 +245,39 @@ class TitleState extends MusicBeatState
 		var easterEgg:String = FlxG.save.data.psychDevsEasterEgg;
 		if(easterEgg == null) easterEgg = ''; //html5 fix
 
-		gfDance.frames = Paths.getSparrowAtlas('gfDanceTitle');
-		gfDance.animation.addByIndices('danceLeft', 'gfDance', [30, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14], "", 24, false);
-		gfDance.animation.addByIndices('danceRight', 'gfDance', [15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29], "", 24, false);
+		if (titleJSON.gfSprite != null && titleJSON.gfSprite.length > 0 && titleJSON.gfSprite != "none")
+		{
+			gfDance.frames = Paths.getSparrowAtlas(titleJSON.gfSprite);
+			if ((titleJSON.gfAnimArray != null && titleJSON.gfAnimArray.length > 0) && (titleJSON.gfAnimIndices[0] != null && titleJSON.gfAnimIndices[0].length > 0 || titleJSON.gfAnimIndices[1] != null && titleJSON.gfAnimIndices[1].length > 0))
+			{
+				gfDance.animation.addByIndices('danceLeft', titleJSON.gfAnimArray[0], [30, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14], "", 24, false);
+				gfDance.animation.addByIndices('danceRight', titleJSON.gfAnimArray[1].length > 0 ? titleJSON.gfAnimArray[1] : titleJSON.gfAnimArray[0], [15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29], "", 24, false);
+				gfDance.animation.addByPrefix('Hey', titleJSON.gfAnimArray[2].length > 0 ? titleJSON.gfAnimArray[2] : 'GF Cheer', 24, false);
+			}
+		}
+		else
+		{
+			if (titleJSON.gfChar != null && titleJSON.gfChar)
+				gfDance.frames = Paths.getSparrowAtlas('characters/GF_assets');
+			else if (titleJSON.gfChar != null && !titleJSON.gfChar)
+				gfDance.frames = Paths.getSparrowAtlas('gfDanceTitle');
+			gfDance.animation.addByIndices('danceLeft', 'GF Dancing Beat', [30, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14], "", 24, false);
+			gfDance.animation.addByIndices('danceRight', 'GF Dancing Beat', [15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29], "", 24, false);
+			if (titleJSON.gfChar != null && titleJSON.gfChar) gfDance.animation.addByPrefix('Hey', 'GF Cheer', 24, false);
+		}
 		
 		gfDance.antialiasing = ClientPrefs.data.globalAntialiasing;
 
-		add(gfDance);
-		gfDance.shader = swagShader.shader;
+		if (titleJSON.gfSprite != null && titleJSON.gfSprite.length > 0 && titleJSON.gfSprite != "none")
+		{
+			add(gfDance);
+			gfDance.shader = swagShader.shader;
+		}
+		else if (titleJSON.gfSprite == null || titleJSON.gfSprite.length <= 0 || titleJSON.gfSprite == "")
+		{
+			add(gfDance);
+			gfDance.shader = swagShader.shader;
+		}
 		add(logoBl);
 		logoBl.shader = swagShader.shader;
 
@@ -334,7 +371,7 @@ class TitleState extends MusicBeatState
 		
 		// Call transitionState with MainMenuState as the target state and random options
 		trace("Transitioning to MainMenuState with random transition: " + options);
-		TransitionState.transitionState(MainMenuState, options);
+		TransitionState.transitionState(MainMenuState, options, null, true);
 		trace("Transition complete");
 	}
 
@@ -444,6 +481,8 @@ class TitleState extends MusicBeatState
 				FlxG.sound.play(Paths.sound('confirmMenu'), 0.7);
 
 				transitioning = true;
+				if (titleJSON.gfChar != null && titleJSON.gfChar) gfDance.animation.play('Hey');
+				candance = false;
 				// FlxG.sound.music.stop();
 
 				var tmr = new FlxTimer().start(2, function(tmr:FlxTimer)
@@ -536,12 +575,15 @@ class TitleState extends MusicBeatState
 		if(logoBl != null)
 			logoBl.animation.play('bump', true);
 
-		if(gfDance != null) {
-			danceLeft = !danceLeft;
-			if (danceLeft)
-				gfDance.animation.play('danceRight');
-			else
-				gfDance.animation.play('danceLeft');
+		if (candance)
+		{
+			if(gfDance != null) {
+				danceLeft = !danceLeft;
+				if (danceLeft)
+					gfDance.animation.play('danceRight', true);
+				else
+					gfDance.animation.play('danceLeft', true);
+			}
 		}
 
 		if(!closedState) {
@@ -551,70 +593,38 @@ class TitleState extends MusicBeatState
 				case 1:
 					if (!playJingle) {
 						//FlxG.sound.music.stop();
-						FlxG.sound.music.time = 0;
+						if (FlxG.sound.music != null) FlxG.sound.music.time = 0;
 						FlxG.sound.playMusic(Paths.music('odd_menu_music'), 0);
 						FlxG.sound.music.fadeIn(4, 0, 0.7);
 						playJingle = true;
 					}
 				case 2:
-					#if PSYCH_WATERMARKS
-					createCoolText(['Psych Engine by'], 15);
-					#else
 					createCoolText(['Mixtape Engine by'], 15);
-					#end
-				// credTextShit.visible = true;
 				case 4:
-					#if PSYCH_WATERMARKS
-					addMoreText('Shadow Mario', 15);
-					addMoreText('RiverOaken', 15);
-					addMoreText('shubs', 15);
-					#else
 					addMoreText('Z11Gaming', 15);
-					#end
-				// credTextShit.text += '\npresent...';
-				// credTextShit.addText();
+					addMoreText('Yutamon', 15);
 				case 5:
 					deleteCoolText();
-				// credTextShit.visible = false;
-				// credTextShit.text = 'In association \nwith';
-				// credTextShit.screenCenter();
 				case 6:
-					#if PSYCH_WATERMARKS
 					createCoolText(['Not associated', 'with'], -40);
-					#else
-					createCoolText(["That\'s", 'right'], -40);
-					#end
 				case 8:
 					addMoreText('This Mofo', -40);
 					ngSpr.visible = true;
-				// credTextShit.text += '\nNewgrounds';
 				case 9:
 					deleteCoolText();
 					ngSpr.visible = false;
-				// credTextShit.visible = false;
-
-				// credTextShit.text = 'Shoutouts Tom Fulp';
-				// credTextShit.screenCenter();
 				case 10:
 					createCoolText([curWacky[0]]);
-				// credTextShit.visible = true;
 				case 12:
 					addMoreText(curWacky[1]);
-				// credTextShit.text += '\nlmao';
 				case 13:
 					deleteCoolText();
-				// credTextShit.visible = false;
-				// credTextShit.text = "Friday";
-				// credTextShit.screenCenter();
 				case 14:
 					addMoreColoredText('FNF:', 0, 0xFFFF0000);
-				// credTextShit.visible = true;
 				case 15:
 					addMoreColoredText('Fear', 0, 0xFFFF0000);
-				// credTextShit.text += '\nNight';
 				case 16:
 					addMoreColoredText('Factor', 0, 0xFFFF0000);
-
 				case 17:
 					deleteCoolText();
 					skipIntro();

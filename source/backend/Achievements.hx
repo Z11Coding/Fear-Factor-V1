@@ -4,6 +4,7 @@ package backend;
 import objects.AchievementPopup;
 import haxe.Exception;
 import haxe.Json;
+import llua.State;
 
 #if LUA_ALLOWED
 import psychlua.FunkinLua;
@@ -36,6 +37,26 @@ class Achievements {
 		createAchievement('ur_bad',					{name: "What a Funkin' Disaster!", description: "Complete a Song with a rating lower than 20%."});
 		createAchievement('ur_good',				{name: "Perfectionist", description: "Complete a Song with a rating of 100%."});
 		createAchievement('toastie',				{name: "Toaster Gamer", description: "Have you tried to run the game on a toaster?"});
+		createAchievement('beat_battle',			{name: "Rhythm Master", description: "Beat \"Beat Battle\" on any difficulty higher than Normal."});
+		createAchievement('beat_battle_master',		{name: "King Of Memory", description: "Beat \"Beat Battle\" on at least Reasonable difficulty or higher with no higher then 10 misses."});
+		createAchievement('beat_battle_god',		{name: "God Teir Memory", description: "Beat \"Beat Battle\" on at least Semi-Impossible difficulty or higher with no higher then 25 misses."});
+		createAchievement('beat_battle_fanatic',	{name: "Number One Fan", description: "Beat \"Beat Battle\" on at least Reasonable difficulty or higher and \"Beat Battle 2\" with modcharts on", maxScore: 2, maxDecimals: 0});
+		createAchievement('secretsunveiled',	    {name: "THERE'S MORE???", description: "Find one of the 4 secrets", hidden: true});
+		createAchievement('pokemon',	    		{name: "Gotta find em' all!", description: "Find all 3 menu secrets", hidden: true});
+		createAchievement('waldosworstnightmare',	{name: "Detective", description: "Find all 4 secret songs", hidden: true});
+		createAchievement('error404',	            {name: "SONG NOT FOUND", description: "Find and beat \"Slowdown\"", hidden: true});
+		createAchievement('secretsuntold',	        {name: "Secret's Untold", description: "Unlock the Secrets Category", hidden: true});
+		createAchievement('potato',	                {name: "Slow-Mo", description: "Set the game to 1 FPS", hidden: true});
+		createAchievement('potatogameplay',	        {name: "YOU CAN PLAY LIKE THIS?!?!", description: "Beat a song while the FPS is set to 1", hidden: true});
+		createAchievement('mattdestroyer',	        {name: "Max Efficiency", description: "Beat a song at 2X Speed or higher", hidden: true});
+		createAchievement('matteleminator',	        {name: "Max Efficiency 2X", description: "Beat a song at 5X Speed or higher", hidden: true});
+		createAchievement('mattgod',	            {name: "Max Efficiency 3X", description: "Beat a song at 10x Speed or higher", hidden: true});
+		createAchievement('matt',	                {name: "Max Efficiency 4X", description: "Beat a song at 15X Speed or higher", hidden: true});
+		createAchievement('mattbeyond',	            {name: "Bro what are you even doing anymore", description: "Beat a song at 20X Speed or higher", hidden: true});
+		createAchievement('perfectionist',	        {name: "S for the best", description: "Beat every song with an S Rank or higher"});
+		createAchievement('lessismore',	        	{name: "Master of Less", description: "Beat any song in a mania of 1-3"});
+		createAchievement('toomanynotes',	        {name: "Master of Mania", description: "Beat any song in a mania higher than 4"});
+		createAchievement('h?',	                    {name: "h?", description: "h?"});
 		createAchievement('pessy_easter_egg',		{name: "Engine Gal Pal", description: "Teehee, you found me~!", hidden: true});
 		
 		//dont delete this thing below

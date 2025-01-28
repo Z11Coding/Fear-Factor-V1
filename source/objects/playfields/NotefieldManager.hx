@@ -31,7 +31,6 @@ class NotefieldManager extends FlxBasic {
     {
         super.destroy();
 
-        
         try {
             while (members.length > 0)
             try {

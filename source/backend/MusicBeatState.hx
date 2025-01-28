@@ -45,6 +45,16 @@ class MusicBeatState extends FlxState
 			openSubState(emptyStickers);
 			//trace('reopened stickers');
 		}
+		TransitionState.currenttransition = null;
+		trace("Transition = " + TransitionState.currenttransition);
+
+		if (getState() != PlayState.instance)
+		{
+			if(ClientPrefs.data.shaders){
+				FlxG.camera.setFilters(states.FirstCheckState.filters);
+				FlxG.camera.filtersEnabled = true;
+			}
+		}
 	}
 
 	public static var emptyStickers:StickerSubState = null;
@@ -63,6 +73,21 @@ class MusicBeatState extends FlxState
 	public static var timePassedOnState:Float = 0;
 	override function update(elapsed:Float)
 	{
+		if (ClientPrefs.data.forcePriority) {
+			if (backend.window.Priority.getPriority() != ClientPrefs.data.gamePriority) {
+				var success:Bool = backend.window.Priority.setPriority(ClientPrefs.data.gamePriority);
+				if (!success) {
+					trace("Failed to set game priority");
+				}
+			}
+		} else {
+			ClientPrefs.data.gamePriority = backend.window.Priority.getPriority();
+		}
+
+		if (ClientPrefs.data.gamePriority > 5) {
+			ClientPrefs.data.gamePriority = 2;
+			backend.window.Priority.setPriority(2);
+		}
 		EventFunc.updateAll();
 		if (Main.audioDisconnected && getState() == PlayState.instance)
 		{
@@ -102,6 +127,20 @@ class MusicBeatState extends FlxState
 		backend.window.WindowUtils.updateTitle();
 
 		super.update(elapsed);
+	}
+
+	override function destroy()
+	{	
+		MemoryUtil.clearMajor();
+		MemoryUtil.clearMinor();
+			var clearfuck:yutautil.MemoryHelper = new yutautil.MemoryHelper();
+		clearfuck.clearClassObject(Type.getClass(this));
+		// trace("Cleaning...");
+		// backend.ImageCache.SpriteManager.cleanFlxState(this);
+		// trace("Dealing with the rest...");
+		// backend.ImageCache.SpriteManager.disposeAllSprites(this);
+		// trace("Done!");
+		super.destroy();
 	}
 
 	private function updateSection():Void

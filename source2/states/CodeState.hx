@@ -168,7 +168,7 @@ class CodeState extends MusicBeatState
 		{
 			codeInput.text = '';
 			FlxTween.tween(blackscreen, {alpha: 0}, 2, {ease: FlxEase.expoIn});
-			FlxG.sound.playMusic(Paths.music('panixPress'));	
+			FlxG.sound.playMusic(Paths.music('odd_menu_music'));	
 		}
 	}
 

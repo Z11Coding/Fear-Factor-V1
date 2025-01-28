@@ -381,8 +381,28 @@ class CharacterEditorState extends MusicBeatState implements PsychUIEventHandler
 		{
 			character.isPlayer = !character.isPlayer;
 			character.flipX = !character.flipX;
+
+			// Adjust offsets to keep the sprite centered when flipped
+			// for (anim in character.animationsArray)
+			// {
+			// 	var offsetX = anim.offsets[0];
+			// 	var offsetY = anim.offsets[1];
+
+			// 	if (character.flipX)
+			// 	{
+			// 		anim.offsets[0] = -offsetX - character.frameWidth;
+			// 	}
+			// 	else
+			// 	{
+			// 		anim.offsets[0] = -offsetX - character.frameWidth;
+			// 	}
+
+			// 	character.addOffset(anim.anim, anim.offsets[0], offsetY);
+			// }
+
 			updateCharacterPositions();
 			updatePointerPos(false);
+			updateText();
 		};
 
 		var reloadCharacter:PsychUIButton = new PsychUIButton(140, 20, "Reload Char", function()
@@ -652,6 +672,24 @@ class CharacterEditorState extends MusicBeatState implements PsychUIEventHandler
 		flipXCheckBox.onClick = function() {
 			character.originalFlipX = !character.originalFlipX;
 			character.flipX = (character.originalFlipX != character.isPlayer);
+
+						// Adjust offsets to keep the sprite centered when flipped
+						// for (anim in character.animationsArray)
+						// 	{
+						// 		var offsetX = anim.offsets[0];
+						// 		var offsetY = anim.offsets[1];
+				
+						// 		if (character.flipX)
+						// 		{
+						// 			anim.offsets[0] = -offsetX - character.frameWidth;
+						// 		}
+						// 		else
+						// 		{
+						// 			anim.offsets[0] = -offsetX - character.frameWidth;
+						// 		}
+				
+						// 		character.addOffset(anim.anim, anim.offsets[0], offsetY);
+						// 	}
 		};
 
 		noAntialiasingCheckBox = new PsychUICheckBox(flipXCheckBox.x, flipXCheckBox.y + 40, "No Antialiasing", 80);
@@ -1080,9 +1118,6 @@ class CharacterEditorState extends MusicBeatState implements PsychUIEventHandler
 		/////////////
 		// bg data //
 		/////////////
-		#if BASE_GAME_FILES
-		camEditor.bgColor = 0xFF666666;
-		#else
 		var bg:BGSprite = new BGSprite('stages/stage/stageback', -600, -200, 0.9, 0.9);
 		add(bg);
 
@@ -1090,7 +1125,6 @@ class CharacterEditorState extends MusicBeatState implements PsychUIEventHandler
 		stageFront.setGraphicSize(Std.int(stageFront.width * 1.1));
 		stageFront.updateHitbox();
 		add(stageFront);
-		#end
 
 		dadPosition.set(100, 100);
 		bfPosition.set(770, 100);

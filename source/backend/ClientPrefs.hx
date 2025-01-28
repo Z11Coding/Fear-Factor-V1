@@ -9,6 +9,9 @@ import states.FirstCheckState;
 // Add a variable here and it will get automatically saved
 @:structInit class SaveVariables {
 	public var showCrash:Bool = true;
+	public var ignoreTweenErrors:Bool = true;
+	public var allowForcedExit:Bool = true;
+	public var gamePriority:Int = 2;
 	public var downScroll:Bool = false;
 	public var silentVol:Bool = false;
 	public var noParticles:Bool = false;
@@ -19,6 +22,8 @@ import states.FirstCheckState;
 	public var experimentalCaching:Bool = false;
 	public var saveCache:Bool = false;
 	public var cacheCharts:Bool = false;
+	public var highPriorityCache:Bool = false;
+	public var forcePriority:Bool = false;
 	public var shaders:Bool = true;
 	public var autoPause:Bool = true;
 	public var drain:Bool = true;
@@ -30,13 +35,15 @@ import states.FirstCheckState;
 	public var globalAntialiasing:Bool = true;
 	public var noteSplashes:Bool = true;
 	public var lowQuality:Bool = false;
-	public var framerate:Int = 60;
+	public var framerate:Int = 120;
 	public var cursing:Bool = true;
 	public var violence:Bool = true;
 	public var camZooms:Bool = true;
+	public var doubleGhosts:Bool = true;
 	public var hideHud:Bool = false;
 	public var wife3:Bool = true;
 	public var cacheOnGPU:Bool = true;
+	public var noAntimash:Bool = false;
 	public var checkForUpdates:Bool = true;
 	public var gimmicksAllowed:Bool = true;
 	public var opponentStrums:Bool = true;
@@ -51,6 +58,8 @@ import states.FirstCheckState;
 	public var enableArtemis:Bool = false;
 	public var mixupMode:Bool = false;
 	public var aiDifficulty:String = 'Average FNF Player';
+	public var loadingThreads:Int = Math.floor(Std.parseInt(Sys.getEnv("NUMBER_OF_PROCESSORS")) / 2);
+	public var multicoreLoading:Bool = false;
 	public var arrowHSV:Array<Array<Int>> = [
 		[0, 0, 0], [0, 0, 0], 
 		[0, 0, 0], [0, 0, 0], 
@@ -78,11 +87,21 @@ import states.FirstCheckState;
 		[0xFF00FFFF, 0xFFFFFFFF, 0xFF1542B7],
 		[0xFF12FA05, 0xFFFFFFFF, 0xFF0A4447],
 		[0xFFF9393F, 0xFFFFFFFF, 0xFF651038],
-		[0xFF999999, 0xFFFFFFFF, 0xFF201E31],
-		[0xFFFFFF00, 0xFFFFFFFF, 0xFF993300],
-		[0xFF8b4aff, 0xFFFFFFFF, 0xFF3b177d],
-		[0xFFFF0000, 0xFFFFFFFF, 0xFF660000],
-		[0xFF0033ff, 0xFFFFFFFF, 0xFF000066]];
+		[0xFFb6b6b6, 0xFFFFFFFF, 0xFF444444],
+		[0xFFffd94a, 0xFFfffff9, 0xFF663500],
+		[0xFFB055BC, 0xFFf4f4ff, 0xFF4D0060],
+		[0xFFdf3e23, 0xFFffe6e9, 0xFF440000],
+		[0xFF2F69E5, 0xFFf5f5ff, 0xFF000F5D],
+		[0xFFC24B99, 0xFFFFFFFF, 0xFF3C1F56],
+		[0xFF00FFFF, 0xFFFFFFFF, 0xFF1542B7],
+		[0xFF12FA05, 0xFFFFFFFF, 0xFF0A4447],
+		[0xFFF9393F, 0xFFFFFFFF, 0xFF651038],
+		[0xFFb6b6b6, 0xFFFFFFFF, 0xFF444444],
+		[0xFFffd94a, 0xFFfffff9, 0xFF663500],
+		[0xFFB055BC, 0xFFf4f4ff, 0xFF4D0060],
+		[0xFFdf3e23, 0xFFffe6e9, 0xFF440000],
+		[0xFF2F69E5, 0xFFf5f5ff, 0xFF000F5D]
+	];
 	public var arrowRGBPixelExtra:Array<Array<FlxColor>> = [
 		[0xFFE276FF, 0xFFFFF9FF, 0xFF60008D],
 		[0xFF3DCAFF, 0xFFF4FFFF, 0xFF003060],
@@ -132,13 +151,23 @@ import states.FirstCheckState;
 		// just fine. but I wont implement it because I don't know how you handle sustains and other stuff like that.
 		// oh yeah when you calculate the bps divide it by the songSpeed or rate because it wont scroll correctly when speeds exist.
 		'songspeed' => 1.0,
+		'randomspeedchange' => false,
 		'healthgain' => 1.0,
 		'healthloss' => 1.0,
+		'chartModifier' => 'Normal',
+		'convertMania' => 3,
 		'instakill' => false,
 		'practice' => false,
 		'botplay' => false,
+		'showcase' => false,
+		'gfMode' => false,
 		'opponentplay' => false,
-		'gfMode' => false
+		'aiMode' => false,
+		'aiDifficulty' => 5,
+		'loopMode' => false,
+		'loopModeC' => false,
+		'loopPlayMult' => 1.05,
+		'bothMode' => false,
 	];
 	public var inputSystem:String = 'Native';
 	public var volUp:String = 'Volup';
@@ -146,6 +175,7 @@ import states.FirstCheckState;
 	public var volMax:String = 'VolMAX';
 
 	public var comboOffset:Array<Int> = [0, 0, 0, 0, 0];
+	public var comboOffsetOpp:Array<Int> = [0, 0, 0, 0, 0];
 	public var ratingOffset:Int = 0;
 	public var marvWindow:Int = 22;
 	public var sickWindow:Int = 45;
@@ -159,13 +189,9 @@ import states.FirstCheckState;
 	public var loadingScreen:Bool = true;
 	public var language:String = 'en-US';
 
-	//charcter select stuff
-	public static var bfMultiUnlock:Bool = false;
-	public static var playableGFUnlock:Bool = false;
-	public static var playablejellyUnlock:Bool = false;
-	public static var playableneoUnlock:Bool = false;
-	public static var playablejmaidUnlock:Bool = false;
-	public static var playablespoopyUnlock:Bool = false;
+	//Arcipelago stuff
+	public var notePopup:Bool = true;
+	public var deathlink:Bool = true;
 
 	public function new()
 	{
@@ -175,6 +201,7 @@ import states.FirstCheckState;
 class ClientPrefs {
 	public static var data:SaveVariables = {};
 	public static var defaultData:SaveVariables = {};
+	public static var showKeybindsOnStart:Bool = true;
 
 	//Every key has two binds, add your key bind down here and then add your control on options/ControlsSubState.hx and Controls.hx
 	public static var keyBinds:Map<String, Array<FlxKey>> = [
@@ -367,6 +394,8 @@ class ClientPrefs {
 		'note_ate16' 	=> [I, NONE],
 		'note_ate17' 	=> [O, NONE],
 		'note_ate18' 	=> [P, NONE],
+
+		'dodge'			=> [SPACE, SPACE],
 		
 		'ui_left'		=> [A, LEFT],
 		'ui_down'		=> [S, DOWN],
@@ -382,10 +411,11 @@ class ClientPrefs {
 		'volume_up'		=> [NUMPADPLUS, PLUS],
 		'volume_down'	=> [NUMPADMINUS, MINUS],
 		
-		'debug_1'		=> [SEVEN, NONE],
-		'debug_2'		=> [EIGHT, NONE],
+		'debug_1'		=> [SEVEN],
+		'debug_2'		=> [EIGHT],
 
-		'fullscreen'	=> [F11, NONE]
+		'fullscreen'	=> [F11],
+		'sidebar'		=> [GRAVEACCENT],
 	];
 
 	public static var gamepadBinds:Map<String, Array<FlxGamepadInputID>> = [
@@ -402,10 +432,210 @@ class ClientPrefs {
 		'accept'		=> [A, START],
 		'back'			=> [B],
 		'pause'			=> [START],
-		'reset'			=> [BACK]
+		'reset'			=> [BACK],
+
+		'sidebar'		=> [],
 	];
 	public static var defaultKeys:Map<String, Array<FlxKey>> = null;
 	public static var defaultButtons:Map<String, Array<FlxGamepadInputID>> = null;
+
+	public static function getKeyBindsForKeys(numKeys:Int):Array<Array<FlxKey>> {
+		var keyBindsList:Array<Array<FlxKey>> = [];
+		switch (numKeys) {
+			case 1:
+				keyBindsList.push(keyBinds.get('note_one1'));
+			case 2:
+				keyBindsList.push(keyBinds.get('note_two1'));
+				keyBindsList.push(keyBinds.get('note_two2'));
+			case 3:
+				keyBindsList.push(keyBinds.get('note_three1'));
+				keyBindsList.push(keyBinds.get('note_three2'));
+				keyBindsList.push(keyBinds.get('note_three3'));
+			case 4:
+				keyBindsList.push(keyBinds.get('note_left'));
+				keyBindsList.push(keyBinds.get('note_down'));
+				keyBindsList.push(keyBinds.get('note_up'));
+				keyBindsList.push(keyBinds.get('note_right'));
+			case 5:
+				keyBindsList.push(keyBinds.get('note_five1'));
+				keyBindsList.push(keyBinds.get('note_five2'));
+				keyBindsList.push(keyBinds.get('note_five3'));
+				keyBindsList.push(keyBinds.get('note_five4'));
+				keyBindsList.push(keyBinds.get('note_five5'));
+			case 6:
+				keyBindsList.push(keyBinds.get('note_six1'));
+				keyBindsList.push(keyBinds.get('note_six2'));
+				keyBindsList.push(keyBinds.get('note_six3'));
+				keyBindsList.push(keyBinds.get('note_six4'));
+				keyBindsList.push(keyBinds.get('note_six5'));
+				keyBindsList.push(keyBinds.get('note_six6'));
+			case 7:
+				keyBindsList.push(keyBinds.get('note_seven1'));
+				keyBindsList.push(keyBinds.get('note_seven2'));
+				keyBindsList.push(keyBinds.get('note_seven3'));
+				keyBindsList.push(keyBinds.get('note_seven4'));
+				keyBindsList.push(keyBinds.get('note_seven5'));
+				keyBindsList.push(keyBinds.get('note_seven6'));
+				keyBindsList.push(keyBinds.get('note_seven7'));
+			case 8:
+				keyBindsList.push(keyBinds.get('note_eight1'));
+				keyBindsList.push(keyBinds.get('note_eight2'));
+				keyBindsList.push(keyBinds.get('note_eight3'));
+				keyBindsList.push(keyBinds.get('note_eight4'));
+				keyBindsList.push(keyBinds.get('note_eight5'));
+				keyBindsList.push(keyBinds.get('note_eight6'));
+				keyBindsList.push(keyBinds.get('note_eight7'));
+				keyBindsList.push(keyBinds.get('note_eight8'));
+			case 9:
+				keyBindsList.push(keyBinds.get('note_nine1'));
+				keyBindsList.push(keyBinds.get('note_nine2'));
+				keyBindsList.push(keyBinds.get('note_nine3'));
+				keyBindsList.push(keyBinds.get('note_nine4'));
+				keyBindsList.push(keyBinds.get('note_nine5'));
+				keyBindsList.push(keyBinds.get('note_nine6'));
+				keyBindsList.push(keyBinds.get('note_nine7'));
+				keyBindsList.push(keyBinds.get('note_nine8'));
+				keyBindsList.push(keyBinds.get('note_nine9'));
+			case 10:
+				keyBindsList.push(keyBinds.get('note_ten1'));
+				keyBindsList.push(keyBinds.get('note_ten2'));
+				keyBindsList.push(keyBinds.get('note_ten3'));
+				keyBindsList.push(keyBinds.get('note_ten4'));
+				keyBindsList.push(keyBinds.get('note_ten5'));
+				keyBindsList.push(keyBinds.get('note_ten6'));
+				keyBindsList.push(keyBinds.get('note_ten7'));
+				keyBindsList.push(keyBinds.get('note_ten8'));
+				keyBindsList.push(keyBinds.get('note_ten9'));
+				keyBindsList.push(keyBinds.get('note_ten10'));
+			case 11:
+				keyBindsList.push(keyBinds.get('note_elev1'));
+				keyBindsList.push(keyBinds.get('note_elev2'));
+				keyBindsList.push(keyBinds.get('note_elev3'));
+				keyBindsList.push(keyBinds.get('note_elev4'));
+				keyBindsList.push(keyBinds.get('note_elev5'));
+				keyBindsList.push(keyBinds.get('note_elev6'));
+				keyBindsList.push(keyBinds.get('note_elev7'));
+				keyBindsList.push(keyBinds.get('note_elev8'));
+				keyBindsList.push(keyBinds.get('note_elev9'));
+				keyBindsList.push(keyBinds.get('note_elev10'));
+				keyBindsList.push(keyBinds.get('note_elev11'));
+			case 12:
+				keyBindsList.push(keyBinds.get('note_twel1'));
+				keyBindsList.push(keyBinds.get('note_twel2'));
+				keyBindsList.push(keyBinds.get('note_twel3'));
+				keyBindsList.push(keyBinds.get('note_twel4'));
+				keyBindsList.push(keyBinds.get('note_twel5'));
+				keyBindsList.push(keyBinds.get('note_twel6'));
+				keyBindsList.push(keyBinds.get('note_twel7'));
+				keyBindsList.push(keyBinds.get('note_twel8'));
+				keyBindsList.push(keyBinds.get('note_twel9'));
+				keyBindsList.push(keyBinds.get('note_twel10'));
+				keyBindsList.push(keyBinds.get('note_twel11'));
+				keyBindsList.push(keyBinds.get('note_twel12'));
+			case 13:
+				keyBindsList.push(keyBinds.get('note_thir1'));
+				keyBindsList.push(keyBinds.get('note_thir2'));
+				keyBindsList.push(keyBinds.get('note_thir3'));
+				keyBindsList.push(keyBinds.get('note_thir4'));
+				keyBindsList.push(keyBinds.get('note_thir5'));
+				keyBindsList.push(keyBinds.get('note_thir6'));
+				keyBindsList.push(keyBinds.get('note_thir7'));
+				keyBindsList.push(keyBinds.get('note_thir8'));
+				keyBindsList.push(keyBinds.get('note_thir9'));
+				keyBindsList.push(keyBinds.get('note_thir10'));
+				keyBindsList.push(keyBinds.get('note_thir11'));
+				keyBindsList.push(keyBinds.get('note_thir12'));
+				keyBindsList.push(keyBinds.get('note_thir13'));
+			case 14:
+				keyBindsList.push(keyBinds.get('note_fort1'));
+				keyBindsList.push(keyBinds.get('note_fort2'));
+				keyBindsList.push(keyBinds.get('note_fort3'));
+				keyBindsList.push(keyBinds.get('note_fort4'));
+				keyBindsList.push(keyBinds.get('note_fort5'));
+				keyBindsList.push(keyBinds.get('note_fort6'));
+				keyBindsList.push(keyBinds.get('note_fort7'));
+				keyBindsList.push(keyBinds.get('note_fort8'));
+				keyBindsList.push(keyBinds.get('note_fort9'));
+				keyBindsList.push(keyBinds.get('note_fort10'));
+				keyBindsList.push(keyBinds.get('note_fort11'));
+				keyBindsList.push(keyBinds.get('note_fort12'));
+				keyBindsList.push(keyBinds.get('note_fort13'));
+				keyBindsList.push(keyBinds.get('note_fort14'));
+			case 15:
+				keyBindsList.push(keyBinds.get('note_fift1'));
+				keyBindsList.push(keyBinds.get('note_fift2'));
+				keyBindsList.push(keyBinds.get('note_fift3'));
+				keyBindsList.push(keyBinds.get('note_fift4'));
+				keyBindsList.push(keyBinds.get('note_fift5'));
+				keyBindsList.push(keyBinds.get('note_fift6'));
+				keyBindsList.push(keyBinds.get('note_fift7'));
+				keyBindsList.push(keyBinds.get('note_fift8'));
+				keyBindsList.push(keyBinds.get('note_fift9'));
+				keyBindsList.push(keyBinds.get('note_fift10'));
+				keyBindsList.push(keyBinds.get('note_fift11'));
+				keyBindsList.push(keyBinds.get('note_fift12'));
+				keyBindsList.push(keyBinds.get('note_fift13'));
+				keyBindsList.push(keyBinds.get('note_fift14'));
+				keyBindsList.push(keyBinds.get('note_fift15'));
+			case 16:
+				keyBindsList.push(keyBinds.get('note_sixt1'));
+				keyBindsList.push(keyBinds.get('note_sixt2'));
+				keyBindsList.push(keyBinds.get('note_sixt3'));
+				keyBindsList.push(keyBinds.get('note_sixt4'));
+				keyBindsList.push(keyBinds.get('note_sixt5'));
+				keyBindsList.push(keyBinds.get('note_sixt6'));
+				keyBindsList.push(keyBinds.get('note_sixt7'));
+				keyBindsList.push(keyBinds.get('note_sixt8'));
+				keyBindsList.push(keyBinds.get('note_sixt9'));
+				keyBindsList.push(keyBinds.get('note_sixt10'));
+				keyBindsList.push(keyBinds.get('note_sixt11'));
+				keyBindsList.push(keyBinds.get('note_sixt12'));
+				keyBindsList.push(keyBinds.get('note_sixt13'));
+				keyBindsList.push(keyBinds.get('note_sixt14'));
+				keyBindsList.push(keyBinds.get('note_sixt15'));
+				keyBindsList.push(keyBinds.get('note_sixt16'));
+			case 17:
+				keyBindsList.push(keyBinds.get('note_sevt1'));
+				keyBindsList.push(keyBinds.get('note_sevt2'));
+				keyBindsList.push(keyBinds.get('note_sevt3'));
+				keyBindsList.push(keyBinds.get('note_sevt4'));
+				keyBindsList.push(keyBinds.get('note_sevt5'));
+				keyBindsList.push(keyBinds.get('note_sevt6'));
+				keyBindsList.push(keyBinds.get('note_sevt7'));
+				keyBindsList.push(keyBinds.get('note_sevt8'));
+				keyBindsList.push(keyBinds.get('note_sevt9'));
+				keyBindsList.push(keyBinds.get('note_sevt10'));
+				keyBindsList.push(keyBinds.get('note_sevt11'));
+				keyBindsList.push(keyBinds.get('note_sevt12'));
+				keyBindsList.push(keyBinds.get('note_sevt13'));
+				keyBindsList.push(keyBinds.get('note_sevt14'));
+				keyBindsList.push(keyBinds.get('note_sevt15'));
+				keyBindsList.push(keyBinds.get('note_sevt16'));
+				keyBindsList.push(keyBinds.get('note_sevt17'));
+			case 18:
+				keyBindsList.push(keyBinds.get('note_ate1'));
+				keyBindsList.push(keyBinds.get('note_ate2'));
+				keyBindsList.push(keyBinds.get('note_ate3'));
+				keyBindsList.push(keyBinds.get('note_ate4'));
+				keyBindsList.push(keyBinds.get('note_ate5'));
+				keyBindsList.push(keyBinds.get('note_ate6'));
+				keyBindsList.push(keyBinds.get('note_ate7'));
+				keyBindsList.push(keyBinds.get('note_ate8'));
+				keyBindsList.push(keyBinds.get('note_ate9'));
+				keyBindsList.push(keyBinds.get('note_ate10'));
+				keyBindsList.push(keyBinds.get('note_ate11'));
+				keyBindsList.push(keyBinds.get('note_ate12'));
+				keyBindsList.push(keyBinds.get('note_ate13'));
+				keyBindsList.push(keyBinds.get('note_ate14'));
+				keyBindsList.push(keyBinds.get('note_ate15'));
+				keyBindsList.push(keyBinds.get('note_ate16'));
+				keyBindsList.push(keyBinds.get('note_ate17'));
+				keyBindsList.push(keyBinds.get('note_ate18'));
+			default:
+				trace('Invalid number of keys: ' + numKeys);
+		}
+		return keyBindsList;
+	}
 
 	public static function resetKeys(controller:Null<Bool> = null) //Null = both, False = Keyboard, True = Controller
 	{
@@ -500,6 +730,16 @@ class ClientPrefs {
 
 		#if DISCORD_ALLOWED DiscordClient.check(); #end
 
+		if (FlxG.save.data.loadingThreads != null)
+		{
+			data.loadingThreads = FlxG.save.data.loadingThreads;
+			if (data.loadingThreads > Math.floor(Std.parseInt(Sys.getEnv("NUMBER_OF_PROCESSORS"))))
+			{
+				data.loadingThreads = Math.floor(Std.parseInt(Sys.getEnv("NUMBER_OF_PROCESSORS")));
+				FlxG.save.data.loadingThreads = data.loadingThreads;
+			}
+		}
+
 		// controls on a separate save file
 		var save:FlxSave = new FlxSave();
 		save.bind('controls_v3', CoolUtil.getSavePath());
@@ -518,37 +758,6 @@ class ClientPrefs {
 					if(gamepadBinds.exists(control)) gamepadBinds.set(control, keys);
 			}
 			reloadVolumeKeys();
-		}
-	}
-
-	public static function saveCharSlect() {
-		FlxG.save.data.bfMultiUnlock = SaveVariables.bfMultiUnlock;
-		FlxG.save.data.playableGFUnlock = SaveVariables.playableGFUnlock;
-		FlxG.save.data.playablejellyUnlock = SaveVariables.playablejellyUnlock;
-		FlxG.save.data.playableneoUnlock = SaveVariables.playableneoUnlock;
-		FlxG.save.data.playablejmaidUnlock = SaveVariables.playablejmaidUnlock;
-		FlxG.save.data.playablespoopyUnlock = SaveVariables.playablespoopyUnlock;
-		FlxG.save.flush();
-	}
-
-	public static function loadCharSlect() {
-		if(FlxG.save.data.bfMultiUnlock != null) {
-			SaveVariables.bfMultiUnlock = FlxG.save.data.bfMultiUnlock;
-		}
-		if(FlxG.save.data.playableGFUnlock != null) {
-			SaveVariables.playableGFUnlock = FlxG.save.data.playableGFUnlock;
-		}
-		if(FlxG.save.data.playablejellyUnlock != null) {
-			SaveVariables.playablejellyUnlock = FlxG.save.data.playablejellyUnlock;
-		}
-		if(FlxG.save.data.playableneoUnlock != null) {
-			SaveVariables.playableneoUnlock = FlxG.save.data.playableneoUnlock;
-		}
-		if(FlxG.save.data.playablejmaidUnlock != null) {
-			SaveVariables.playablejmaidUnlock = FlxG.save.data.playablejmaidUnlock;
-		}
-		if(FlxG.save.data.playablespoopyUnlock != null) {
-			SaveVariables.playablespoopyUnlock = FlxG.save.data.playablespoopyUnlock;
 		}
 	}
 

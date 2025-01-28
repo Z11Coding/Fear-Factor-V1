@@ -7,7 +7,7 @@ import backend.gamejolt.GameJolt.GameJoltLogin;
 
 class OptionsState extends MusicBeatState
 {
-	var options:Array<String> = ['Controls', /*'Adjust Delay and Combo', TODO: make this work*/'Graphics', 'Visuals and UI', 'Gameplay' #if TRANSLATIONS_ALLOWED , 'Language' #end, /*'GameJolt Login', //Not right now*/ 'Misc.'];
+	var options:Array<String> = ['Controls', 'Adjust Delay and Combo', 'Graphics', 'Visuals and UI', 'Gameplay' #if TRANSLATIONS_ALLOWED , 'Language' #end, /*'GameJolt Login', //Not right now*/ 'Misc.'];
 	private var grpOptions:FlxTypedGroup<Alphabet>;
 	private static var curSelected:Int = 0;
 	public static var menuBG:FlxSprite;
@@ -25,12 +25,12 @@ class OptionsState extends MusicBeatState
 				openSubState(new options.VisualsUISubState());
 			case 'Gameplay':
 				openSubState(new options.GameplaySettingsSubState());
+			case 'Language':
+				openSubState(new options.LanguageSubState());	
 			case 'Misc.':
 				openSubState(new options.OtherSettingsSubState());
 			case 'Adjust Delay and Combo':
 				LoadingState.loadAndSwitchState(new options.NoteOffsetState());
-			case 'Language':
-				openSubState(new options.LanguageSubState());	
 			case 'GameJolt Login':
 				LoadingState.loadAndSwitchState(new GameJoltLogin());
 		}
@@ -103,7 +103,7 @@ class OptionsState extends MusicBeatState
 			if (cameFromPlaystate) 
 			{
 				StageData.loadDirectory(PlayState.SONG);
-				FlxG.switchState(new states.PlayState());
+				LoadingState.loadAndSwitchState(new states.PlayState());
 			}
 			else MusicBeatState.switchState(new states.MainMenuState());
 		}

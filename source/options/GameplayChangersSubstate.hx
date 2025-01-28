@@ -34,6 +34,7 @@ class GameplayChangersSubstate extends MusicBeatSubstate
 			option.maxValue = 6;
 		}
 		optionsArray.push(option);
+		optionsArray.push(new GameplayOption('Instakill on Miss', 'instakill', 'bool', false));
 
 		#if FLX_PITCH
 		var option:GameplayOption = new GameplayOption('Playback Rate', 'songspeed', 'float', 1);
@@ -68,23 +69,25 @@ class GameplayChangersSubstate extends MusicBeatSubstate
 		option.scrollSpeed = 2;
 		option.minValue = Note.minMania;
 		option.maxValue = Note.maxMania;
-		option.displayFormat = "%e Keys";
 		optionsArray.push(option);
 		
 		optionsArray.push(new GameplayOption('Instakill on Miss', 'instakill', 'bool', false));
 		optionsArray.push(new GameplayOption('Practice Mode', 'practice', 'bool', false));
 		optionsArray.push(new GameplayOption('Botplay', 'botplay', 'bool', false));
+		//optionsArray.push(new GameplayOption('Showcase Mode', 'showcase', 'bool', false));
 		//optionsArray.push(new GameplayOption('GF Mode', 'gfMode', 'bool', false));
-		//optionsArray.push(new GameplayOption('Opponent Mode', 'opponentplay', 'bool', false));
-		//optionsArray.push(new GameplayOption('"AI" Opponent', 'aiMode', 'bool', false));
+		optionsArray.push(new GameplayOption('Play Both Sides', 'bothMode', 'bool', false));
 
-		var option:GameplayOption = new GameplayOption('"AI" Difficulty', 'aiDifficulty', 'int', 1);
+		optionsArray.push(new GameplayOption('Loop Mode', 'loopMode', 'bool', false));
+		optionsArray.push(new GameplayOption('Loop Challenge Mode', 'loopModeC', 'bool', false));
+		var option:GameplayOption = new GameplayOption('Challenge Mode Mult.', 'loopPlayMult', 'float', 1.05);
 		option.scrollSpeed = 1;
-		option.minValue = 0;
-		option.maxValue = 5;
-		option.changeValue = 1;
-		option.displayFormat = '%v';
-		//optionsArray.push(option);
+		option.minValue = 1.05;
+		option.maxValue = 2;
+		option.changeValue = 0.05;
+		option.displayFormat = '%vX';
+		option.decimals = 2;
+		optionsArray.push(option);
 	}
 
 	public function getOptionByName(name:String)
@@ -323,7 +326,7 @@ class GameplayChangersSubstate extends MusicBeatSubstate
 		var val:Dynamic = option.getValue();
 		if(option.type == 'percent') val *= 100;
 		var def:Dynamic = option.defaultValue;
-		option.text = text.replace('%v', val).replace('%d', def).replace('%e', val+1);
+		option.text = text.replace('%v', val).replace('%d', def);
 	}
 
 	function clearHold()
@@ -393,7 +396,7 @@ class GameplayOption
 	public var maxValue:Dynamic = null; //Only used in int/float/percent type
 	public var decimals:Int = 1; //Only used in float/percent type
 
-	public var displayFormat:String = '%v'; //How String/Float/Percent/Int values are shown, %v = Current value, %d = Default value, %e = Current Value + 1
+	public var displayFormat:String = '%v'; //How String/Float/Percent/Int values are shown, %v = Current value, %d = Default value
 	public var name:String = 'Unknown';
 
 	public function new(name:String, variable:String, type:String = 'bool', defaultValue:Dynamic = 'null variable value', ?options:Array<String> = null)

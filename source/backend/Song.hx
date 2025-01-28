@@ -14,10 +14,12 @@ typedef SwagSong =
 {
 	var song:String;
 	var notes:Array<SwagSection>;
+	//@:optional var playerNotes:Array<Dynamic>;
+	//@:optional var opponentNotes:Array<Dynamic>;
 	var events:Array<Dynamic>;
 	var bpm:Float;
+	var ?bpmT:Conductor.BPMTween;
 	var needsVoices:Bool;
-	var newVoiceStyle:Bool;
 	var speed:Float;
 	var offset:Float;
 
@@ -31,6 +33,9 @@ typedef SwagSong =
 
 	var mania:Int;
 	var startMania:Int;
+
+	@:optional var usualMania:Int;
+	@:optional var usualStartMania:Int;
 
 	@:optional var gameOverChar:String;
 	@:optional var gameOverSound:String;
@@ -52,7 +57,6 @@ class Song
 	public var events:Array<Dynamic>;
 	public var bpm:Float;
 	public var needsVoices:Bool = false;
-	public var newVoiceStyle:Bool = false;
 	public var arrowSkin:String;
 	public var splashSkin:String;
 	public var disableNoteRGB:Bool = false;
@@ -95,15 +99,14 @@ class Song
 				}
 			}
 		}
+		
 		if (songJson.mania == null)
 		{
 			songJson.mania = Note.defaultMania;
-			//trace("Song mania value is NULL, set to " + Note.defaultMania);
 		}
 		if (songJson.startMania == null)
 		{
 			songJson.startMania = Note.defaultMania;
-			//trace("Song mania value is NULL, set to " + Note.defaultMania);
 		}
 	}
 
@@ -137,6 +140,20 @@ class Song
 					else i++;
 				}
 			}
+
+			if (songJson.mania == null)
+			{
+				songJson.mania = Note.defaultMania;
+			}
+			if (songJson.startMania == null)
+			{
+				songJson.startMania = Note.defaultMania;
+			}
+			/*
+			trace("DID A THING");
+			trace("Manias: ");
+			trace(songJson.mania);
+			trace(songJson.startMania);*/
 		}
 
 		var sectionsData:Array<SwagSection> = songJson.notes;
@@ -153,8 +170,8 @@ class Song
 
 			for (note in section.sectionNotes)
 			{
-				var gottaHitNote:Bool = (note[1] < 4) ? section.mustHitSection : !section.mustHitSection;
-				note[1] = (note[1] % 4) + (gottaHitNote ? 0 : 4);
+				var gottaHitNote:Bool = (note[1] < (Note.ammo[PlayState.mania])) ? section.mustHitSection : !section.mustHitSection;
+				note[1] = (note[1] % Note.ammo[PlayState.mania]-1) + (gottaHitNote ? 0 : Note.ammo[PlayState.mania]-1);
 
 				if(note[3] != null && !Std.isOfType(note[3], String))
 					note[3] = Note.defaultNoteTypes[note[3]]; //compatibility with Week 7 and 0.1-0.3 psych charts
@@ -209,42 +226,101 @@ class Song
 
 	public static function parseJSON(rawData:String, ?nameForError:String = null, ?convertTo:String = 'mixtape_v1'):SwagSong
 	{
-		var songJson:SwagSong = cast Json.parse(rawData).song;
+		var songJson:Dynamic = Json.parse(rawData);
 		try {
-			songJson = cast Json.parse(rawData);
 			if(Reflect.hasField(songJson, 'song'))
 			{
 				var subSong:SwagSong = Reflect.field(songJson, 'song');
 				if(subSong != null && Type.typeof(subSong) == TObject)
 					songJson = subSong;
 			}
-			if(convertTo != null && convertTo.length > 0)
-			{
-				var fmt:String = songJson.format;
-				if(fmt == null) fmt = songJson.format = 'unknown';
+			var fmt:String = songJson.format;
+			if(fmt == null) fmt = songJson.format = 'unknown';
+			trace(fmt);
 
-				switch(convertTo)
-				{
-					case 'psych_v1':
-						if(!fmt.startsWith('psych_v1')) //Convert to Psych 1.0 format
-						{
-							trace('converting chart $nameForError with format $fmt to psych_v1 format...');
-							songJson.format = 'psych_v1_convert';
-							convert(songJson);
-						}
-					case 'mixtape_v1':
-						if(!fmt.startsWith('mixtape_v1')) //Convert to Mixtape 1.0 format
-						{
-							trace('converting chart $nameForError with format $fmt to mixtape_v1 format...');
-							songJson.format = 'mixtape_v1_convert';
-							onLoadJsonMixtape(songJson);
-						}
-					default:
-						trace('converting chart $nameForError with format $fmt to mixtape_v1 format...');
-						songJson.format = 'mixtape_v1';
-						onLoadJsonMixtape(songJson);
-						
+			if (songJson.mania == null) {
+				songJson.mania = Note.defaultMania;
+			}
+			if (songJson.startMania == null) {
+				songJson.startMania = songJson.mania != null ? songJson.mania : Note.defaultMania;
+			}
+
+			/*var chartMod:String = switch (Type.getClassName(Type.getClass(FlxG.state)).split(".")[Lambda.count(Type.getClassName(Type.getClass(FlxG.state)).split(".")) - 1]) {
+				case "ChartingStateOG", "ChartingStatePsych":
+					null;
+				default:
+					ClientPrefs.getGameplaySetting('chartModifier', 'Normal') ?? "Normal";
+			}
+			trace("Accessed from State: " + Type.getClassName(Type.getClass(FlxG.state)).split(".")[Lambda.count(Type.getClassName(Type.getClass(FlxG.state)).split(".")) - 1]);
+			if (songJson.mania != null) {
+				songJson.usualMania = songJson.mania;
+			}
+			if (songJson.startMania != null) {
+				songJson.usualStartMania = songJson.startMania;
+			} else {
+				songJson.usualStartMania = songJson.usualMania;
+			}
+			if (chartMod == 'ManiaConverter') {
+				var newMania = ClientPrefs.getGameplaySetting('convertMania', 3);
+				songJson.mania = newMania;
+				songJson.startMania = newMania;
+			}
+			if (chartMod == "4K Only") {
+				songJson.mania = 3;
+				songJson.startMania = 3;
+			}
+
+			// Separate notes into player and opponent notes
+			var playerNotes:Array<Dynamic> = [];
+			var opponentNotes:Array<Dynamic> = [];
+			var mania:Int = (Json.parse(rawData)).mania != null ? (Json.parse(rawData)).mania : Note.defaultMania;
+			var theNotes:Array<SwagSection> = songJson.notes;
+			trace("Mania: " + mania);
+			for (note in theNotes)
+			{
+				for (note in note.sectionNotes)
+					if (note[1] < Note.ammo[mania] && !note.mustHitSection)
+					{
+						playerNotes.push(note);
+					}
+					else
+					{
+						opponentNotes.push(note);
+					}
 				}
+		
+			songJson.playerNotes = playerNotes;
+			songJson.opponentNotes = opponentNotes;
+		
+			trace("Player Notes: " + playerNotes.length);
+			trace("Opponent Notes: " + opponentNotes.length);*/
+			switch (fmt)
+			{
+				case 'psych_v1':
+					if(!fmt.startsWith('psych_v1')) //Convert to Psych 1.0 format
+					{
+						trace('converting chart $nameForError with format $fmt to psych_v1 format...');
+						songJson.format = 'psych_v1_convert';
+						convert(songJson);
+					}
+				case 'psych_v1_convert':
+					if(!fmt.startsWith('psych_v1')) //Convert to Psych 1.0 format
+					{
+						trace('converting chart $nameForError with format $fmt to psych_v1 format...');
+						songJson.format = 'psych_v1';
+						convert(songJson);
+					}
+				case 'mixtape_v1':
+					if(!fmt.startsWith('mixtape_v1')) //Convert to Mixtape 1.0 format
+					{
+						trace('converting chart $nameForError with format $fmt to mixtape_v1 format...');
+						songJson.format = 'mixtape_v1_convert';
+						onLoadJsonMixtape(songJson);
+					}
+				default: 
+					trace('converting chart $nameForError with format $fmt to mixtape_v1 format...');
+					songJson.format = 'mixtape_v1_convert';
+					onLoadJsonMixtape(songJson);
 			}
 		} catch (error:Dynamic) {
 			trace('Failed to parse JSON with default method. Attempting to parse with parseJSONshit...');

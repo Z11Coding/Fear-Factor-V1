@@ -1,15 +1,15 @@
 package psychlua;
-
+import lime.app.Application;
+import llua.State;
 import flixel.FlxBasic;
 import objects.Character;
 import psychlua.LuaUtils;
 import psychlua.CustomSubstate;
+import backend.modchart.SubModifier;
 
 #if LUA_ALLOWED
 import psychlua.FunkinLua;
 #end
-
-import backend.modchart.SubModifier;
 
 #if HSCRIPT_ALLOWED
 import crowplexus.iris.Iris;
@@ -49,6 +49,7 @@ class HScript extends Iris
 			catch(e:Dynamic)
 			{
 				FunkinLua.luaTrace('ERROR (${hs.origin}) - $e', false, false, FlxColor.RED);
+				Application.current.window.alert('ERROR (${hs.name}) - - $e', 'HScript Error');
 			}
 		}
 	}
@@ -99,7 +100,7 @@ class HScript extends Iris
 		execute();
 	}
 
-	var varsToBring:Any = null;
+	var varsToBring(default, set):Any = null;
 	override function preset() {
 		super.preset();
 
@@ -256,8 +257,8 @@ class HScript extends Iris
 		set('createGlobalCallback', function(name:String, func:Dynamic)
 		{
 			for (script in PlayState.instance.luaArray)
-				if(script != null && script.lua != null && !script.closed)
-					Lua_helper.add_callback(script.lua, name, func);
+				if(script != null && script.getScript().lua != null && !script.getScript().closed)
+					Lua_helper.add_callback(script.getScript().lua, name, func);
 
 			FunkinLua.customFunctions.set(name, func);
 		});
@@ -267,7 +268,7 @@ class HScript extends Iris
 		{
 			if(funk == null) funk = parentLua;
 			
-			if(parentLua != null) funk.addLocalCallback(name, func);
+			if(funk != null) funk.addLocalCallback(name, func);
 			else FunkinLua.luaTrace('createCallback ($name): 3rd argument is null', false, false, FlxColor.RED);
 		});
 		#end
@@ -411,16 +412,48 @@ class HScript extends Iris
 		set("VideoSprite", objects.VideoSprite);
 		#end
 
-		if(varsToBring != null) {
-			for (key in Reflect.fields(varsToBring)) {
-				key = key.trim();
-				var value = Reflect.field(varsToBring, key);
-				//trace('Key $key: $value');
-				set(key, Reflect.field(varsToBring, key));
-			}
-			varsToBring = null;
-		}
-	}
+		// Archipelago Scripting
+		// set("Archipelago", archipelago.APGameState);
+		// set("APGameState", archipelago.APGameState);
+
+		set("addAPItem", function(item:Dynamic)
+		{
+			trace("This doesn't do anything....... YET!");
+		});
+			/*
+			// Streamer VS Chat stuff.
+			if (PlayState.instance != null && Std.is(PlayState.instance, archipelago.APPlayState)) {
+				var SvC = cast(PlayState.instance, archipelago.APPlayState);
+				set("addSvCEffect", function(effect:String, action:Void->Void, ?apply:Dynamic) {
+					if (apply == null) apply = {};
+					apply.ttl = Reflect.hasField(apply, "ttl") && apply.ttl != null ? apply.ttl : 0;
+					apply.playSound = Reflect.hasField(apply, "playSound") && apply.playSound != null ? apply.playSound : "";
+					apply.playSoundVol = Reflect.hasField(apply, "playSoundVol") && apply.playSoundVol != null ? apply.playSoundVol : 1;
+					apply.noIcon = Reflect.hasField(apply, "noIcon") && apply.noIcon != null ? apply.noIcon : true;
+					apply.alwaysEnd = Reflect.hasField(apply, "alwaysEnd") && apply.alwaysEnd != null ? apply.alwaysEnd : true;
+					apply.effect = Reflect.hasField(apply, "effect") && apply.effect != null ? apply.effect : effect;
+					apply.onEnd = Reflect.hasField(apply, "onEnd") && apply.onEnd != null ? apply.onEnd : () -> null;
+					var thing = function() {
+						try {
+							action();
+						} catch (e:Dynamic) {
+							trace('Failed to dispatch HScript SvC Effect: $e');
+							FunkinLua.luaTrace('Failed to dispatch HScript SvC Effect: $e', false, false, FlxColor.RED);
+						}
+
+						try {
+							SvC.applyEffect(apply.ttl, apply.onEnd, apply.playSound, apply.playSoundVol, apply.noIcon, apply.alwaysEnd, apply.effect);
+						} catch (e:Dynamic) {
+							trace('Failed to finish execution for an unknown reason: $e');
+							FunkinLua.luaTrace('Failed to finish execution for an unknown reason: $e', false, false, FlxColor.RED);
+						}
+					}
+					SvC.effectMap.set(this.name, thing);
+					SvC.addEffect(thing + this.name);
+				});
+			*/
+
+	}	
 
 	public function executeCode(?funcToRun:String = null, ?funcArgs:Array<Dynamic> = null):IrisCall {
 		if (funcToRun == null) return null;
@@ -526,12 +559,41 @@ class HScript extends Iris
 	}
 	#end
 
+	override public function set(name:String, value:Dynamic, allowOverride:Bool = false):Void {
+		// should always override by default
+		super.set(name, value, true);
+	}
+
+	/*override function irisPrint(v):Void
+	{
+		FunkinLua.luaTrace('ERROR (${this.origin}:${interp.posInfos().lineNumber}): ${v}');
+		trace('[${ruleSet.name}:${interp.posInfos().lineNumber}]: ${v}\n');
+	}*/
+
 	override public function destroy()
 	{
 		origin = null;
 		#if LUA_ALLOWED parentLua = null; #end
 
 		super.destroy();
+	}
+
+	function set_varsToBring(values:Any) {
+		if (varsToBring != null)
+			for (key in Reflect.fields(varsToBring))
+				if(exists(key.trim()))
+					interp.variables.remove(key.trim());
+
+		if (values != null)
+		{
+			for (key in Reflect.fields(values))
+			{
+				key = key.trim();
+				set(key, Reflect.field(values, key));
+			}
+		}
+
+		return varsToBring = values;
 	}
 }
 

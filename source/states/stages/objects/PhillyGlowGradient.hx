@@ -10,11 +10,11 @@ class PhillyGlowGradient extends FlxSprite
 		super(x, y);
 		originalY = y;
 
-		loadGraphic(Paths.image('effects/Gradient'));
-		antialiasing = ClientPrefs.data.globalAntialiasing;
+		loadGraphic(Paths.image('effects/gradient'));
 		scrollFactor.set(0, 0.75);
 		setGraphicSize(2000, originalHeight);
 		updateHitbox();
+		antialiasing = ClientPrefs.data.globalAntialiasing;
 	}
 
 	override function update(elapsed:Float)

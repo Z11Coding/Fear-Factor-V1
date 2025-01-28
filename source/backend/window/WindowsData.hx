@@ -78,6 +78,88 @@ class WindowsData
 
 	#if windows
 	@:functionCode('
+		HANDLE hProcess = GetCurrentProcess();
+		DWORD priority = GetPriorityClass(hProcess);
+		return priority;
+	')
+	private static function _getProcessPriority():Int
+	{
+		return 0;
+	}
+
+	public static function getProcessPriority():Int
+	{
+		return _getProcessPriority();
+	}
+
+	// @:functionCode('
+	// 	typedef void (*PriorityChangeCallback)(int);
+	// 	static PriorityChangeCallback callback = nullptr;
+
+	// 	void setPriorityChangeCallback(PriorityChangeCallback cb) {
+	// 		callback = cb;
+	// 	}
+
+	// 	void notifyPriorityChange(int newPriority) {
+	// 		if (callback) {
+	// 			callback(newPriority);
+	// 		}
+	// 	}
+	// ')
+	// @:noCompletion
+	// private static function _setPriorityChangeCallback(callback:Dynamic->Void):Void {}
+
+	// public static function setPriorityChangeCallback(callback:Dynamic->Void):Void
+	// {
+	// 	_setPriorityChangeCallback(callback);
+	// }
+
+	// @:functionCode('
+	// 	DWORD newPriority = priority;
+	// 	SetPriorityClass(GetCurrentProcess(), newPriority);
+	// 	notifyPriorityChange(newPriority);
+	// ')
+	// private static function _changeProcessPriority(priority:Int):Void {}
+
+	// public static function changeProcessPriority(priority:Int):Void
+	// {
+	// 	_changeProcessPriority(priority);
+	// }
+	#end
+
+
+    @:functionCode("return SetPriorityClass(GetCurrentProcess(), IDLE_PRIORITY_CLASS);")
+    public static function setProcessPriorityIdle():Bool {
+        return untyped __cpp__("setProcessPriorityIdle()");
+    }
+
+    @:functionCode("return SetPriorityClass(GetCurrentProcess(), BELOW_NORMAL_PRIORITY_CLASS);")
+    public static function setProcessPriorityBelowNormal():Bool {
+        return untyped __cpp__("setProcessPriorityBelowNormal()");
+    }
+
+    @:functionCode("return SetPriorityClass(GetCurrentProcess(), NORMAL_PRIORITY_CLASS);")
+    public static function setProcessPriorityNormal():Bool {
+        return untyped __cpp__("setProcessPriorityNormal()");
+    }
+
+    @:functionCode("return SetPriorityClass(GetCurrentProcess(), ABOVE_NORMAL_PRIORITY_CLASS);")
+    public static function setProcessPriorityAboveNormal():Bool {
+        return untyped __cpp__("setProcessPriorityAboveNormal()");
+    }
+
+    @:functionCode("return SetPriorityClass(GetCurrentProcess(), HIGH_PRIORITY_CLASS);")
+    public static function setProcessPriorityHigh():Bool {
+        return untyped __cpp__("setProcessPriorityHigh()");
+    }
+
+    @:functionCode("return SetPriorityClass(GetCurrentProcess(), REALTIME_PRIORITY_CLASS);")
+    public static function setProcessPriorityRealtime():Bool {
+        return untyped __cpp__("setProcessPriorityRealtime()");
+    }
+
+	#if windows
+	@:functionCode('
 		HWND taskbar = FindWindowW(L"Shell_TrayWnd", NULL);
 		if (!taskbar) {
 			std::cout << "Finding taskbar failed with error: " << GetLastError() << std::endl;
@@ -184,6 +266,8 @@ class WindowsData
 		_setWindowColorMode(darkMode);
 	}
 
+	
+
 	@:functionCode('
 	HWND window = GetActiveWindow();
 	// Remove the WS_SYSMENU style
@@ -216,14 +300,36 @@ class WindowsData
        	SetLayeredWindowAttributes(window, 0, (255 * (a * 100)) / 100, LWA_ALPHA);
 
     ')
+	public static var curWidnowAlpha:Float;
 	/**
 	 * Set Whole Window's Opacity
 	 * ! MAKE SURE TO CALL CppAPI._setWindowLayered(); BEFORE RUNNING THIS
 	 * @param alpha 
 	 */
-	public static function setWindowAlpha(alpha:Float)
+	public static function setWindowAlpha(?alpha:Float)
 	{
+		curWidnowAlpha = alpha;
 		return alpha;
+	}
+
+	@:functionCode('
+        HWND window = GetActiveWindow();
+        BYTE alpha;
+        DWORD flags;
+
+        if (GetLayeredWindowAttributes(window, NULL, &alpha, &flags)) {
+            return (float)alpha / 255.0f;
+        } else {
+            return -1.0f; // Indicate an error
+        }
+    ')
+	/**
+	 * Get Whole Window's Opacity
+	 * @return 
+	 */
+	public static function getWindowAlpha():Float
+	{
+		return 0;
 	}
 
 	@:functionCode('SetProcessDPIAware();')

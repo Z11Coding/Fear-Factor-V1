@@ -15,6 +15,10 @@ class CacheSettings extends BaseOptionsMenu
 			"If checked, The Music Will Be Cached.", 'musicPreload2', 'bool');
 		addOption(option); // now shut up before i put you in my basement
 
+		var option:Option = new Option('Cache Videos', // even tho only one person asked, it here
+			"If checked, The Videos Will Be Cached.", 'videoPreload2', 'bool');
+		addOption(option); // now shut up before i put you in my basement
+
 		var option:Option = new Option('Experimental Caching',
 			"If checked, Experimental Caching Will Be Enabled. Allows saving the Cache to the next session.", 'experimentalCaching', 'bool', null, FlxG.resetState);
 		addOption(option);
@@ -25,15 +29,20 @@ class CacheSettings extends BaseOptionsMenu
 			'If checked, the Cache will be saved for later plays.', 'saveCache', 'bool');
 		var cacheChartsOption:Option = new Option('Cache Charts',
 		'If checked, Charts will be added to the Cache.', 'cacheCharts', 'bool');
+		var highPriorityOption:Option = new Option('High Priority',
+			'If checked, The game will have a higher priority during caching.', 'highPriorityCache', 'bool');
 
 		if (experimentalCachingEnabled) {
 			addOption(saveCacheOption);
 			addOption(cacheChartsOption);
+			addOption(highPriorityOption);
 		} else {
 			removeOption(saveCacheOption);
 			ClientPrefs.data.saveCache = false;
 			removeOption(cacheChartsOption);
 			ClientPrefs.data.cacheCharts = false;
+			removeOption(highPriorityOption);
+			ClientPrefs.data.highPriorityCache = false;
 		}
 
 		super();

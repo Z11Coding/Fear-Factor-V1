@@ -36,7 +36,7 @@ class MemoryUtil {
 
 	public static function clearMinor() {
 		#if (cpp || java || neko)
-		Gc.run(false);
+		Gc.run(false);	
 		#end
 	}
 
@@ -44,7 +44,6 @@ class MemoryUtil {
 		#if cpp
 		Gc.run(true);
 		Gc.compact();
-		// run the garbage collector for good measure lmfao
 		System.gc();
 		#elseif hl
 		Gc.major();
@@ -79,14 +78,6 @@ class MemoryUtil {
 	}
 
 	public static inline function currentMemUsage() {
-		#if cpp
-		return Gc.memInfo64(Gc.MEM_INFO_CURRENT);
-		#else
-		return 0;
-		#end
-	}
-	
-	public static inline function totalMemUsage() {
 		#if cpp
 		return Gc.memInfo64(Gc.MEM_INFO_USAGE);
 		#elseif sys

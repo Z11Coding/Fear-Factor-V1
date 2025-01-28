@@ -24,6 +24,41 @@ typedef EventNote = {
 	value2:String
 }
 
+typedef PreloadedChartNote = {
+	var strumTime:Float;
+	var noteData:Int;
+	var column:Int;
+	var mustPress:Bool;
+	// var oppNote:Bool;
+	var noteType:String;
+	var animSuffix:String;
+	@:optional var noteskin:String;
+	var texture:String;
+	var noAnimation:Bool;
+	var noMissAnimation:Bool;
+	var gfNote:Bool;
+	var exNote:Bool;
+	var isSustainNote:Bool;
+	var isSustainEnd:Bool;
+	var sustainLength:Float;
+	var parentST:Float;
+	var hitHealth:Float;
+	var missHealth:Float;
+	var hitCausesMiss:Null<Bool>;
+	var wasHit:Bool;
+	var multSpeed:Float;
+	// var noteDensity:Float;
+	var ignoreNote:Bool;
+	var blockHit:Bool;
+	var lowPriority:Bool;
+	@:optional var AIMiss:Bool;
+	@:optional var AIstrumTime:Float;
+	@:optional var field:PlayField;
+	@:optional var fieldIndex:Int;
+	@:optional var noteIndex:Int;
+}
+
+
 class Note extends NoteObject
 {
 	public var vec3Cache:Vector3 = new Vector3(); // for vector3 operations in modchart code
@@ -39,7 +74,7 @@ class Note extends NoteObject
 	public static var ammo:Array<Int> = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18];
 	public static var scales:Array<Float> = [0.9, 0.85, 0.8, 0.7, 0.66, 0.6, 0.55, 0.50, 0.46, 0.39, 0.36, 0.32, 0.31, 0.31, 0.3, 0.26, 0.26, 0.22]; 
 	public static var lessX:Array<Int> = [0, 0, 0, 0, 0, 8, 7, 8, 8, 7, 6, 6, 8, 7, 6, 7, 6, 6];
-	public static var separator:Array<Int> = [0, 0, 1, 1, 2, 2, 2, 3, 3, 4, 4, 5, 6, 6, 7, 6, 5];
+	public static var separator:Array<Int> = [99, 99, 99, 1, 1, 1, 2, 3, 3, 3, 4, 5, 6, 6, 7, 6, 5];
 	public static var xtra:Array<Int> = [150, 89, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
 	public static var posRest:Array<Int> = [0, 0, 0, 0, 25, 32,46, 52, 60, 40, 45, 30, 30, 29,72, 37, 61, 16];
 	public static var gridSizes:Array<Int> = [40, 40, 40, 40, 40, 40, 40, 40, 40, 35, 30, 25, 25, 20, 20, 20, 20, 15];
@@ -68,104 +103,121 @@ class Note extends NoteObject
 			"letters" => ["E"], 
 			"anims" => ["UP"], 
 			"strumAnims" => ["SPACE"], 
-			"pixelAnimIndex" => [4]
+			"pixelAnimIndex" => [4],
+			"colArray" => [2]
 		],
 		1 => [
 				"letters" => ["A", "D"], 
 				"anims" => ["LEFT", "RIGHT"], 
 				"strumAnims" => ["LEFT", "RIGHT"], 
-				"pixelAnimIndex" => [0, 3]
+				"pixelAnimIndex" => [0, 3],
+				"colArray" => [0, 3]
 			],
 		2 => [
 				"letters" => ["A", "E", "D"], 
 				"anims" => ["LEFT", "UP", "RIGHT"], 
 				"strumAnims" => ["LEFT", "SPACE", "RIGHT"], 
-				"pixelAnimIndex" => [0, 4, 3]
+				"pixelAnimIndex" => [0, 4, 3],
+				"colArray" => [0, 2, 3]
 			],
 		3 => [
 				"letters" => ["A", "B", "C", "D"], 
 				"anims" => ["LEFT", "DOWN", "UP", "RIGHT"], 
 				"strumAnims" => ["LEFT", "DOWN", "UP", "RIGHT"], 
-				"pixelAnimIndex" => [0, 1, 2, 3]
+				"pixelAnimIndex" => [0, 1, 2, 3],
+				"colArray" => [0, 1, 2, 3]
 			],
 
 		4 => [
 				"letters" => ["A", "B", "E", "C", "D"], 
 				"anims" => ["LEFT", "DOWN", "UP", "UP", "RIGHT"],
 				"strumAnims" => ["LEFT", "DOWN", "SPACE", "UP", "RIGHT"], 
-				"pixelAnimIndex" => [0, 1, 4, 2, 3]
+				"pixelAnimIndex" => [0, 1, 4, 2, 3],
+				"colArray" => [0, 1, 2, 2, 3]
 			],
 		5 => [
 				"letters" => ["A", "C", "D", "F", "B", "I"], 
 				"anims" => ["LEFT", "UP", "RIGHT", "LEFT", "DOWN", "RIGHT"],
 				"strumAnims" => ["LEFT", "UP", "RIGHT", "LEFT", "DOWN", "RIGHT"], 
-				"pixelAnimIndex" => [0, 2, 3, 5, 1, 8]
+				"pixelAnimIndex" => [0, 2, 3, 5, 1, 8],
+				"colArray" => [0, 2, 3, 0, 1, 3]
 			],
 		6 => [
 				"letters" => ["A", "C", "D", "E", "F", "B", "I"], 
 				"anims" => ["LEFT", "UP", "RIGHT", "UP", "LEFT", "DOWN", "RIGHT"],
 				"strumAnims" => ["LEFT", "UP", "RIGHT", "SPACE", "LEFT", "DOWN", "RIGHT"], 
-				"pixelAnimIndex" => [0, 2, 3, 4, 5, 1, 8]
+				"pixelAnimIndex" => [0, 2, 3, 4, 5, 1, 8],
+				"colArray" => [0, 2, 3, 2, 0, 1, 3]
 			],
 		7 => [
 				"letters" => ["A", "B", "C", "D", "F", "G", "H", "I"], 
 				"anims" => ["LEFT", "DOWN", "UP", "RIGHT", "LEFT", "DOWN", "UP", "RIGHT"],
 				"strumAnims" => ["LEFT", "DOWN", "UP", "RIGHT", "LEFT", "DOWN", "UP", "RIGHT"], 
-				"pixelAnimIndex" => [0, 1, 2, 3, 5, 6, 7, 8]
+				"pixelAnimIndex" => [0, 1, 2, 3, 5, 6, 7, 8],
+				"colArray" => [0, 1, 2, 3, 0, 1, 2, 3]
 			],
 		8 => [
 				"letters" => ["A", "B", "C", "D", "E", "F", "G", "H", "I"], 
 				"anims" => ["LEFT", "DOWN", "UP", "RIGHT", "UP", "LEFT", "DOWN", "UP", "RIGHT"],
 				"strumAnims" => ["LEFT", "DOWN", "UP", "RIGHT", "SPACE", "LEFT", "DOWN", "UP", "RIGHT"], 
-				"pixelAnimIndex" => [0, 1, 2, 3, 4, 5, 6, 7, 8]
+				"pixelAnimIndex" => [0, 1, 2, 3, 4, 5, 6, 7, 8],
+				"colArray" => [0, 1, 2, 3, 2, 0, 1, 2, 3]
 			],
 		9 => [
 				"letters" => ["A", "B", "C", "D", "E", "N", "F", "G", "H", "I"], 
 				"anims" => ["LEFT", "DOWN", "UP", "RIGHT", "UP", "UP", "LEFT", "DOWN", "UP", "RIGHT"],
 				"strumAnims" => ["LEFT", "DOWN", "UP", "RIGHT", "SPACE", "CIRCLE", "LEFT", "DOWN", "UP", "RIGHT"], 
-				"pixelAnimIndex" => [0, 1, 2, 3, 4, 13, 5, 6, 7, 8]
+				"pixelAnimIndex" => [0, 1, 2, 3, 4, 13, 5, 6, 7, 8],
+				"colArray" => [0, 1, 2, 3, 2, 2, 0, 1, 2, 3]
 			],
 		10 => [
 				"letters" => ["A", "B", "C", "D", "J", "E", "M", "F", "G", "H", "I"], 
 				"anims" => ["LEFT", "DOWN", "UP", "RIGHT", "LEFT", "UP", "RIGHT", "LEFT", "DOWN", "UP", "RIGHT"],
 				"strumAnims" => ["LEFT", "DOWN", "UP", "RIGHT", "CIRCLE", "SPACE", "CIRCLE", "LEFT", "DOWN", "UP", "RIGHT"], 
-				"pixelAnimIndex" => [0, 1, 2, 3, 9, 4, 12, 5, 6, 7, 8]
+				"pixelAnimIndex" => [0, 1, 2, 3, 9, 4, 12, 5, 6, 7, 8],
+				"colArray" => [0, 1, 2, 3, 0, 2, 3, 0, 1, 2, 3]
 			],
 		11 => [
 				"letters" => ["A", "B", "C", "D", "J", "K", "L", "M", "F", "G", "H", "I"], 
 				"anims" => ["LEFT", "DOWN", "UP", "RIGHT", "LEFT", "DOWN", "UP", "RIGHT", "LEFT", "DOWN", "UP", "RIGHT"],
 				"strumAnims" => ["LEFT", "DOWN", "UP", "RIGHT", "CIRCLE", "CIRCLE", "CIRCLE", "CIRCLE", "LEFT", "DOWN", "UP", "RIGHT"], 
-				"pixelAnimIndex" => [0, 1, 2, 3, 9, 10, 11, 12, 5, 6, 7, 8]
+				"pixelAnimIndex" => [0, 1, 2, 3, 9, 10, 11, 12, 5, 6, 7, 8],
+				"colArray" => [0, 1, 2, 3, 0, 1, 2, 3, 0, 1, 2, 3]
 			],
 		12 => [
 				"letters" => ["A", "B", "C", "D", "J", "K", "N", "L", "M", "F", "G", "H", "I"], 
 				"anims" => ["LEFT", "DOWN", "UP", "RIGHT", "LEFT", "DOWN", "UP", "UP", "RIGHT", "LEFT", "DOWN", "UP", "RIGHT"],
 				"strumAnims" => ["LEFT", "DOWN", "UP", "RIGHT", "CIRCLE", "CIRCLE", "CIRCLE", "CIRCLE", "CIRCLE", "LEFT", "DOWN", "UP", "RIGHT"], 
-				"pixelAnimIndex" => [0, 1, 2, 3, 9, 10, 13, 11, 12, 5, 6, 7, 8]
+				"pixelAnimIndex" => [0, 1, 2, 3, 9, 10, 13, 11, 12, 5, 6, 7, 8],
+				"colArray" => [0, 1, 2, 3, 0, 1, 2, 2, 3, 0, 1, 2, 3]
 			],
 		13 => [
 				"letters" => ["A", "B", "C", "D", "J", "K", "E", "N", "L", "M", "F", "G", "H", "I"], 
 				"anims" => ["LEFT", "DOWN", "UP", "RIGHT", "LEFT", "DOWN", "UP", "UP", "UP", "RIGHT", "LEFT", "DOWN", "UP", "RIGHT"],
 				"strumAnims" => ["LEFT", "DOWN", "UP", "RIGHT", "CIRCLE", "CIRCLE", "SPACE", "CIRCLE", "CIRCLE", "CIRCLE", "LEFT", "DOWN", "UP", "RIGHT"], 
-				"pixelAnimIndex" => [0, 1, 2, 3, 9, 10, 4, 13, 11, 12, 5, 6, 7, 8]
+				"pixelAnimIndex" => [0, 1, 2, 3, 9, 10, 4, 13, 11, 12, 5, 6, 7, 8],
+				"colArray" => [0, 1, 2, 3, 0, 1, 2, 2, 2, 3, 0, 1, 2, 3]
 			],
 		14 => [
 				"letters" => ["A", "B", "C", "D", "J", "K", "E", "N", "E", "L", "M", "F", "G", "H", "I"], 
 				"anims" => ["LEFT", "DOWN", "UP", "RIGHT", "LEFT", "DOWN", "UP", "UP", "UP", "UP", "RIGHT", "LEFT", "DOWN", "UP", "RIGHT"],
 				"strumAnims" => ["LEFT", "DOWN", "UP", "RIGHT", "CIRCLE", "CIRCLE", "SPACE", "CIRCLE", "SPACE", "CIRCLE", "CIRCLE", "LEFT", "DOWN", "UP", "RIGHT"], 
-				"pixelAnimIndex" => [0, 1, 2, 3, 9, 10, 4, 13, 4, 11, 12, 5, 6, 7, 8]
+				"pixelAnimIndex" => [0, 1, 2, 3, 9, 10, 4, 13, 4, 11, 12, 5, 6, 7, 8],
+				"colArray" => [0, 1, 2, 3, 0, 1, 2, 2, 2, 2, 3, 0, 1, 2, 3]
 			],
 		15 => [
 				"letters" => ["A", "B", "C", "D", "J", "K", "L", "M", "O", "P", "Q", "R", "F", "G", "H", "I"], 
 				"anims" => ["LEFT", "DOWN", "UP", "RIGHT", "LEFT", "DOWN", "UP", "RIGHT", "LEFT", "DOWN", "UP", "RIGHT", "LEFT", "DOWN", "UP", "RIGHT"],
 				"strumAnims" => ["LEFT", "DOWN", "UP", "RIGHT", "CIRCLE", "CIRCLE", "CIRCLE", "CIRCLE", "CIRCLE", "CIRCLE", "CIRCLE", "CIRCLE", "LEFT", "DOWN", "UP", "RIGHT"], 
-				"pixelAnimIndex" => [0, 1, 2, 3, 9, 10, 11, 12, 14, 15, 16, 17, 5, 6, 7, 8]
+				"pixelAnimIndex" => [0, 1, 2, 3, 9, 10, 11, 12, 14, 15, 16, 17, 5, 6, 7, 8],
+				"colArray" => [0, 1, 2, 3, 0, 1, 2, 3, 0, 1, 2, 3, 0, 1, 2, 3]
 			],
 		16 => [
 				"letters" => ["A", "B", "C", "D", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "F", "G", "H", "I"], 
 				"anims" => ["LEFT", "DOWN", "UP", "RIGHT", "LEFT", "DOWN", "UP", "UP", "RIGHT", "LEFT", "DOWN", "UP", "RIGHT", "LEFT", "DOWN", "UP", "RIGHT"],
 				"strumAnims" => ["LEFT", "DOWN", "UP", "RIGHT", "CIRCLE", "CIRCLE", "CIRCLE", "CIRCLE", "CIRCLE", "CIRCLE", "CIRCLE", "CIRCLE", "CIRCLE", "LEFT", "DOWN", "UP", "RIGHT"], 
-				"pixelAnimIndex" => [0, 1, 2, 3, 9, 10, 11, 12, 13, 14, 15, 16, 17, 5, 6, 7, 8]
+				"pixelAnimIndex" => [0, 1, 2, 3, 9, 10, 11, 12, 13, 14, 15, 16, 17, 5, 6, 7, 8],
+				"colArray" => [0, 1, 2, 3, 0, 1, 2, 2, 3, 0, 1, 2, 3, 0, 1, 2, 3]
 		],
 		17 => [
 				"letters" => ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I',
@@ -174,7 +226,8 @@ class Note extends NoteObject
 				"LEFT", "DOWN", "UP", "RIGHT", "UP", "LEFT", "DOWN", "UP", "RIGHT"],
 				"strumAnims" => ["LEFT", "DOWN", "UP", "RIGHT", "SPACE", "LEFT", "DOWN", "UP", "RIGHT", 
 				"LEFT", "DOWN", "UP", "RIGHT", "CIRCLE", "LEFT", "DOWN", "UP", "RIGHT"], 
-				"pixelAnimIndex" => [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17]
+				"pixelAnimIndex" => [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17],
+				"colArray" => [0, 1, 2, 3, 2, 0, 1, 2, 3, 0, 1, 2, 3, 2, 0, 1, 2, 3]
 		],
 	];
 
@@ -199,29 +252,6 @@ class Note extends NoteObject
         0.32 //18k
     ];
 
-	public static var gfxIndex:Array<Dynamic> = [
-		[4],
-		[0, 3],
-		[0, 4, 3],
-		[0, 1, 2, 3],
-		[0, 1, 4, 2, 3],
-		[0, 2, 3, 5, 1, 8],
-		[0, 2, 3, 4, 5, 1, 8],
-		[0, 1, 2, 3, 5, 6, 7, 8],
-		[0, 1, 2, 3, 4, 5, 6, 7, 8]
-	];
-	public static var gfxHud:Array<Dynamic> = [
-		[4],
-		[0, 3],
-		[0, 4, 3],
-		[0, 1, 2, 3],
-		[0, 1, 4, 2, 3],
-		[0, 2, 3, 0, 1, 3],
-		[0, 2, 3, 4, 0, 1, 3],
-		[0, 1, 2, 3, 0, 1, 2, 3],
-		[0, 1, 2, 3, 4, 0, 1, 2, 3]
-	];
-
 	// End of extra keys stuff
 	//////////////////////////////////////////////////
 
@@ -242,7 +272,6 @@ class Note extends NoteObject
 	];
 
 	public var extraData:Map<String, Dynamic> = new Map<String, Dynamic>();
-
 	public var noteDiff:Float = 1000;
 	
 	// basic stuff
@@ -384,6 +413,7 @@ class Note extends NoteObject
 	public var changeAnim:Bool = true;
 	public var changeColSwap:Bool = true;
 	public var isParent:Bool; // ke input shits
+	public var childs:Array<Note> = [];
 	public var spotInLine:Int = 0;
 	public var ratingDisabled:Bool = false;
 	public var hitHealth:Float = 0.023;
@@ -392,6 +422,7 @@ class Note extends NoteObject
 	public var customHealthHit:Bool = false;
 	public var centerNote:Bool = false;
 	public var hitboxMultiplier:Float = 1;
+	public var cod:String = '???';
 
 	//Action Engine Stuff
 	public var noteIndex:Int = -1;
@@ -400,15 +431,26 @@ class Note extends NoteObject
 	public var rgbShader:RGBShaderReference;
 	public static var globalRgbShaders:Array<RGBPalette> = [];
 	public static var SUSTAIN_SIZE:Int = 44;
-	public static var defaultNoteSkin(default, never):String = 'noteskins/normalNOTE';
+	public static var defaultNoteSkin(default, never):String = 'normalNOTE';
 
 	//AI Stuff
 	public var AIStrumTime:Float = 0;
 	public var AIMiss:Bool = false;
 
-	// Fear Factor
-	public var bulletNote:Bool = false;
-	public var shotgunNote:Bool = false;
+	//Archipelago
+	public var isCheck:Bool = false;
+	public var isMine:Bool = false;
+	public var isAlert:Bool = false;
+	public var isHeal:Bool = false;
+	public var isFreeze:Bool = false;
+	public var isFakeHeal:Bool = false;
+	var justMixedUp:Bool = false;
+	public var trueNoteData:Int = 0;
+	public var specialNote:Bool = false;
+	public var ignoreMiss:Bool = false;
+	public var spinAmount:Float = 0;
+	public var rootNote:Note;
+	var posTween:FlxTween;
 
 
 	public static var defaultNotes = [
@@ -418,9 +460,7 @@ class Note extends NoteObject
 		'Hurt Note',
 		'Ghost Note',
 		'EX Note',
-		'GF Duet',
-		'Bullet Note',
-		'Shotgun Note'
+		'GF Duet'
 	];
 
 	public var isSustainEnd:Bool = false;
@@ -434,7 +474,7 @@ class Note extends NoteObject
 
 	public function resizeByRatio(ratio:Float) //haha funny twitter shit
 	{
-		if(isSustainNote && animation.curAnim != null && !animation.curAnim.name.endsWith('end'))
+		if(isSustainNote && animation.curAnim != null && !animation.curAnim.name.endsWith('tail'))
 		{
 			scale.y *= ratio;
 			updateHitbox();
@@ -450,34 +490,46 @@ class Note extends NoteObject
 
 	public function defaultRGB()
 	{
-		var arr:Array<FlxColor> = ClientPrefs.data.arrowRGBExtra[gfxIndex[PlayState.mania][noteData]];
-		if(PlayState.isPixelStage) arr = ClientPrefs.data.arrowRGBPixelExtra[gfxIndex[PlayState.mania][noteData]];
+		var arr:Array<FlxColor> = ClientPrefs.data.arrowRGBExtra[Note.keysShit.get(mania).get('pixelAnimIndex')[noteData]];
+		if(PlayState.isPixelStage) arr = ClientPrefs.data.arrowRGBPixelExtra[Note.keysShit.get(mania).get('pixelAnimIndex')[noteData]];
 
-		if (noteData > -1 && noteData <= PlayState.mania)
+		if (arr != null && noteData > -1 && noteData <= mania)
 		{
 			rgbShader.r = arr[0];
 			rgbShader.g = arr[1];
 			rgbShader.b = arr[2];
 		}
+		else
+		{
+			rgbShader.r = 0xFFFF0000;
+			rgbShader.g = 0xFF00FF00;
+			rgbShader.b = 0xFF0000FF;
+		}
 	}
 
 	private function set_noteType(value:String):String {
 		noteSplashTexture = PlayState.SONG != null ? PlayState.SONG.splashSkin : 'noteSplashes';
-		//defaultRGB();
+		defaultRGB();
 		if(noteData > -1 && noteType != value) {
 			switch(value) {
 				case 'Hurt Note':
 					ignoreNote = mustPress;
-					reloadNote('noteskins/HURT');
+					//reloadNote('HURTNOTE_assets');
+					//this used to change the note texture to HURTNOTE_assets.png,
+					//but i've changed it to something more optimized with the implementation of RGBPalette:
+					
+					// note colors
+					rgbShader.r = 0xFF101010;
+					rgbShader.g = 0xFFFF0000;
+					rgbShader.b = 0xFF990022;
+					
 					noteSplashTexture = 'HURTnoteSplashes';
 					usesDefaultColours = false;
-					if(isSustainNote) {
-						missHealth = 0.1;
-					} else {
-						missHealth = 0.3;
-					}
+					
+					// gameplay data
+					lowPriority = true;
+					missHealth = isSustainNote ? 0.25 : 0.1;
 					hitCausesMiss = true;
-
 				case 'No Animation':
 					noAnimation = true;
 					noMissAnimation = true;
@@ -491,37 +543,49 @@ class Note extends NoteObject
 					ghostNote = true;
 				case 'EX Note':
 					exNote = true;
-				case 'Center Note':
-					reloadNote('noteskins/CENTER');
-					hitCausesMiss = false;
-					centerNote = true;
+				case 'Check Note':
+					isCheck = true;
+					rgbShader.r = 0xFF313131;
+					rgbShader.g = 0xFFFFFFFF;
+					rgbShader.b = 0xFFB4B4B4;
+				case 'Mine Note':
+					ignoreNote = true;
+					hitCausesMiss = true;
+					rgbShader.enabled = false;
+				case 'Ice Note':
+					ignoreNote = true;
+					hitCausesMiss = true;
+					rgbShader.enabled = false;
+				case 'Fake Heal Note':
+					ignoreNote = true;
+					hitCausesMiss = true;
+					rgbShader.enabled = false;
 				case 'Bullet Note':
-					bulletNote = true;
 					noAnimation = true;
 					reloadNote('noteskins/GUN_BULLETNOTE');
 					hitHealth = 0.09;
+					missHealth = 0.09;
 				case 'Shotgun Note':
-					shotgunNote = true;
 					noAnimation = true;
 					reloadNote('noteskins/SHOTGUN_BULLETNOTE');
 					hitHealth = 0.2;
+					missHealth = 0.2;
 				default:
 					//Nothing
 						
 			}
+			if (value != null && value.length > 1) NoteTypesConfig.applyNoteTypeData(this, value);
 			noteType = value;
 		}
 
 		return value;
 	}
 
-	public function new(strumTime:Float, noteData:Int, ?prevNote:Note, ?sustainNote:Bool = false, ?inEditor:Bool = false, ?createdFrom:Dynamic = null)
+	public function new(?strumTime:Float = -1, ?noteData:Int, ?prevNote:Note, ?sustainNote:Bool = false, ?inEditor:Bool = false, ?createdFrom:Dynamic = null)
 	{
 		super();
 		objType = NOTE;
-
 		animation = new PsychAnimationController(this);
-
 		mania = PlayState.mania;
 
 		if (prevNote == null)
@@ -540,7 +604,7 @@ class Note extends NoteObject
 		y -= 2000;
 		this.strumTime = strumTime;
 		if(!inEditor) this.strumTime += ClientPrefs.data.noteOffset;
-		if(!inEditor) visualTime = createdFrom.getNoteInitialTime(this.strumTime);
+		if (strumTime != -1 && !inEditor) visualTime = createdFrom.getNoteInitialTime(this.strumTime);
 
 		if (isSustainNote && prevNote != null) {
 			parentNote = prevNote;
@@ -553,29 +617,31 @@ class Note extends NoteObject
 		antialiasing = ClientPrefs.data.globalAntialiasing;
 		
 		this.noteData = noteData;
-
+		trueNoteData = noteData;
 		if(noteData > -1) {
+			rgbShader = new RGBShaderReference(this, initializeGlobalRGBShader(noteData));
+			if(PlayState.SONG != null && PlayState.SONG.disableNoteRGB) 
+			{
+				rgbShader.enabled = false;
+				if (noteType == '' || noteType == null) reloadNote('normalNOTE');
+			}
 			texture = '';
-			if (mania <= 8) 
-			{
-				//rgbShader = new RGBShaderReference(this, initializeGlobalRGBShader(noteData));
-				if (noteType == '' || noteType == null) reloadNote('normal');
-			}
-			else
-			{
-				if (noteType == '' || noteType == null) reloadNote('normal');
-			}
 
 			x += swagWidth * (noteData % Note.ammo[mania]);
 			if(!isSustainNote && noteData > -1 && noteData < Note.maxManiaUI_integer) { //Doing this 'if' check to fix the warnings on Senpai songs
 				var animToPlay:String = '';
 				animToPlay = Note.keysShit.get(mania).get('letters')[noteData];
-				animation.play(animToPlay);
+				if (hasAnimation(animToPlay))
+					animation.play(animToPlay);
+				else
+				{
+					animToPlay = colArray[Note.keysShit.get(mania).get('colArray')[noteData]];
+					animation.play(animToPlay + 'Scroll');
+				}
+					
 			}
 		}
-
 		// trace(prevNote);
-
 		if(prevNote!=null)
 			prevNote.nextNote = this;
 
@@ -590,7 +656,13 @@ class Note extends NoteObject
 			//offsetX += width* 0.5;
 			copyAngle = false;
 
-			animation.play(Note.keysShit.get(mania).get('letters')[noteData] + ' tail');
+			var animToPlay:String = '';
+			animToPlay = Note.keysShit.get(mania).get('letters')[noteData] + ' tail';
+			if (!hasAnimation(animToPlay))
+			{
+				animToPlay = colArray[Note.keysShit.get(mania).get('colArray')[noteData]] + 'holdend';
+			}
+			animation.play(animToPlay);
 
 			updateHitbox();
 
@@ -598,13 +670,19 @@ class Note extends NoteObject
 
 			if (prevNote.isSustainNote)
 			{
-				prevNote.animation.play(Note.keysShit.get(mania).get('letters')[prevNote.noteData] + ' hold');
-
-				prevNote.scale.y *= Conductor.stepCrochet / 100 * 1.05;
-				if(createdFrom != null && createdFrom.songSpeed != null) prevNote.scale.y *= createdFrom.songSpeed;
+				var animToPlay2:String = '';
+				animToPlay2 = Note.keysShit.get(mania).get('letters')[noteData] + ' hold';
+				if (!hasAnimation(animToPlay2))
+				{
+					animToPlay2 = colArray[Note.keysShit.get(mania).get('colArray')[noteData]] + 'hold';
+				}
+				prevNote.animation.play(animToPlay2);
+				
+				//prevNote.scale.y *= Conductor.stepCrochet / 100 * 1.05;
+				//if(createdFrom != null && createdFrom.songSpeed != null) prevNote.scale.y *= createdFrom.songSpeed;
 
 				if(PlayState.isPixelStage) { ///Y E  A H
-					prevNote.scale.y *= 1.19;
+					prevNote.scale.y *= 0.01;
 					prevNote.scale.y *= (6 / height); //Auto adjust note size
 				}
 				prevNote.updateHitbox();
@@ -644,6 +722,11 @@ class Note extends NoteObject
 		return globalRgbShaders[noteData];
 	}
 
+	public function hasAnimation(anim:String):Bool
+	{
+		return animation.exists(anim);
+	}
+
 	var lastNoteOffsetXForPixelAutoAdjusting:Float = 0;
 	var lastNoteScaleToo:Float = 1;
 	var _lastNoteOffX:Float = 0;
@@ -659,7 +742,7 @@ class Note extends NoteObject
 		{
 			skin = PlayState.SONG != null ? PlayState.SONG.arrowSkin : null;
 			if(skin == null || skin.length < 1)
-				skin = defaultNoteSkin + postfix;
+				skin = 'noteskins/' + "NOTE" + postfix;
 		}
 		//else rgbShader.enabled = false;
 
@@ -685,30 +768,59 @@ class Note extends NoteObject
 		
 		if (PlayState.isPixelStage)
 		{
-			if (isSustainNote)
+			switch (noteType)
 			{
-				loadGraphic(Paths.image('pixelUI/' + skinPixel + 'ENDS' + skinPostfix));
-				width = width / 18;
-				height = height / 2;
-				loadGraphic(Paths.image('pixelUI/' + skinPixel + 'ENDS' + skinPostfix), true, Math.floor(width), Math.floor(height));
-			}
-			else
-			{
-				loadGraphic(Paths.image('pixelUI/' + skinPixel + skinPostfix));
-				width = width / 18;
-				height = height / 5;
-				loadGraphic(Paths.image('pixelUI/' + skinPixel + skinPostfix), true, Math.floor(width), Math.floor(height));
+				case 'Mine Note':
+					loadGraphic(Paths.image("streamervschat/pixelUI/minenote"), false);
+				case 'Warning Note':
+					loadGraphic(Paths.image("streamervschat/pixelUI/warningnote"), false);
+				case 'Heal Note':
+					loadGraphic(Paths.image("streamervschat/pixelUI/healnote"), false);
+				case 'Ice Note':
+					loadGraphic(Paths.image("streamervschat/pixelUI/icenote"), false);
+				case 'Fake Heal Note':
+					loadGraphic(Paths.image("streamervschat/pixelUI/fakehealnote"), false);
+				default:
+					if (isSustainNote)
+					{
+						loadGraphic(Paths.image('pixelUI/' + skinPixel + 'ENDS' + skinPostfix, null, true));
+						width = width / Note.pixelNotesDivisionValue;
+						height = height / 6;
+						loadGraphic(Paths.image('pixelUI/' + skinPixel + 'ENDS' + skinPostfix, null, true), true, Math.floor(width), 0);
+					}
+					else
+					{
+						loadGraphic(Paths.image('pixelUI/' + skinPixel + skinPostfix, null, true));
+						width = width / Note.pixelNotesDivisionValue;
+						height = height / 5;
+						loadGraphic(Paths.image('pixelUI/' + skinPixel + skinPostfix, null, true), true, Math.floor(width), Math.floor(height));
+					}
 			}
 			defaultWidth = width;
-			setGraphicSize(Std.int(width * PlayState.daPixelZoom * Note.pixelScales[mania]));
+			defaultHeight = height;
+			setGraphicSize(Std.int(width * PlayState.daPixelZoom * Note.pixelScales[mania]), 0);
 			loadPixelNoteAnims();
 			antialiasing = false;
 		}
 		else
 		{
-			frames = Paths.getSparrowAtlas(skin);
-			loadNoteAnims();
-			antialiasing = ClientPrefs.data.globalAntialiasing;
+			switch (noteType)
+			{
+				case 'Mine Note':
+					loadGraphic(Paths.image("streamervschat/minenote"), false);
+				case 'Warning Note':
+					loadGraphic(Paths.image("streamervschat/warningnote"), false);
+				case 'Heal Note':
+					loadGraphic(Paths.image("streamervschat/healnote"), false);
+				case 'Ice Note':
+					loadGraphic(Paths.image("streamervschat/icenote"), false);
+				case 'Fake Heal Note':
+					loadGraphic(Paths.image("streamervschat/fakehealnote"), false);
+				default:
+					frames = Paths.getSparrowAtlas(skin, null, true);
+					loadNoteAnims();
+					antialiasing = ClientPrefs.data.globalAntialiasing;
+			}
 		}
 		
 		if(isSustainNote) {
@@ -735,35 +847,6 @@ class Note extends NoteObject
 	private function set_scrollSpeed(value:Float):Float
 	{
 		scrollSpeed = value;
-		/*
-
-		if (isSustainNote && (animation.curAnim != null && !animation.curAnim.name.endsWith('end')))
-		{
-			scale.y = originalScale;
-			updateHitbox();
-
-			scale.y *= Conductor.stepCrochet / 100 * 1.05;
-			if (PlayState.instance != null)
-			{
-				scale.y *= scrollSpeed;
-			}
-
-			if (PlayState.isPixelStage)
-			{
-				scale.y *= 1.19;
-				scale.y *= (6 / height); // Auto adjust note size
-			}
-			updateHitbox();
-
-			if (PlayState.isPixelStage)
-			{
-				scale.y *= PlayState.daPixelZoom;
-				updateHitbox();
-			}
-			updateHitbox();
-			// prevNote.setGraphicSize();
-		}*/
-
 		return value;
 	}
 
@@ -782,12 +865,21 @@ class Note extends NoteObject
 	function _loadNoteAnims() {
 		for (i in 0...gfxLetter.length)
 		{
-			animation.addByPrefix(gfxLetter[i], gfxLetter[i] + '0');
+			attemptToAddAnimationByPrefix(gfxLetter[i], gfxLetter[i] + '0');
+			attemptToAddAnimationByPrefix(gfxLetter[i], colArray[Note.keysShit.get(mania).get('colArray')[noteData]] + '0');
+			attemptToAddAnimationByPrefix(gfxLetter[i], colArray[Note.keysShit.get(mania).get('colArray')[noteData]] + '0');
 
 			if (isSustainNote)
 			{
-				animation.addByPrefix(gfxLetter[i] + ' hold', gfxLetter[i] + ' hold');
-				animation.addByPrefix(gfxLetter[i] + ' tail', gfxLetter[i] + ' tail');
+				attemptToAddAnimationByPrefix(gfxLetter[i] + ' tail', colArray[Note.keysShit.get(mania).get('colArray')[noteData]] + ' hold end');
+				attemptToAddAnimationByPrefix(gfxLetter[i] + ' hold', colArray[Note.keysShit.get(mania).get('colArray')[noteData]] + ' hold piece');
+				attemptToAddAnimationByPrefix(gfxLetter[i] + ' hold', gfxLetter[i] + ' hold');
+				attemptToAddAnimationByPrefix(gfxLetter[i] + ' tail', gfxLetter[i] + ' tail');
+
+				attemptToAddAnimationByPrefix(gfxLetter[i] + ' tail', 'pruple end hold');
+				attemptToAddAnimationByPrefix(gfxLetter[i] + ' tail', colArray[Note.keysShit.get(mania).get('colArray')[noteData]] + ' hold end');
+
+				attemptToAddAnimationByPrefix(gfxLetter[i] + ' hold', colArray[Note.keysShit.get(mania).get('colArray')[noteData]] + ' hold piece');
 			}
 		}
 
@@ -800,44 +892,26 @@ class Note extends NoteObject
 		updateHitbox();
 	}
 
+	function attemptToAddAnimationByPrefix(name:String, prefix:String, framerate:Float = 24, doLoop:Bool = true)
+	{
+		var animFrames = [];
+		@:privateAccess
+		animation.findByPrefix(animFrames, prefix); // adds valid frames to animFrames
+		if(animFrames.length < 1) return;
+
+		animation.addByPrefix(name, prefix, framerate, doLoop);
+	}
+
 	function loadPixelNoteAnims() {
-		if(isSustainNote) {
-			for (i in 0...gfxLetter.length) {
+		for (i in 0...gfxLetter.length)
+		{
+			animation.add(gfxLetter[i], [i + pixelNotesDivisionValue]);
+			if (isSustainNote)
+			{
 				animation.add(gfxLetter[i] + ' hold', [i]);
 				animation.add(gfxLetter[i] + ' tail', [i + pixelNotesDivisionValue]);
 			}
-		} else {
-			for (i in 0...gfxLetter.length) {
-				animation.add(gfxLetter[i], [i + pixelNotesDivisionValue]);
-			}
 		}
-	}
-
-	public function applyManiaChange()
-	{
-		if (isSustainNote)
-			scale.y = 1;
-		reloadNote(texture);
-		if (isSustainNote)
-			offsetX = width / 2;
-		if (!isSustainNote)
-		{
-			var animToPlay:String = '';
-			animToPlay = Note.keysShit.get(mania).get('letters')[noteData];
-			animation.play(animToPlay);
-		}
-
-		if (isSustainNote && prevNote != null)
-		{
-			animation.play(Note.keysShit.get(mania).get('letters')[noteData] + ' tail');
-			if (prevNote.isSustainNote)
-			{
-				prevNote.animation.play(Note.keysShit.get(mania).get('letters')[noteData] + ' hold');
-				prevNote.updateHitbox();
-			}
-		}
-
-		updateHitbox();
 	}
 
 	override function update(elapsed:Float)
